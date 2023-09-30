@@ -1,6 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "jsx": "react",
     "strict": true
   },
   "include": [
@@ -8,5 +9,5 @@
     "**/*.tsx",
     "src/**/*.ts", // Your source files
     "env.d.ts" // Include the env.d.ts file
-  ]
+, "App.test.js"  ]
 }
