@@ -3,14 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { t } from 'react-native-tailwindcss';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import NetInfo from '@react-native-community/netinfo';
 
 export default function App() {
-
-    NetInfo.fetch().then(state => {
-      console.log('Connection type', state.type);
-      console.log('Is connected?', state.isConnected);
-    });
 
   return (
     <View style={styles.container}>
