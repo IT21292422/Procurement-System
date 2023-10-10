@@ -10,7 +10,7 @@ export default function App() {
   const logged = false
  return(
     <Provider store={store}>
-      {!logged?
+      {logged?
         <LogIn/>
       :
         <MainNavigation/>
