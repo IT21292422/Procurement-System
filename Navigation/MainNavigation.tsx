@@ -18,23 +18,63 @@ import ViewOrders from '../src/screens/TheManager/ViewOrders';
 import ItemAdd from '../src/screens/ProcurementStaff/ItemAdd';
 import OrderPurchase from '../src/screens/ProcurementStaff/OrderPurchase';
 import OrderView from '../src/screens/ProcurementStaff/OrderView';
+import { UserState } from '../config/interfaces';
+import Loading from '../src/screens/Loading';
+import LogIn from '../src/screens/LogIn';
+import UnknownUserScreen from '../src/screens/UnknownUserScreen';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function MainNavigation() {
+  
   const dispatch = useDispatch()
-  const count:number = useSelector((state:any)=>state.counter.value)
+
+  const userName:string | null = useSelector((state:UserState)=> state.userName)
+  const userType:string | null = useSelector((state:UserState)=> state.userType)
+  const isLoading:boolean = useSelector((state:UserState)=> state.isLoading)
  
   // before develop your part uncomment other routes except your
-  return (
-    <NavigationContainer>
-      {/* <SiteManagerRoute/> */}
-      {/* <TheManagerRoute/> */}
-      {/* <SupplierRoute/> */}
-      <ProcurementStaff/>
-    </NavigationContainer>
-  )
+  if(isLoading){
+    return <Loading/>;
+  }
+
+  if(!userName){
+    return <LogIn/>
+  }
+
+  if (userType === 'site_manager') {
+    // Render Site Manager route/component
+    return (
+      <NavigationContainer>
+        <SiteManagerRoute />
+      </NavigationContainer>
+    );
+  } else if (userType === 'manager') {
+    // Render The Manager route/component
+    return (
+      <NavigationContainer>
+        <TheManagerRoute />
+      </NavigationContainer>
+    );
+  } else if (userType === 'supplier') {
+    // Render Supplier route/component
+    return (
+      <NavigationContainer>
+        <SupplierRoute />
+      </NavigationContainer>
+    );
+  } else if (userType === 'procurement_staff') {
+    // Render Procurement Staff route/component
+    return (
+      <NavigationContainer>
+        <ProcurementStaff />
+      </NavigationContainer>
+    );
+  } else {
+    // Handle other cases or unknown user types here
+    return <UnknownUserScreen />;
+  }
 }
 
 function SiteManagerRoute(){
