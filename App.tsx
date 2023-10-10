@@ -1,30 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { t } from 'react-native-tailwindcss';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import {store} from './context/store'
-import { useSelector,useDispatch } from 'react-redux';
 import { Provider } from 'react-redux'
-
-function Main(){
-  const dispatch = useDispatch()
-  const count:number = useSelector((state:any)=>state.counter.value)
-  return(
-    <View style={[t.flexGrow,t.justifyAround,t.selfStart]}>
-      <Text>It works {count}</Text>
-    </View>
-  )
-}
+import MainNavigation from './Navigation/MainNavigation';
+import LogIn from './src/screens/LogIn'
 
 export default function App() {
-  return(
+
+  const logged = false
+ return(
     <Provider store={store}>
-        <Main/>
+      {logged?
+        <LogIn/>
+      :
+        <MainNavigation/>
+      }
     </Provider>
   )
 }
 
+// **Test run is here*****************
 // return (
 //   <View style={[t.flexGrow,t.justifyAround,t.selfStart]}>
 //     {/* here using tailwind styles refer following*/}

@@ -10,6 +10,15 @@ cd f [press tab key]
 npm i
 ```
 
+### If something goes wrong 
+```
+npm upgrade
+```
+or
+```
+npx expo start -c
+```
+
 ### create file name ***.env.local*** in root folder, include the firebase config
 ```
   EXPO_PUBLIC_API_KEY = 
