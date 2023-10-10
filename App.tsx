@@ -3,19 +3,12 @@ import { t } from 'react-native-tailwindcss';
 import {store} from './context/store'
 import { Provider } from 'react-redux'
 import MainNavigation from './Navigation/MainNavigation';
-import LogIn from './src/screens/LogIn'
-import { View ,Text} from 'react-native';
 
 export default function App() {
 
-  const logged = false
  return(
     <Provider store={store}>
-      {logged?
-        <LogIn/>
-      :
         <MainNavigation/>
-      }
     </Provider>
   )
 }
