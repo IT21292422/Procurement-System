@@ -4,6 +4,7 @@ import {store} from './context/store'
 import { Provider } from 'react-redux'
 import MainNavigation from './Navigation/MainNavigation';
 import LogIn from './src/screens/LogIn'
+import { View ,Text} from 'react-native';
 
 export default function App() {
 
