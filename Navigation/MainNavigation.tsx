@@ -30,11 +30,16 @@ export default function MainNavigation() {
   
   const dispatch = useDispatch()
 
-  const userName:string | null = useSelector((state:UserState)=> state.userName)
-  const userType:string | null = useSelector((state:UserState)=> state.userType)
-  const isLoading:boolean = useSelector((state:UserState)=> state.isLoading)
- 
   // before develop your part uncomment other routes except your
+  let userName:string | null = useSelector((state:UserState)=> state.userName)
+  let userType:string | null = useSelector((state:UserState)=> state.userType)
+  let isLoading:boolean = useSelector((state:UserState)=> state.isLoading)
+ 
+  // this the are you can crate mock user
+  userName = 'hello'
+  userType = 'site_manager'
+  isLoading = false
+
   if(isLoading){
     return <Loading/>;
   }
