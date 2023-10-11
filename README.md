@@ -30,3 +30,35 @@ npx expo start -c
 ```
 
 * If it doesn't work add "" between values
+---
+### redux common files
+
+import files
+```
+import { View, Text,Button } from 'react-native'
+import { setUserType,logOut,logUser,setLoading } from '../../features/user/userSlice';
+import { useSelector,useDispatch } from 'react-redux';
+import { UserState } from '../../config/interfaces';
+```
+use and change values
+```
+const dispatch = useDispatch()
+
+let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
+
+let userType: string | null = useSelector((state: { user: UserState }) => state.user.userType);
+
+let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
+
+      <Text>User name {userName}</Text>
+      <Text>User type {userType}</Text>
+
+      <Button title='change to manager' onPress={() => dispatch(setUserType('manager'))}/>
+
+      <Button title='change to site_manager' onPress={() => dispatch(setUserType('site_manager'))}/>
+
+      <Button title='change to procurement_staff' onPress={() => dispatch(setUserType('procurement_staff'))}/>
+
+      <Button title='change to supplier' onPress={() => dispatch(setUserType('supplier'))}/>
+```
+
