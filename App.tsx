@@ -3,12 +3,15 @@ import { t } from 'react-native-tailwindcss';
 import {store} from './context/store'
 import { Provider } from 'react-redux'
 import MainNavigation from './Navigation/MainNavigation';
+import { PaperProvider } from 'react-native-paper';
 
 export default function App() {
 
  return(
     <Provider store={store}>
+      <PaperProvider>
         <MainNavigation/>
+      </PaperProvider>
     </Provider>
   )
 }
