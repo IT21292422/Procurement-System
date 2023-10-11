@@ -13,6 +13,7 @@ import OrderRef from '../src/screens/Supplier/OrderRef';
 import SupplierProfile from '../src/screens/Supplier/SupplierProfile';
 import CreatePolicy from '../src/screens/TheManager/CreatePolicy';
 import OrderDetails from '../src/screens/TheManager/OrderDetails';
+import ProcunentOrderDetails from '../src/screens/ProcurementStaff/OrderDetails';
 import PendingOrders from '../src/screens/TheManager/PendingOrders';
 import ViewOrders from '../src/screens/TheManager/ViewOrders';
 import ItemAdd from '../src/screens/ProcurementStaff/ItemAdd';
@@ -31,20 +32,20 @@ export default function MainNavigation() {
   const dispatch = useDispatch()
 
   // before develop your part uncomment other routes except your
-  let userName:string | null = useSelector((state:UserState)=> state.userName)
-  let userType:string | null = useSelector((state:UserState)=> state.userType)
-  let isLoading:boolean = useSelector((state:UserState)=> state.isLoading)
+  // let userName:string | null = useSelector((state:UserState)=> state.userName)
+  // let userType:string | null = useSelector((state:UserState)=> state.userType)
+  // let isLoading:boolean = useSelector((state:UserState)=> state.isLoading)
  
+let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
+let userType: string | null = useSelector((state: { user: UserState }) => state.user.userType);
+let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
+
   // this the are you can crate mock user
-  userName = 'hello'
-  userType = 'manager'
-  isLoading = false
+  // userName = 'hello'
+  // userType = 'procurement_staff'
+  // isLoading = false
 
-  if(isLoading){
-    return <Loading/>;
-  }
-
-  if(!userName){
+  if(!userType && !userName){
     return <LogIn/>
   }
 
@@ -118,7 +119,7 @@ function ProcurementStaff(){
       <Tab.Navigator initialRouteName='OrderView'>
         <Tab.Screen name='OrderView' component={OrderView}/>
         <Tab.Screen name='ItemAdd' component={ItemAdd}/>
-        <Tab.Screen name='OrderDetails' component={OrderDetails}/>
+        <Tab.Screen name='OrderDetails' component={ProcunentOrderDetails}/>
         <Tab.Screen name='OrderPurchase' component={OrderPurchase}/>
       </Tab.Navigator>
     )
