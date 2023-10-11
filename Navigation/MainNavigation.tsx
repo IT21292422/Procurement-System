@@ -37,7 +37,7 @@ export default function MainNavigation() {
  
   // this the are you can crate mock user
   userName = 'hello'
-  userType = 'site_manager'
+  userType = 'manager'
   isLoading = false
 
   if(isLoading){
@@ -105,10 +105,10 @@ function SupplierRoute(){
 function TheManagerRoute(){
     return(
       <Tab.Navigator initialRouteName='ViewOrders'>
+        <Tab.Screen name='ViewOrders' component={ViewOrders}/>
         <Tab.Screen name='OrderDetails' component={OrderDetails}/>
         <Tab.Screen name='CreatePolicy' component={CreatePolicy}/>
         <Tab.Screen name='PendingOrders' component={PendingOrders}/>
-        <Tab.Screen name='ViewOrders' component={ViewOrders}/>
       </Tab.Navigator>
     )
 }
