@@ -9,6 +9,7 @@ export default function ItemAdd() {
   let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
   return (
     <View>
+      <Text>OrderView for {userName}</Text>
       <Text>ItemAdd</Text>
     </View>
   )

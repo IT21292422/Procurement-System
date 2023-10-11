@@ -4,7 +4,7 @@ import { t } from 'react-native-tailwindcss';
 import NetInfo from '@react-native-community/netinfo';
 import { UserState } from '../../config/interfaces';
 import { useSelector,useDispatch } from 'react-redux';
-import { setUserType } from '../../features/user/userSlice';
+import { setUserType,logUser } from '../../features/user/userSlice';
 
 
 export default function LogIn() {
@@ -28,7 +28,10 @@ let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.
       <Text>User type {userType}</Text>
       <Button title='change to manager' onPress={() => dispatch(setUserType('manager'))}/>
       <Button title='change to site_manager' onPress={() => dispatch(setUserType('site_manager'))}/>
-      <Button title='change to procurement_staff' onPress={() => dispatch(setUserType('procurement_staff'))}/>
+      <Button title='change to procurement_staff' onPress={() => {
+        dispatch(setUserType('procurement_staff'))
+        dispatch(logUser('hello'))
+        }}/>
       <Button title='change to supplier' onPress={() => dispatch(setUserType('supplier'))}/>
     </View>
   )

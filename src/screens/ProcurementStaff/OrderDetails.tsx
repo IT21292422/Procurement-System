@@ -4,10 +4,12 @@ import { setUserType,logOut,logUser,setLoading } from '../../../features/user/us
 import { useSelector,useDispatch } from 'react-redux';
 import { UserState } from '../../../config/interfaces';
 
-export default function OrderDetails() {
+export default function ProcunentOrderDetails() {
   const dispatch = useDispatch()
+  let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
   return (
     <View>
+       <Text>OrderView for {userName}</Text>
       <Text>OrderDetails</Text>
     </View>
   )
