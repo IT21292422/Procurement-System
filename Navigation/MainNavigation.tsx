@@ -35,16 +35,16 @@ export default function MainNavigation() {
   // let userType:string | null = useSelector((state:UserState)=> state.userType)
   // let isLoading:boolean = useSelector((state:UserState)=> state.isLoading)
  
-  let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
+let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
 let userType: string | null = useSelector((state: { user: UserState }) => state.user.userType);
 let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
 
   // this the are you can crate mock user
-  // userName = 'hello'
-  // userType = 'site_manager'
+  userName = 'hello'
+  userType = 'site_manager'
   // isLoading = false
 
-  if(!userType){
+  if(!userType && !userName){
     return <LogIn/>
   }
 

@@ -12,7 +12,10 @@ export default function OrderView() {
   return (
     <View>
       <Text>OrderView</Text>
-       <Button title='Logout' onPress={() => dispatch(setUserType(null))}/>
+       <Button title='Logout' onPress={() => {
+        dispatch(setUserType(null))
+        dispatch(logOut())
+      }}/>
     </View>
   )
 }
