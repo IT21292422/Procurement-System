@@ -31,3 +31,21 @@ export type SiteType = {
 	siteName: string,
 	address:  string
 }
+
+export type newItemRequestType = {
+	itemName:    string;
+	description: string;
+	isApproved:  boolean
+}
+
+export type policy = {
+	id:           string;
+	policyName:   string;
+	threshold:    number; // if total is lower than this it is automatically approved
+	description:  string;    
+}
+
+export type supplier = {
+	supplierId:   string;
+	supplierName: string;
+}
