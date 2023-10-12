@@ -2,14 +2,7 @@ import { View, Text } from 'react-native'
 import React, { useState } from 'react'
 import { doc, getDoc } from "firebase/firestore";
 import { fireStore } from '../../../config/firebase';
-
-type ItemType = {
-	itemId: string;
-	itemName: string;
-	description: string;
-	unitPrice: number;
-	policy: string;
-}
+import { ItemType } from '../../../config/types';
 
 export default function ItemDetails() {
 	const itemId = 'cp7RzpuvXMxFUbCmctNM';
