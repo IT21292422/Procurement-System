@@ -1,5 +1,11 @@
 import { Timestamp } from 'firebase/firestore';
 
+export type UserType = {
+	username:	 string,
+	userType:	 string, // site_manager | manager | procurement | supplier 
+	userEmail: string
+}
+
 export type ItemType = {
 	itemId: 		 string;
 	itemName:		 string;
@@ -14,9 +20,16 @@ export type OrderType = {
 	itemId: 			string,
 	itemName: 		string,
 	quantity: 		number,
-	status: 			string,
 	orderTotal: 	number,
+	deliverySite: string, // site name
+	status: 			string, // approval_pending | approved | delivery_pending | delivered ...
 	createdAt: 		Timestamp,
 	purchaseDate: Timestamp,
 	supplierId: 	string
+}
+
+export type SiteType = {
+	siteId: 	string,
+	siteName: string,
+	address: 	string
 }
