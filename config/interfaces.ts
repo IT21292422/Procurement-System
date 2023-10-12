@@ -3,3 +3,10 @@ export interface UserState {
   isLoading: boolean;
   userType: string | null;
 }
+
+export interface Policy{
+  policyName: string,
+  itemName: string,
+  policyAmount: number,
+  description: string
+}
