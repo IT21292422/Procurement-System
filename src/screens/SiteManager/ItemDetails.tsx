@@ -29,7 +29,7 @@ export default function ItemDetails() {
 
 			if (docSnap.exists()) {
 				const data = docSnap.data() as ItemType;
-				setItemDetails(data);
+				setItemDetails({...data, itemId: docSnap.id});
 			} else {
 				console.log("No such document!");
 			}
