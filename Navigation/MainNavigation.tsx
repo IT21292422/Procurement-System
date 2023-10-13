@@ -5,6 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import DeliveryDetails from '../src/screens/SiteManager/DeliveryDetails';
 import Draft from '../src/screens/SiteManager/Draft';
 import ItemDetails from '../src/screens/SiteManager/ItemDetails';
@@ -26,6 +27,7 @@ import UnknownUserScreen from '../src/screens/UnknownUserScreen';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 export default function MainNavigation() {
   
@@ -106,10 +108,10 @@ function SupplierRoute(){
 function TheManagerRoute(){
     return(
       <Tab.Navigator initialRouteName='ViewOrders'>
-        <Tab.Screen name='ViewOrders' component={ViewOrders}/>
-        <Tab.Screen name='OrderDetails' component={OrderDetails}/>
-        <Tab.Screen name='CreatePolicy' component={CreatePolicy}/>
-        <Tab.Screen name='PendingOrders' component={PendingOrders}/>
+        <Tab.Screen name='View Orders' component={ViewOrders}/>
+        <Tab.Screen name='Order Details' component={OrderDetails}/>
+        <Tab.Screen name='Create Policy' component={CreatePolicy}/>
+        <Tab.Screen name='Pending Orders' component={PendingOrders}/>
       </Tab.Navigator>
     )
 }

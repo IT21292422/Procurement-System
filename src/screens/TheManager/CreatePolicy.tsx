@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Button, Card, Text, TextInput, HelperText } from 'react-native-paper'
 
 import { Policy } from '../../../config/interfaces'
-import { addPolicy } from './ManagerController'
+import { addPolicy } from './PolicyController'
 
 export default function CreatePolicy() {
   const [policyName,setPolicyName] = useState("")
