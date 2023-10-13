@@ -1,4 +1,4 @@
-import { fireStore } from "../../../../config/firebase";
+import { fireStore } from "../../config/firebase";
 import { collection, getDocs, query,where } from "firebase/firestore";
 
 const getAllItems= async (orderId: any) => {

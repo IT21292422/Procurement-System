@@ -6,7 +6,8 @@ import { ActivityIndicator, MD2Colors,Button } from 'react-native-paper';
 import { View, Platform, StyleSheet, ScrollView,RefreshControl  } from 'react-native'
 import { Card, Text } from 'react-native-paper'
 import { Modal, Portal, TextInput} from 'react-native-paper';
-import createOrder from './hooks/createOrder';import getAllOrders from './hooks/getAllOrders';
+import createOrder from '../../hooks/createOrder';
+import getAllOrders from '../../hooks/getAllOrders';
 import {testCreateOrder} from './hooks/test'
 
 

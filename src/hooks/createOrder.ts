@@ -1,10 +1,10 @@
-import { fireStore } from "../../../../config/firebase";
+import { fireStore } from "../../config/firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-const createItem = async (itemData:any) => {
+const createOrder = async (orderData:any) => {
   try {
-    const ordersCollection = collection(fireStore, "item");
-    const newOrderRef = await addDoc(ordersCollection, itemData);
+    const ordersCollection = collection(fireStore, "order");
+    const newOrderRef = await addDoc(ordersCollection, orderData);
     console.log(newOrderRef);
     return newOrderRef.id; // Return the ID of the newly created order document
   } catch (error) {
@@ -14,4 +14,4 @@ const createItem = async (itemData:any) => {
   }
 };
 
-export default createItem;
+export default createOrder;

@@ -6,8 +6,8 @@ import { UserState } from '../../../config/interfaces';
 import { ActivityIndicator, MD2Colors,Button } from 'react-native-paper';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { Modal, Portal, TextInput,Card,Text} from 'react-native-paper';
-import createItem from './hooks/createItem';
-import getAllItems from './hooks/getAllItems';
+import createItem from '../../hooks/createItem';
+import getAllItems from '../../hooks/getAllItems';
 import { testCreateItem } from './hooks/test';
 
 
