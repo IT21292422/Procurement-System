@@ -5,8 +5,8 @@ export interface UserState {
 }
 
 export interface Policy{
+  id?: string,
   policyName: string,
-  itemName: string,
   policyAmount: number,
   description: string
 }

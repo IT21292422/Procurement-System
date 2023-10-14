@@ -13,6 +13,7 @@ import ItemsList from '../src/screens/SiteManager/ItemsList';
 import OrderRef from '../src/screens/Supplier/OrderRef';
 import SupplierProfile from '../src/screens/Supplier/SupplierProfile';
 import CreatePolicy from '../src/screens/TheManager/CreatePolicy';
+import ViewPolicies from '../src/screens/TheManager/ViewPolicies';
 import OrderDetails from '../src/screens/TheManager/OrderDetails';
 import ProcunentOrderDetails from '../src/screens/ProcurementStaff/OrderDetails';
 import PendingOrders from '../src/screens/TheManager/PendingOrders';
@@ -109,8 +110,8 @@ function TheManagerRoute(){
     return(
       <Tab.Navigator initialRouteName='ViewOrders'>
         <Tab.Screen name='View Orders' component={ViewOrders}/>
-        <Tab.Screen name='Order Details' component={OrderDetails}/>
         <Tab.Screen name='Create Policy' component={CreatePolicy}/>
+        <Tab.Screen name='View Policy' component={ViewPolicies}/>
         <Tab.Screen name='Pending Orders' component={PendingOrders}/>
       </Tab.Navigator>
     )

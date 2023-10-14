@@ -7,7 +7,7 @@ import { addPolicy } from './PolicyController'
 
 export default function CreatePolicy() {
   const [policyName,setPolicyName] = useState("")
-  const [itemName,setItemName] = useState("")
+  //const [itemName,setItemName] = useState("")
   const [amount,setAmount] = useState("")
   const [description,setDescription] = useState("")
   const [showInputErrror, setShowInputError] = useState(false)
@@ -17,21 +17,21 @@ export default function CreatePolicy() {
 
   const policy: Policy = {
     policyName,
-    itemName,
+    //itemName,
     policyAmount: +amount,
     description
   }
   let numbers = /^[0-9]+$/;
 
   const createPolicy = () => {
-    if(policyName==="" && itemName==="" && amount==="" && description===""){
+    if(policyName==="" && amount==="" && description===""){
       setShowInputError(true)
     }else if(!amount.match(numbers)){
       setShowNumberError(true)
     }else{
       addPolicy(policy)
       setPolicyName("")
-      setItemName("")
+      //setItemName("")
       setAmount("")
       setDescription("")
     }
@@ -49,13 +49,13 @@ export default function CreatePolicy() {
       value={policyName}
       onChangeText={name => setPolicyName(name)}
       />
-      <TextInput
+      {/* <TextInput
       mode='outlined'
       label="Item Name"
       style={styles.input}
       value={itemName}
       onChangeText={item => setItemName(item)}
-      />
+      /> */}
       <TextInput
       mode='outlined'
       label="Amount"

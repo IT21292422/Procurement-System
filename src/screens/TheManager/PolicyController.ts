@@ -11,8 +11,6 @@ async function addPolicy(data:Policy){
         const updateTimestamp = await updateDoc(docRef, {
             id:docRef.id,
             timestamp: serverTimestamp(),
-            updatedDate: new Date().toDateString(),
-            updatedTime: new Date().toLocaleTimeString(),
         });
 
         console.log("Policy Added Successfully with ID: ", docRef.id)
@@ -54,7 +52,7 @@ async function getPolicyById(id:any){
 async function updatePolicy(id:any, data:Policy){
     try{
         const docRef = doc(fireStore,"policy",id)
-        setDoc(docRef,{policyName: data.policyName, itemName: data.itemName, amount: data.policyAmount, description: data.description}, {merge: true})
+        setDoc(docRef,{policyName: data.policyName, amount: data.policyAmount, description: data.description}, {merge: true})
     
         const updateTimestamp = await updateDoc(docRef,{
             timestamp: serverTimestamp(),

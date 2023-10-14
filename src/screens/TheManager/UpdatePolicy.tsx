@@ -1,13 +1,13 @@
 import { View, Platform, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Card, Text, TextInput, HelperText } from 'react-native-paper'
 
 import { Policy } from '../../../config/interfaces'
-import { addPolicy } from './PolicyController'
+import { getPolicyById, updatePolicy } from './PolicyController'
 
 export default function UpdatePolicy() {
     const [policyName,setPolicyName] = useState("")
-    const [itemName,setItemName] = useState("")
+    //const [itemName,setItemName] = useState("")
     const [amount,setAmount] = useState("")
     const [description,setDescription] = useState("")
     const [showInputErrror, setShowInputError] = useState(false)
@@ -15,21 +15,39 @@ export default function UpdatePolicy() {
 
     const policy: Policy = {
         policyName,
-        itemName,
+        //itemName,
         policyAmount: +amount,
         description
       }
       let numbers = /^[0-9]+$/;
     
-      const updatePolicy = () => {
-        if(policyName==="" && itemName==="" && amount==="" && description===""){
+    const id = "1234"
+
+    const getPolicy = async () => {
+      try{
+        const newData: any = await getPolicyById(id)
+        setPolicyName(newData.policyName)
+        //setItemName(newData.itemName)
+        setAmount(newData.policyAmount)
+        setDescription(newData.description)
+      }catch(error){
+        console.log("Error retrieving policy: ",error)
+      }
+    }
+
+    useEffect(()=>{
+      getPolicy()
+    },[id])
+
+      const updtPolicy = () => {
+        if(policyName==="" && amount==="" && description===""){
           setShowInputError(true)
         }else if(!amount.match(numbers)){
           setShowNumberError(true)
         }else{
-          addPolicy(policy)
+          updatePolicy(id,policy)
           setPolicyName("")
-          setItemName("")
+          //setItemName("")
           setAmount("")
           setDescription("")
         }
@@ -47,13 +65,13 @@ export default function UpdatePolicy() {
           value={policyName}
           onChangeText={name => setPolicyName(name)}
           />
-          <TextInput
+          {/* <TextInput
           mode='outlined'
           label="Item Name"
           style={styles.input}
           value={itemName}
           onChangeText={item => setItemName(item)}
-          />
+          /> */}
           <TextInput
           mode='outlined'
           label="Amount"
@@ -77,7 +95,7 @@ export default function UpdatePolicy() {
         <HelperText type="error" style={{marginLeft:5}} visible={showInputErrror}>
           Input Elements Cannot Be Empty
         </HelperText>
-          <Button mode='contained' onPress={updatePolicy}>Update</Button>
+          <Button mode='contained' onPress={updtPolicy}>Update</Button>
         </Card.Actions>
       </Card>
       </View>
