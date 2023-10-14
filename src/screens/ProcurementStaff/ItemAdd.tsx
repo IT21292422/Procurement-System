@@ -1,43 +1,32 @@
 import React,{useEffect,useState} from 'react'
-import { setUserType,logOut,logUser,setLoading } from '../../../features/user/userSlice';
-import { useSelector,useDispatch } from 'react-redux';
 import { View, Platform, StyleSheet, ScrollView, RefreshControl } from 'react-native'
-import { UserState } from '../../../config/interfaces';
+import { Items } from '../../../config/interfaces';
 import { ActivityIndicator, MD2Colors,Button } from 'react-native-paper';
-import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { NavigationProp } from '@react-navigation/native';
 import { Modal, Portal, TextInput,Card,Text} from 'react-native-paper';
 import createItem from '../../hooks/createItem';
 import getAllItems from '../../hooks/getAllItems';
 import { testCreateItem } from '../../hooks/test';
-
-
-type RootStackParamList = {
-  ItemAdd: { orderId: any }; // Assuming itemId is a string
-};
-
-type ItemAddRouteProp = RouteProp<RootStackParamList, 'ItemAdd'>;
+import { ItemAddRouteProp, RootStackParamList } from '../../../config/types';
 
 const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<RootStackParamList> }> = ({ route,navigation }) => {
   const {orderId} = route.params;
   
   const [visible, setVisible] = useState(false);
-  const [getItem, setGetItem] = useState<{  
-    orderId: string;
-    itemId: string;
-    itemName: string;
-    description: string;
-    unit: string;
-    unitPrice: number;
-    policy: string;
-  }[]>([]);
+  const [getItem, setGetItem] = useState<Items[]>([]);
   const [setLoading, setSetLoading] = useState(true);
-  const [itemData, setItemData] = useState(null);
+  const [itemData, setItemData] = useState<Items>({
+    itemName:'',
+    unitPrice:0,
+    quantity:0,
+  });
   const [isRefreshing, setIsRefreshing] = useState(false);
   
   useEffect(() => {
     const fetchData = async () => {
     setSetLoading(true);
-    const allItems = await getAllItems(orderId);
+    console.log('order id in itemAdd',orderId);
+    const allItems:Items[] = await getAllItems(orderId);
     setGetItem(allItems)
     setSetLoading(false);
     };
@@ -45,19 +34,19 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
     fetchData();
   }, []);
   
-  const showModal = () => setVisible(true);
+  const showModal = () => {
+    setItemData({
+      itemName:'',
+      unitPrice:0,
+      quantity:0
+    })
+    setVisible(true)
+  };
   const hideModal = () => setVisible(false);
-  
-  const dispatch = useDispatch()
-  let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
   
   const submitData = async() =>{
     setSetLoading(true)
-    let id = await createItem(getItem)
-    // setItemData({ })
-    if(await id){
-      hideModal()
-    }
+    await createItem(orderId,itemData)
     setSetLoading(false)
     } 
     
@@ -72,11 +61,43 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
   const handleRefresh = async () => {
   setSetLoading(true);
   setIsRefreshing(true);
-  const allItems = await getAllItems(orderId);
+  const allItems:Items[] = await getAllItems(orderId);
   setGetItem(allItems)
   setIsRefreshing(false);
   setSetLoading(false);
 };
+
+const itemAddModal:any = () =>{
+  return(
+      <Portal>
+        <Modal visible={visible} contentContainerStyle={styles.containerStyle}>
+            <TextInput
+              label="Item name"
+              value={''}
+              onChangeText={item => setItemData({...itemData,itemName:item})}
+              />
+            <TextInput
+              label="Unit price"
+              value={itemData.unitPrice.toString()}
+              onChangeText={item => setItemData({...itemData,unitPrice: parseInt(item, 10)})}
+              />
+            <TextInput
+              label="Quantity"
+              value={itemData.quantity.toString()}
+              onChangeText={item => setItemData({...itemData,quantity: parseInt(item, 10)})}
+              />
+          <Card.Actions>
+          <Button onPress={() => {
+            submitData()
+          }}>Add Item</Button>
+          <Button onPress={() => {
+            hideModal()
+          }}>Cancel</Button>
+          </Card.Actions>
+        </Modal>
+      </Portal>
+  )
+}
     
   if(setLoading){
     return(
@@ -90,21 +111,7 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
         }>
-      <Portal>
-        <Modal visible={visible} contentContainerStyle={styles.containerStyle}>
-            <TextInput
-              label="Item name"
-              value={'hello'}
-              onChangeText={item => setItemData(item)}
-              />
-          <Button onPress={() => {
-            submitData()
-          }}>Add order</Button>
-          <Button onPress={() => {
-            hideModal()
-          }}>Cancel</Button>
-        </Modal>
-      </Portal>
+          {itemAddModal()}
       <View>
         <Text>OrderView for {orderId}</Text>
         <Card.Actions>
@@ -114,53 +121,52 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
         <Button onPress={() => {
           showModal()
         }}>New Item</Button>
-        <Button
+        {/* <Button
           onPress={() => {
             addTestItem()
           }}
-          >addTestItem</Button>
+          >addTestItem</Button> */}
         </Card.Actions>
       </View>
-            <View style={styles.container}>
-      {getItem ? (
+        <View style={styles.container}>
+      {getItem.length > 0 ? (
         getItem.map((item, index) => (
           <Card key={index} mode="elevated" style={styles.card}>
             <Card.Content>
               <Text variant="titleLarge" style={{ fontWeight: 'bold' }}>
-                Item id : {item.itemId}
+                Item id : {item.itemName}
               </Text>
-              <Text variant="bodyMedium">{item.itemName}</Text>
             </Card.Content>
             <Card.Content>
               <Text style={{ fontWeight: 'bold' }}>
-                Description:&nbsp;
-                <Text variant="bodyMedium">{item.description}</Text>
+                Quantity:&nbsp;
+                <Text variant="bodyMedium">{item.quantity}</Text>
               </Text>
               <Text style={{ fontWeight: 'bold' }}>
-                Unit:&nbsp;
-                <Text variant="bodyMedium">{item.unit}</Text>
-              </Text>
-              <Text style={{ fontWeight: 'bold' }}>
-                Unit Price:&nbsp;
+                Unit price:&nbsp;
                 <Text variant="bodyMedium">{item.unitPrice}</Text>
-              </Text>
-              <Text style={{ fontWeight: 'bold' }}>
-                Policy:&nbsp;
-                <Text variant="bodyMedium">{item.policy}</Text>
               </Text>
             </Card.Content>
             <Card.Actions>
-              {/* This goes to single item view in ProcunentOrderDetails */}
+              {/* This goes to single item view in ProcurementOrderDetails */}
               <Button
-                onPress={() => navigation.navigate('OrderDetails', { orderId: item.orderId, itemId:item.itemId })}
-              >View Item</Button>
+                onPress={() =>
+                  navigation.navigate('OrderDetails', {
+                    orderId: orderId,
+                  })
+                }
+              >
+                View Item
+              </Button>
               {/* Your pop-up code should go here */}
             </Card.Actions>
           </Card>
         ))
-        ) : (
-          <Text>Loading</Text>
-          )}
+      ) : (
+        <View style={styles.container}>
+          <Text>No Items</Text>
+        </View>
+      )}
     </View>
     </ScrollView>
     )
@@ -193,5 +199,8 @@ const styles = StyleSheet.create({
   ,
   containerStyle : {
     backgroundColor: 'white', 
-    padding: 20}
+    padding: 20,
+    borderRadius: 16,
+    margin:10
+  }
   })

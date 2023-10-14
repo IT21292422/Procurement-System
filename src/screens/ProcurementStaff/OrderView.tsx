@@ -1,38 +1,40 @@
 import React,{useEffect,useState} from 'react'
-import { setUserType,logOut,logUser,setLoading } from '../../../features/user/userSlice';
 import { useSelector,useDispatch } from 'react-redux';
 import { UserState } from '../../../config/interfaces';
 import { ActivityIndicator, MD2Colors,Button } from 'react-native-paper';
 import { View, Platform, StyleSheet, ScrollView,RefreshControl  } from 'react-native'
 import { Card, Text } from 'react-native-paper'
-import { Modal, Portal, TextInput} from 'react-native-paper';
 import createOrder from '../../hooks/createOrder';
 import getAllOrders from '../../hooks/getAllOrders';
 import {testCreateOrder} from '../../hooks/test'
 import {logout} from '../../hooks/logout'
-import updateOrderStatus from '../../hooks/updateStatus';
+import updateStatus from '../../hooks/updateStatus';
 
 export default function OrderView({navigation}:any) {
   const [getOrder, setGetOrder] = useState<{
-  orderId: string;
-  isDraft: boolean;
-  itemList: {
-    itemName: string;
-    unitPrice: number;
-    quantity: number;
-  }[];
-  orderTotal: number;
-  deliverySite: string;
-  status: string;
-  createdAt: Date;
-  purchaseDate: Date;
-  supplierName: string;
-  estimatedDeliveryDate: Date;
+    orderId: string;
+    isDraft: boolean;
+    itemList: {
+      itemName: string;
+      unitPrice: number;
+      quantity: number;
+    }[];
+    orderTotal: number;
+    deliverySite: string;
+    status: string;
+    createdAt: Date;
+    purchaseDate: Date;
+    supplierName: string;
+    estimatedDeliveryDate: Date;
   }[]>([]);
   const [setLoading, setSetLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [order, setOrder] = useState({text:''});
+  
+  const dispatch = useDispatch()
+  let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchData = async () => {
     setSetLoading(true);
     const allOrders = await getAllOrders();
@@ -52,25 +54,17 @@ const handleRefresh = async () => {
   setSetLoading(false);
 };
 
-const [visible, setVisible] = useState(false);
-const [order, setOrder] = useState({text:''});
-
-const showModal = () => setVisible(true);
-const hideModal = () => setVisible(false);
-
-const dispatch = useDispatch()
-let userType: string | null = useSelector((state: { user: UserState }) => state.user.userType);
-let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
-
-// const renderOrder = 
-
-    // submit the new order for testing
-    const submitData = async() =>{
+const submitData = async() =>{
       let id = createOrder(order)
       setOrder({text:''})
       if(await id){
-        hideModal()
       }
+    }
+
+const updateOrderStatus = async (orderId:string) =>{
+      setSetLoading(true);
+      await updateStatus(orderId, "approved");
+      setSetLoading(false);
     }
     
     if(setLoading){
@@ -85,34 +79,16 @@ let userName: string | null = useSelector((state: { user: UserState }) => state.
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
         }>
-      <Portal>
-        <Modal visible={visible} contentContainerStyle={styles.containerStyle}>
-            <TextInput
-              label="Email"
-              value={order.text}
-              onChangeText={text => setOrder({text})}
-              />
-          <Button onPress={() => {
-            submitData()
-          }}>Add order</Button>
-          <Button onPress={() => {
-            hideModal()
-          }}>Cancel</Button>
-        </Modal>
-      </Portal>
       <View>
-      <Text>OrderView for {userName}</Text>
       <Card.Actions>
+      <Text>{userName}</Text>
         <Button onPress={() => {
-          dispatch(logOut())
-          // logout()
+          // dispatch(logOut())
+          logout()
         }}>Logout</Button>
-        <Button onPress={() => {
-          showModal()
-        }}>New Order</Button>
-        <Button onPress={() => {
+        {/* <Button onPress={() => {
           testCreateOrder()
-        }}>add test Order</Button>
+        }}>add test Order</Button> */}
       </Card.Actions>
       </View>
       <View style={styles.container}>
@@ -146,7 +122,7 @@ let userName: string | null = useSelector((state: { user: UserState }) => state.
               View Items
             </Button>
             {order.status==='pending'?(
-              <Button onPress={() => {updateOrderStatus(order.orderId, "approved");}}>
+              <Button onPress={() => {updateOrderStatus(order.orderId)}} style={{ backgroundColor: 'green' }}>
               Approve
             </Button>):(
             <Button>

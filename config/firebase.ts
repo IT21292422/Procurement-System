@@ -1,9 +1,12 @@
 import { initializeApp,getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from 'firebase/auth';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage, { AsyncStorageStatic } from '@react-native-async-storage/async-storage';
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
+import 'firebase/compat/app'
 import {
   EXPO_PUBLIC_API_KEY,
   EXPO_PUBLIC_AUTH_DOMAIN,
@@ -25,12 +28,16 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const fireStore = getFirestore(app);
+// const fireStore = getFirestore(app);
 const storage = getStorage(app);
 
-initializeAuth(app, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-});
+// initializeAuth(app, {
+//   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+// });
+
+const fireStore = initializeFirestore(app,{
+  experimentalForceLongPolling:true
+})
 
 export { fireStore, storage, app };
 

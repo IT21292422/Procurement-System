@@ -13,3 +13,9 @@ export interface LoginResponse {
   userType: string | null;
   error: string | null;
 }
+
+export interface Items{
+  itemName: string;
+  unitPrice: number;
+  quantity: number;
+}

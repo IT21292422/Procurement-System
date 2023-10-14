@@ -7,7 +7,7 @@ import { ActivityIndicator, MD2Colors,Button,Card,Text } from 'react-native-pape
 
 export default function ProcunentOrderDetails({route,navigation}) {
 
-  const {orderId,itemId} = route.params;
+  const {orderId} = route.params;
 
   const dispatch = useDispatch()
   let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
@@ -28,7 +28,6 @@ export default function ProcunentOrderDetails({route,navigation}) {
       <View style={styles.container}>
         <Card  mode='elevated' style={styles.card}>
           <Card.Content><Text>Order : {orderId}</Text></Card.Content>
-          <Card.Content><Text>Item : {itemId}</Text></Card.Content>
           <Card.Content>
             <Text style={{ fontWeight: 'bold' }}>
               Quantity:&nbsp;
