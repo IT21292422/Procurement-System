@@ -15,7 +15,7 @@ const testCreateOrder = async () => {
   };
 
   try {
-    const ordersCollection = collection(fireStore, "order");
+    const ordersCollection = collection(fireStore, "orders");
     const newOrderRef = await addDoc(ordersCollection, orderData);
     console.log(newOrderRef);
     return newOrderRef.id; // Return the ID of the newly created order document
@@ -38,7 +38,7 @@ const testCreateItem = async (orderId) => {
   };
 
   try {
-    const ordersCollection = collection(fireStore, "item");
+    const ordersCollection = collection(fireStore, "items");
     const newOrderRef = await addDoc(ordersCollection, itemData);
     console.log(newOrderRef);
     return newOrderRef.id; // Return the ID of the newly created order document
@@ -56,7 +56,7 @@ const testcreateUser = async () => {
   };
 
   try {
-    const ordersCollection = collection(fireStore, "user");
+    const ordersCollection = collection(fireStore, "users");
     const newOrderRef = await addDoc(ordersCollection, userData);
     console.log(newOrderRef);
   } catch (error) {

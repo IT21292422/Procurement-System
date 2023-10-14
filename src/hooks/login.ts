@@ -8,7 +8,6 @@ export default async function login(email: string, password: string): Promise<Lo
   const [error, setError] = useState<string | null>(null);
   const [userType, setUserType] = useState<string | null>(null);
 
-  try {
     const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password);
     
     if(userCredential){
@@ -28,13 +27,10 @@ export default async function login(email: string, password: string): Promise<Lo
       setError(null); // Reset error in case it was previously set
     }else{
       setError('something is wrong')
-    }
-      
-    } catch (error: any) {
-      setError(error.message);
-    }
-    
+    }    
     // Return an object containing user type and error states
+    setError(null)
+    setUserType('procurement_staff')
     return { userType, error };
   }
   

@@ -105,19 +105,21 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
           }}>Cancel</Button>
         </Modal>
       </Portal>
-        <View>
+      <View>
         <Text>OrderView for {orderId}</Text>
+        <Card.Actions>
+        <Button
+            onPress={() => navigation.navigate('OrderView')}
+            >Order View</Button>
         <Button onPress={() => {
           showModal()
         }}>New Item</Button>
         <Button
-          onPress={() => navigation.navigate('OrderView')}
-          >Order View</Button>
-        <Button
           onPress={() => {
             addTestItem()
           }}
-          >add test item</Button>
+          >addTestItem</Button>
+        </Card.Actions>
       </View>
             <View style={styles.container}>
       {getItem ? (

@@ -9,7 +9,7 @@ import { Modal, Portal, TextInput} from 'react-native-paper';
 import createOrder from '../../hooks/createOrder';
 import getAllOrders from '../../hooks/getAllOrders';
 import {testCreateOrder} from '../../hooks/test'
-
+import {logout} from '../../hooks/logout'
 
 export default function OrderView({navigation}:any) {
   const [getOrder, setGetOrder] = useState<{ 
@@ -95,9 +95,11 @@ let userName: string | null = useSelector((state: { user: UserState }) => state.
         </Modal>
       </Portal>
       <View>
-        <Text>OrderView for {userName}</Text>
+      <Text>OrderView for {userName}</Text>
+      <Card.Actions>
         <Button onPress={() => {
           dispatch(logOut())
+          // logout()
         }}>Logout</Button>
         <Button onPress={() => {
           showModal()
@@ -105,6 +107,7 @@ let userName: string | null = useSelector((state: { user: UserState }) => state.
         <Button onPress={() => {
           testCreateOrder()
         }}>add test Order</Button>
+      </Card.Actions>
       </View>
       <View style={styles.container}>
         {getOrder ? (
@@ -178,63 +181,4 @@ const styles = StyleSheet.create({
   containerStyle : {
     backgroundColor: 'white', 
     padding: 20}
-  })
-  
-  // const orders = [
-  //   {
-  //     orderId: "ORD-1234",
-  //     isDraft: false,
-  //     quantity: 100,
-  //     orderTotal: 5000,
-  //     deliverySite: "Construction Site A",
-  //     status: "approved",
-  //     createdAt: new Date("2023-10-10"),
-  //     purchaseDate: new Date("2023-10-05"),
-  //     supplierId: "supplier-001",
-  //   },
-  //   {
-  //     orderId: "ORD-5678",
-  //     isDraft: false,
-  //     quantity: 5000,
-  //     orderTotal: 7500,
-  //     deliverySite: "Construction Site B",
-  //     status: "delivery_pending",
-  //     createdAt: new Date("2023-10-08"),
-  //     purchaseDate: new Date("2023-10-03"),
-  //     supplierId: "supplier-002",
-  //   },
-  //   {
-  //     orderId: "ORD-9101",
-  //     isDraft: false,
-  //     quantity: 50,
-  //     orderTotal: 2500,
-  //     deliverySite: "Construction Site C",
-  //     status: "delivered",
-  //     createdAt: new Date("2023-10-12"),
-  //     purchaseDate: new Date("2023-10-06"),
-  //     supplierId: "supplier-003",
-  //   },
-  //   {
-  //     orderId: "ORD-1213",
-  //     isDraft: false,
-  //     quantity: 200,
-  //     orderTotal: 3000,
-  //     deliverySite: "Construction Site D",
-  //     status: "approved",
-  //     createdAt: new Date("2023-10-09"),
-  //     purchaseDate: new Date("2023-10-04"),
-  //     supplierId: "supplier-004",
-  //   },
-  //   {
-  //     orderId: "ORD-1415",
-  //     isDraft: false,
-  //     itemName: "Paint",
-  //     quantity: 10,
-  //     orderTotal: 1000,
-  //     deliverySite: "Construction Site E",
-  //     status: "approval_pending",
-  //     createdAt: new Date("2023-10-11"),
-  //     purchaseDate: new Date("2023-10-07"),
-  //     supplierId: "supplier-005",
-  //   },
-  // ];
+  }) 

@@ -3,7 +3,7 @@ import { auth } from '../../config/firebase';
 import { logOut,setLoading } from '../../features/user/userSlice';
 import { useDispatch } from 'react-redux';
 
-export default function logout() {
+export function logout() {
     const dispatch = useDispatch()
 
     signOut(auth).then(() => {

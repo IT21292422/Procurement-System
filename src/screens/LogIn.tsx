@@ -34,15 +34,17 @@ export default function LogIn() {
 
   const submitLogin= async ()=>{
     dispatch(setLoading(true))
-    // const {user,error} = await login(logins.email,logins.password)
-    const {userType,error} = await login("procurement_staff@email.com",'12345678')
+    const {userType,error} = await login(logins.email,logins.password)
+    // setLogins({...logins,email:'procurement_staff'})
+    // const {userType,error} = await login(logins.email,'12345678')
     if(error===null){
       dispatch(logUser(logins.email))
       dispatch(setLoading(false))
       dispatch(setUserType(userType))
+      dispatch(setLoading(false))
     }
     dispatch(setLoading(false))
-    setLogingError(true)
+    // setLogingError(true)
   }
 
   const handleEmailChange = (text:string) => {
@@ -62,6 +64,7 @@ export default function LogIn() {
       <View style={[t.flexGrow,t.justifyAround,t.selfStart]}>
       <Text>LogIn</Text>
       <Text>User name {userName}</Text>
+      <Text>User name typed {logins.email}</Text>
       <Text>User type {userType}</Text>
       <View>
         <HelperText type="error" visible={logingError}>

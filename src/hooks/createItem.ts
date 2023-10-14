@@ -3,7 +3,7 @@ import { collection, addDoc } from "firebase/firestore";
 
 const createItem = async (itemData:any) => {
   try {
-    const ordersCollection = collection(fireStore, "item");
+    const ordersCollection = collection(fireStore, "items");
     const newOrderRef = await addDoc(ordersCollection, itemData);
     console.log(newOrderRef);
     return newOrderRef.id; // Return the ID of the newly created order document
