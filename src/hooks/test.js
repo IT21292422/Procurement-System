@@ -1,17 +1,22 @@
 import { fireStore } from "../../config/firebase";
 import { collection, addDoc } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const testCreateOrder = async () => {
   const orderData = {
-    orderId: "ORD-1617",
+    orderId: "your_order_id",
     isDraft: false,
-    quantity: 75,
-    orderTotal: 4000,
-    deliverySite: "Construction Site F",
-    status: "delivery_pending",
-    createdAt: new Date("2023-10-18"),
-    purchaseDate: new Date("2023-10-10"),
-    supplierId: "supplier-006",
+    itemList: [
+      { itemName: "Item 1", unitPrice: 10, quantity: 2 },
+      { itemName: "Item 2", unitPrice: 15, quantity: 3 },
+    ],
+    orderTotal: 70,
+    deliverySite: "Delivery Site Name",
+    status: "approval_pending",
+    createdAt: new Date(),
+    purchaseDate: new Date(),
+    supplierName: "Supplier Name",
+    estimatedDeliveryDate: new Date(),
   };
 
   try {
@@ -65,4 +70,29 @@ const testcreateUser = async () => {
   }
 };
 
-export { testCreateOrder, testCreateItem, testcreateUser };
+const testcreateUserOnAuth = () => {
+  const userData = {
+    userEmail: "procurement_staff@email.com",
+    password: "12345678",
+    userType: "procurement_staff",
+  };
+
+  const auth = getAuth();
+  createUserWithEmailAndPassword(auth, userData.userEmail, userData.password)
+    .then((userCredential) => {
+      // Signed up
+      const user = userCredential.user;
+      console.log(user);
+      // ...
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+export {
+  testCreateOrder,
+  testCreateItem,
+  testcreateUser,
+  testcreateUserOnAuth,
+};

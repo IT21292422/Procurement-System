@@ -10,19 +10,25 @@ import createOrder from '../../hooks/createOrder';
 import getAllOrders from '../../hooks/getAllOrders';
 import {testCreateOrder} from '../../hooks/test'
 import {logout} from '../../hooks/logout'
+import updateOrderStatus from '../../hooks/updateStatus';
 
 export default function OrderView({navigation}:any) {
-  const [getOrder, setGetOrder] = useState<{ 
-    orderId: string;
-    isDraft: boolean;
+  const [getOrder, setGetOrder] = useState<{
+  orderId: string;
+  isDraft: boolean;
+  itemList: {
+    itemName: string;
+    unitPrice: number;
     quantity: number;
-    orderTotal: number;
-    deliverySite: string;
-    status: string;
-    createdAt: Date;
-    purchaseDate: Date;
-    supplierId: string;
-   }[]>([]);
+  }[];
+  orderTotal: number;
+  deliverySite: string;
+  status: string;
+  createdAt: Date;
+  purchaseDate: Date;
+  supplierName: string;
+  estimatedDeliveryDate: Date;
+  }[]>([]);
   const [setLoading, setSetLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -113,37 +119,40 @@ let userName: string | null = useSelector((state: { user: UserState }) => state.
         {getOrder ? (
       getOrder.map((order, index) => (
         <Card key={index} mode='elevated' style={styles.card}>
-          <Card.Content>
-            <Text variant="titleLarge" style={{ fontWeight: 'bold' }}>{order.status}</Text>
-            <Text variant="bodyMedium">{order.orderId}</Text>
-          </Card.Content>
-          <Card.Content>
-            <Text style={{ fontWeight: 'bold' }}>
-              Quantity:&nbsp;
-              <Text variant="bodyMedium">{order.quantity}</Text>
-            </Text>
-            <Text style={{ fontWeight: 'bold' }}>
-              Supplier:&nbsp;
-              <Text variant="bodyMedium">{order.supplierId}</Text>
-            </Text>
-            <Text style={{ fontWeight: 'bold' }}>
-              Date To Receive:&nbsp;
-              <Text variant="bodyMedium">{order.deliverySite}</Text>
-            </Text>
-          </Card.Content>
-          <Card.Actions>
-            <Button
-              onPress={() => navigation.navigate('ItemAdd', { orderId: order.orderId })}
-            >
+            <Card.Content>
+                <Text variant="titleLarge" style={{ fontWeight: 'bold' }}>{order.status}</Text>
+                <Text variant="bodyMedium">{order.orderId}</Text>
+              </Card.Content>
+              <Card.Content>
+                <Text style={{ fontWeight: 'bold' }}>
+                  Delivery Site:&nbsp;
+                  <Text variant="bodyMedium">{order.deliverySite}</Text>
+                </Text>
+                <Text style={{ fontWeight: 'bold' }}>
+                  Supplier:&nbsp;
+                  <Text variant="bodyMedium">{order.supplierName}</Text>
+                </Text>
+                <Text style={{ fontWeight: 'bold' }}>
+                  Order Total:&nbsp;
+                  <Text variant="bodyMedium">{order.orderTotal}</Text>
+                </Text>
+                <Text style={{ fontWeight: 'bold' }}>
+                  Status:&nbsp;
+                  <Text variant="bodyMedium">{order.status}</Text>
+                </Text>
+              </Card.Content>
+            <Card.Actions>
+            <Button onPress={() => navigation.navigate('ItemAdd', { orderId: order.orderId })}>
               View Items
             </Button>
-            <Button 
-              onPress={() => {
-                
-              }}
-            >
-              Confirm Order
-            </Button> 
+            {order.status==='pending'?(
+              <Button onPress={() => {updateOrderStatus(order.orderId, "approved");}}>
+              Approve
+            </Button>):(
+            <Button>
+              Confirmed 
+            </Button>) 
+            }
             {/* Your pop-up code should go here */}
           </Card.Actions>
         </Card>
