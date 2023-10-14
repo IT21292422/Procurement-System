@@ -1,4 +1,4 @@
-import { fireStore } from "../../../../config/firebase";
+import { fireStore } from "../../config/firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 const testCreateOrder = async () => {
@@ -49,4 +49,20 @@ const testCreateItem = async (orderId) => {
   }
 };
 
-export { testCreateOrder, testCreateItem };
+const testcreateUser = async () => {
+  const userData = {
+    userEmail: "procurement_staff@email.com",
+    userType: "procurement_staff",
+  };
+
+  try {
+    const ordersCollection = collection(fireStore, "user");
+    const newOrderRef = await addDoc(ordersCollection, userData);
+    console.log(newOrderRef);
+  } catch (error) {
+    console.error("Error creating order:", error);
+    throw error; // You can choose to throw the error for further handling or handle it here
+  }
+};
+
+export { testCreateOrder, testCreateItem, testcreateUser };

@@ -1,14 +1,14 @@
 import React,{useEffect,useState} from 'react'
 import { setUserType,logOut,logUser,setLoading } from '../../../features/user/userSlice';
 import { useSelector,useDispatch } from 'react-redux';
-import { View, Platform, StyleSheet, ScrollView } from 'react-native'
+import { View, Platform, StyleSheet, ScrollView, RefreshControl } from 'react-native'
 import { UserState } from '../../../config/interfaces';
 import { ActivityIndicator, MD2Colors,Button } from 'react-native-paper';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { Modal, Portal, TextInput,Card,Text} from 'react-native-paper';
 import createItem from '../../hooks/createItem';
 import getAllItems from '../../hooks/getAllItems';
-import { testCreateItem } from './hooks/test';
+import { testCreateItem } from '../../hooks/test';
 
 
 type RootStackParamList = {
@@ -32,6 +32,7 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
   }[]>([]);
   const [setLoading, setSetLoading] = useState(true);
   const [itemData, setItemData] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +68,15 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
         setSetLoading(false)
     }
   }
+
+  const handleRefresh = async () => {
+  setSetLoading(true);
+  setIsRefreshing(true);
+  const allItems = await getAllItems(orderId);
+  setGetItem(allItems)
+  setIsRefreshing(false);
+  setSetLoading(false);
+};
     
   if(setLoading){
     return(
@@ -76,7 +86,10 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
       )
     }else{
       return (
-        <ScrollView style={styles.scrollview}>
+        <ScrollView style={styles.scrollview} 
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }>
       <Portal>
         <Modal visible={visible} contentContainerStyle={styles.containerStyle}>
             <TextInput
@@ -180,51 +193,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', 
     padding: 20}
   })
-
-  // const getItem = [
-  //   {
-  //     orderId: "order-001",
-  //     itemId: "item-001",
-  //     itemName: "Cement",
-  //     description: "High-quality cement for construction",
-  //     unit: "per bag",
-  //     unitPrice: 10.99,
-  //     policy: "Standard delivery policy",
-  //   },
-  //   {
-  //     orderId: "order-002",
-  //     itemId: "item-002",
-  //     itemName: "Bricks",
-  //     description: "Red bricks for building",
-  //     unit: "per 1000 bricks",
-  //     unitPrice: 299.99,
-  //     policy: "Fast delivery policy",
-  //   },
-  //   {
-  //     orderId: "order-001",
-  //     itemId: "item-003",
-  //     itemName: "Paint",
-  //     description: "Interior and exterior paint",
-  //     unit: "per gallon",
-  //     unitPrice: 25.49,
-  //     policy: "Eco-friendly policy",
-  //   },
-  //   {
-  //     orderId: "order-003",
-  //     itemId: "item-004",
-  //     itemName: "Wood Planks",
-  //     description: "Hardwood planks for flooring",
-  //     unit: "per board foot",
-  //     unitPrice: 2.99,
-  //     policy: "Sustainable sourcing policy",
-  //   },
-  //   {
-  //     orderId: "order-002",
-  //     itemId: "item-005",
-  //     itemName: "Roofing Shingles",
-  //     description: "Asphalt roofing shingles",
-  //     unit: "per bundle",
-  //     unitPrice: 19.99,
-  //     policy: "Weather-resistant policy",
-  //   },
-  // ];

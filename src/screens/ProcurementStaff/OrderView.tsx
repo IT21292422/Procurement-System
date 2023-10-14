@@ -8,7 +8,7 @@ import { Card, Text } from 'react-native-paper'
 import { Modal, Portal, TextInput} from 'react-native-paper';
 import createOrder from '../../hooks/createOrder';
 import getAllOrders from '../../hooks/getAllOrders';
-import {testCreateOrder} from './hooks/test'
+import {testCreateOrder} from '../../hooks/test'
 
 
 export default function OrderView({navigation}:any) {
@@ -97,7 +97,6 @@ let userName: string | null = useSelector((state: { user: UserState }) => state.
       <View>
         <Text>OrderView for {userName}</Text>
         <Button onPress={() => {
-          dispatch(setUserType(null))
           dispatch(logOut())
         }}>Logout</Button>
         <Button onPress={() => {

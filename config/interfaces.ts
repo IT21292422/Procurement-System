@@ -3,3 +3,13 @@ export interface UserState {
   isLoading: boolean;
   userType: string | null;
 }
+
+export interface Logings{
+  email:string,
+  password:string
+}
+
+export interface LoginResponse {
+  userType: string | null;
+  error: string | null;
+}
