@@ -41,9 +41,9 @@ let userType: string | null = useSelector((state: { user: UserState }) => state.
 let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
 
   // this the are you can crate mock user
-  // userName = 'hello'
-  // userType = 'procurement_staff'
-  // isLoading = false
+  userName = 'hello'
+  userType = 'supplier'
+  isLoading = false
 
   if(!userType && !userName){
     return <LogIn/>
@@ -98,7 +98,7 @@ function SupplierRoute(){
     return(
       <Tab.Navigator initialRouteName='SupplierProfile'>
         <Tab.Screen name='SupplierProfile' component={SupplierProfile}/>
-        <Tab.Screen name='OrderRef' component={OrderRef}/>
+        <Tab.Screen name='Order' component={OrderRef}/>
       </Tab.Navigator>
     )
 }
