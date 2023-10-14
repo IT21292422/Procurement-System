@@ -23,7 +23,8 @@ export type OrderType = {
 	status:       string, // approval_pending | approved | delivery_pending | delivered ...
 	createdAt:    Timestamp,
 	purchaseDate: Timestamp,
-	supplierName: string
+	supplierName: string,
+	estimatedDeliveryDate: Timestamp;
 }
 
 export type SiteType = {
