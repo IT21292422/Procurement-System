@@ -1,6 +1,5 @@
-import { View, Text,Button } from 'react-native'
+import { View, Text,Button,StyleSheet } from 'react-native'
 import React,{useEffect,useState} from 'react'
-import { t } from 'react-native-tailwindcss';
 import NetInfo from '@react-native-community/netinfo';
 import { Logings, UserState } from '../../config/interfaces';
 import { useSelector,useDispatch } from 'react-redux';
@@ -42,9 +41,10 @@ export default function LogIn() {
       dispatch(setLoading(false))
       dispatch(setUserType(userType))
       dispatch(setLoading(false))
+    }else{
+      dispatch(setLoading(false))
+      setLogingError(true)
     }
-    dispatch(setLoading(false))
-    // setLogingError(true)
   }
 
   const handleEmailChange = (text:string) => {
@@ -61,7 +61,8 @@ export default function LogIn() {
       )
   }else{
     return (
-      <View style={[t.flexGrow,t.justifyAround,t.selfStart]}>
+      // <View style={[t.flexGrow,t.justifyAround,t.selfStart]}>
+      <View style={styles.container}>
       <Text>LogIn</Text>
       <Text>User name {userName}</Text>
       <Text>User name typed {logins.email}</Text>
@@ -70,10 +71,28 @@ export default function LogIn() {
         <HelperText type="error" visible={logingError}>
           Invalid email or password !!!
         </HelperText>
-        <TextInput label="Email" value={logins.email} onChangeText={handleEmailChange}/>
-        <TextInput label="Password"  value={logins.password} onChangeText={handlePasswordChange} secureTextEntry={true}/>
+        <View style={{ margin: 10 }}>
+          <TextInput 
+          label="Email" 
+          value={logins.email} 
+          onChangeText={handleEmailChange}
+          style={styles.textArea}
+          />
+        </View>
+        <View style={{ margin: 10 }}>
+          <TextInput 
+          label="Password"  
+          value={logins.password} 
+          onChangeText={handlePasswordChange} 
+          secureTextEntry={true}
+          style={styles.textArea}
+          />
+        </View>
       </View>
-      <Button title='Login here' onPress={()=>submitLogin()}/>
+      <Button 
+        title='Login here' 
+        color={'rgb(127, 0, 255)'} 
+        onPress={()=>submitLogin()}/>
       
       <Button title='test create procurement' onPress={() => testcreateUser ()}/>
       
@@ -88,3 +107,20 @@ export default function LogIn() {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  textArea:{ 
+    borderRadius: 10, 
+    borderWidth: 1, 
+    borderColor: 'gray' 
+  },
+  button:{
+    borderRadius:30,
+  }
+}) 

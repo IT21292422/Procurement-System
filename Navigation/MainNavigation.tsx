@@ -118,9 +118,9 @@ function TheManagerRoute(){
 function ProcurementStaff(){
     return(
       <Stack.Navigator initialRouteName='OrderView'>
-        <Stack.Screen name='OrderView' component={OrderView}/>
-        <Stack.Screen name='ItemAdd' component={ItemAdd}/>
-        <Stack.Screen name='OrderDetails' component={ProcunentOrderDetails}/>
+        <Stack.Screen name='OrderView' options={{ title: 'Orders' }} component={OrderView}/>
+        <Stack.Screen name='ItemAdd' options={{ title: 'Items' }} component={ItemAdd}/>
+        <Stack.Screen name='OrderDetails' options={{ title: 'Item' }} component={ProcunentOrderDetails}/>
       </Stack.Navigator>
     )
 }  

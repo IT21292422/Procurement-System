@@ -1,51 +1,101 @@
-import { View,StyleSheet } from 'react-native'
+import { View,StyleSheet, RefreshControl, ScrollView } from 'react-native'
 import React,{useState,useEffect} from 'react'
-import { setUserType,logOut,logUser,setLoading } from '../../../features/user/userSlice';
-import { useSelector,useDispatch } from 'react-redux';
-import { UserState } from '../../../config/interfaces';
+import { logOut } from '../../../features/user/userSlice';
+import { useDispatch } from 'react-redux';
+import { IRequestedItems, UserState } from '../../../config/interfaces';
 import { ActivityIndicator, MD2Colors,Button,Card,Text } from 'react-native-paper';
+import getItemRequests from '../../hooks/getItemRequests'
 
-export default function ProcunentOrderDetails({route,navigation}) {
-
-  const {orderId} = route.params;
-
+export default function ProcunentOrderDetails({navigation}) {
   const dispatch = useDispatch()
-  let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
   const [setLoading, setSetLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [itemRequested, setItemRequested] = useState<IRequestedItems[]>([]);
 
   useEffect(() => {
-    setSetLoading(false)
+    const fetchRequests = async () =>{
+      setSetLoading(true)
+      const requestedItems:IRequestedItems[] = await getItemRequests()
+      setItemRequested(requestedItems)
+      setSetLoading(false)
+    }
+    fetchRequests()
   }, []);
 
-    if(setLoading){
+  const handleRefresh = async () => {
+  setSetLoading(true);
+  setIsRefreshing(true);
+  const requestedItems:IRequestedItems[] = await getItemRequests()
+  setItemRequested(requestedItems)
+  setIsRefreshing(false);
+  setSetLoading(false);
+  };
+
+  const topBar = () =>{
+    return(
+      <View>
+      <Card.Actions>
+        <Button onPress={() => {
+          dispatch(logOut())
+          // logout()
+        }}>Logout</Button>
+        <Button
+          onPress={() =>
+            navigation.navigate('OrderView')}>
+          Order View
+        </Button>
+      </Card.Actions>
+      </View>
+    )
+  }
+
+  const requestedItemView = () =>{
+    return(
+      <View style={styles.container}>
+      {itemRequested.length? (
+        itemRequested.map((item, index) => (
+        <Card key={index} mode='elevated' style={styles.card}>
+            <Card.Content>
+              <Text variant="bodyMedium">{item.itemName}</Text>
+            </Card.Content>
+            <Card.Content>
+                <Text style={{ fontWeight: 'bold' }}>
+                  Item status:&nbsp;
+                  {item.isApproved?(
+                    <Text variant="bodyMedium">Approved</Text>
+                  ):(
+                    <Text variant="bodyMedium">Pending</Text>
+                  )}
+                </Text>
+                <Text>
+                  Description:&nbsp;
+                  <Text variant="bodyMedium">{item.description}</Text>
+                </Text>
+            </Card.Content>
+        </Card>
+      ))
+    ) : (
+      <Text>Loading</Text>
+    )}
+      </View>
+    )
+  }
+
+  if(setLoading){
       return(
         <View style={styles.container}>
           <ActivityIndicator animating={true} color={MD2Colors.red800} />
         </View>
       )
-    }else{
+  }else{
       return (
-      <View style={styles.container}>
-        <Card  mode='elevated' style={styles.card}>
-          <Card.Content><Text>Order : {orderId}</Text></Card.Content>
-          <Card.Content>
-            <Text style={{ fontWeight: 'bold' }}>
-              Quantity:&nbsp;
-            </Text>
-            <Text style={{ fontWeight: 'bold' }}>
-              Supplier:&nbsp;
-            </Text>
-            <Text style={{ fontWeight: 'bold' }}>
-              Date To Receive:&nbsp;
-            </Text>
-          </Card.Content>
-          <Card.Actions>
-            <Button
-          onPress={() => navigation.navigate('ItemAdd',{orderId})}
-            >Back to items</Button>
-          </Card.Actions>
-        </Card>
-      </View>
+      <ScrollView style={styles.scrollview}         
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }>
+          {topBar()}
+          {requestedItemView()}
+      </ScrollView>
     )
   }
 }
@@ -68,5 +118,8 @@ const styles = StyleSheet.create({
   },
   containerStyle : {
     backgroundColor: 'white', 
-    padding: 20}
+    padding: 20},
+  scrollview: {
+    minHeight: '100%'
+    }
 })

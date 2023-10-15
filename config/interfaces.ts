@@ -19,3 +19,9 @@ export interface Items{
   unitPrice: number;
   quantity: number;
 }
+
+export interface IRequestedItems{
+  description:string;
+  isApproved:boolean;
+  itemName:string;
+}

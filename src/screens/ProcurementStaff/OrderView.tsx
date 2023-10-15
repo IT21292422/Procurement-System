@@ -9,6 +9,7 @@ import getAllOrders from '../../hooks/getAllOrders';
 import {testCreateOrder} from '../../hooks/test'
 import {logout} from '../../hooks/logout'
 import updateStatus from '../../hooks/updateStatus';
+import { logOut } from '../../../features/user/userSlice';
 
 export default function OrderView({navigation}:any) {
   const [getOrder, setGetOrder] = useState<{
@@ -66,31 +67,31 @@ const updateOrderStatus = async (orderId:string) =>{
       await updateStatus(orderId, "approved");
       setSetLoading(false);
     }
-    
-    if(setLoading){
-      return(
-        <View style={styles.container}>
-          <ActivityIndicator animating={true} color={MD2Colors.red800} />
-        </View>
-      )
-    }else{
-      return (
-        <ScrollView style={styles.scrollview}         
-        refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-        }>
+
+const topBar = () =>{
+  return(
       <View>
       <Card.Actions>
       <Text>{userName}</Text>
         <Button onPress={() => {
-          // dispatch(logOut())
-          logout()
+          dispatch(logOut())
+          // logout()
         }}>Logout</Button>
         {/* <Button onPress={() => {
           testCreateOrder()
         }}>add test Order</Button> */}
+        <Button
+          onPress={() =>
+            navigation.navigate('OrderDetails')}>
+          View Requested Items
+        </Button>
       </Card.Actions>
       </View>
+  )
+}
+
+const orderView = () =>{
+  return(
       <View style={styles.container}>
         {getOrder ? (
       getOrder.map((order, index) => (
@@ -129,7 +130,6 @@ const updateOrderStatus = async (orderId:string) =>{
               Confirmed 
             </Button>) 
             }
-            {/* Your pop-up code should go here */}
           </Card.Actions>
         </Card>
       ))
@@ -137,6 +137,23 @@ const updateOrderStatus = async (orderId:string) =>{
       <Text>Loading</Text>
     )}
       </View>
+  )
+}
+    
+  if(setLoading){
+      return(
+        <View style={styles.container}>
+          <ActivityIndicator animating={true} color={MD2Colors.red800} />
+        </View>
+      )
+  }else{
+      return (
+        <ScrollView style={styles.scrollview}         
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }>
+          {topBar()}
+          {orderView()}
     </ScrollView>
     )
   }

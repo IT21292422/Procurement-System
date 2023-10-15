@@ -48,9 +48,10 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
     setSetLoading(true)
     await createItem(orderId,itemData)
     setSetLoading(false)
+    hideModal()
     } 
     
-    const addTestItem = async() =>{
+  const addTestItem = async() =>{
       setSetLoading(true)
       let id = await testCreateItem(orderId)
       if(await id){
@@ -73,7 +74,7 @@ const itemAddModal:any = () =>{
         <Modal visible={visible} contentContainerStyle={styles.containerStyle}>
             <TextInput
               label="Item name"
-              value={''}
+              value={itemData.itemName}
               onChangeText={item => setItemData({...itemData,itemName:item})}
               />
             <TextInput
@@ -98,26 +99,15 @@ const itemAddModal:any = () =>{
       </Portal>
   )
 }
-    
-  if(setLoading){
-    return(
-      <View style={styles.container}>
-          <ActivityIndicator animating={true} color={MD2Colors.red800} />
-        </View>
-      )
-    }else{
-      return (
-        <ScrollView style={styles.scrollview} 
-        refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-        }>
-          {itemAddModal()}
+
+const topBar = () =>{
+  return(
       <View>
-        <Text>OrderView for {orderId}</Text>
         <Card.Actions>
+        <Text>Items for order : {orderId}</Text>
         <Button
             onPress={() => navigation.navigate('OrderView')}
-            >Order View</Button>
+            >To Order View</Button>
         <Button onPress={() => {
           showModal()
         }}>New Item</Button>
@@ -128,7 +118,12 @@ const itemAddModal:any = () =>{
           >addTestItem</Button> */}
         </Card.Actions>
       </View>
-        <View style={styles.container}>
+  )
+}
+
+const itemListView = () =>{
+  return(
+      <View style={styles.container}>
       {getItem.length > 0 ? (
         getItem.map((item, index) => (
           <Card key={index} mode="elevated" style={styles.card}>
@@ -147,19 +142,6 @@ const itemAddModal:any = () =>{
                 <Text variant="bodyMedium">{item.unitPrice}</Text>
               </Text>
             </Card.Content>
-            <Card.Actions>
-              {/* This goes to single item view in ProcurementOrderDetails */}
-              <Button
-                onPress={() =>
-                  navigation.navigate('OrderDetails', {
-                    orderId: orderId,
-                  })
-                }
-              >
-                View Item
-              </Button>
-              {/* Your pop-up code should go here */}
-            </Card.Actions>
           </Card>
         ))
       ) : (
@@ -168,6 +150,24 @@ const itemAddModal:any = () =>{
         </View>
       )}
     </View>
+  )
+}
+    
+  if(setLoading){
+    return(
+      <View style={styles.container}>
+          <ActivityIndicator animating={true} color={MD2Colors.red800} />
+        </View>
+      )
+    }else{
+      return (
+        <ScrollView style={styles.scrollview} 
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }>
+          {topBar()}
+          {itemAddModal()}
+          {itemListView()}
     </ScrollView>
     )
   }
