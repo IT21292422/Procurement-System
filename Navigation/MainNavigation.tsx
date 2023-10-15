@@ -23,9 +23,12 @@ import LogIn from '../src/screens/LogIn';
 import UnknownUserScreen from '../src/screens/UnknownUserScreen';
 import OrderList from '../src/screens/SiteManager/Order/OrderList';
 import NewItemRequests from '../src/screens/SiteManager/NewItemRequest/newItemRequests';
+import { createStackNavigator } from '@react-navigation/stack';
+import ItemDetails from '../src/screens/SiteManager/Item/ItemDetails';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 export default function MainNavigation() {
   
@@ -93,6 +96,12 @@ function SiteManagerRoute(){
       </Tab.Navigator>
     )
 }  
+// const SiteManager_StackScreens = () => (
+//   <Stack.Navigator initialRouteName="ItemsList">
+//     <Stack.Screen name="ItemsList" component={ItemsList} />
+//     <Stack.Screen name="ItemDetails" component={ItemDetails} />
+//   </Stack.Navigator>
+// );
 
 function SupplierRoute(){
     return(
