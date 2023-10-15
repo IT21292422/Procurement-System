@@ -34,9 +34,9 @@ async function getPolicies(){
     }
 }
 
-async function getPolicyById(id:any){
+async function getPolicyById(docId:any){
     try{
-        const docRef = doc(fireStore,"policy",id);
+        const docRef = doc(fireStore,"policy",docId.id);
         const querySnapshot = await getDoc(docRef);
         if(querySnapshot.exists()){
             return querySnapshot.data()
@@ -44,22 +44,21 @@ async function getPolicyById(id:any){
             console.log("No such policy document")
         }
     }catch(error){
-        console.log("Error Retrieving Policy Document: ",error)
+        console.log("Error getting policy by id",error)
     }
-
 }
 
-async function updatePolicy(id:any, data:Policy){
+async function updatePolicy(docId:any, data:Policy){
     try{
-        const docRef = doc(fireStore,"policy",id)
-        setDoc(docRef,{policyName: data.policyName, amount: data.policyAmount, description: data.description}, {merge: true})
+        console.log(docId.id)
+        console.log(data)
+        const docRef = doc(fireStore,"policy",docId.id)
+        setDoc(docRef,{policyName: data.policyName, policyAmount: data.policyAmount, description: data.description}, {merge: true})
     
         const updateTimestamp = await updateDoc(docRef,{
             timestamp: serverTimestamp(),
-            updatedDate: new Date().toDateString(),
-            updatedTime: new Date().toLocaleTimeString
         })
-        console.log("Policy Updated Successfully with ID: ",id)
+        console.log("Policy Updated Successfully with ID: ",docId.id)
     }catch(error){
         console.log("Error Updating Policy: ",error)
     }
@@ -67,6 +66,7 @@ async function updatePolicy(id:any, data:Policy){
 
 async function deletePolicy(id:any){
     try{
+        console.log(id)
         await deleteDoc(doc(fireStore,"policy", id));
         console.log("Policy deleted successfully with ID: ", id)
     }catch(error){

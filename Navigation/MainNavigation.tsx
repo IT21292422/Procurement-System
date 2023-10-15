@@ -14,7 +14,6 @@ import OrderRef from '../src/screens/Supplier/OrderRef';
 import SupplierProfile from '../src/screens/Supplier/SupplierProfile';
 import CreatePolicy from '../src/screens/TheManager/CreatePolicy';
 import ViewPolicies from '../src/screens/TheManager/ViewPolicies';
-import OrderDetails from '../src/screens/TheManager/OrderDetails';
 import ProcunentOrderDetails from '../src/screens/ProcurementStaff/OrderDetails';
 import PendingOrders from '../src/screens/TheManager/PendingOrders';
 import ViewOrders from '../src/screens/TheManager/ViewOrders';
@@ -25,6 +24,7 @@ import { UserState } from '../config/interfaces';
 import Loading from '../src/screens/Loading';
 import LogIn from '../src/screens/LogIn';
 import UnknownUserScreen from '../src/screens/UnknownUserScreen';
+import EvaluatedOrders from '../src/screens/TheManager/EvaluatedOrders';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -108,12 +108,12 @@ function SupplierRoute(){
 
 function TheManagerRoute(){
     return(
-      <Tab.Navigator initialRouteName='ViewOrders'>
-        <Tab.Screen name='View Orders' component={ViewOrders}/>
-        <Tab.Screen name='Create Policy' component={CreatePolicy}/>
-        <Tab.Screen name='View Policy' component={ViewPolicies}/>
-        <Tab.Screen name='Pending Orders' component={PendingOrders}/>
-      </Tab.Navigator>
+      <Drawer.Navigator initialRouteName='ViewOrders'>
+        <Drawer.Screen name='View Orders' component={ViewOrders}/>
+        <Drawer.Screen name='Pending Orders' component={PendingOrders}/>
+        <Drawer.Screen name='Approved' component={EvaluatedOrders}/>
+        <Drawer.Screen name='View Policy' component={ViewPolicies}/>
+      </Drawer.Navigator>
     )
 }
 

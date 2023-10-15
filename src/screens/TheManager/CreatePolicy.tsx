@@ -70,6 +70,7 @@ export default function CreatePolicy() {
       <TextInput
       mode='outlined'
       label="Description"
+      multiline={true}
       style={styles.input}
       value={description}
       onChangeText={description => setDescription(description)}

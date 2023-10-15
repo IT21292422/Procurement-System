@@ -5,13 +5,15 @@ import { Button, Card, Text, TextInput, HelperText } from 'react-native-paper'
 import { Policy } from '../../../config/interfaces'
 import { getPolicyById, updatePolicy } from './PolicyController'
 
-export default function UpdatePolicy() {
+export default function UpdatePolicy(id:any) {
     const [policyName,setPolicyName] = useState("")
     //const [itemName,setItemName] = useState("")
     const [amount,setAmount] = useState("")
     const [description,setDescription] = useState("")
     const [showInputErrror, setShowInputError] = useState(false)
     const [showNumberErrror, setShowNumberError] = useState(false)
+
+    console.log(id)
 
     const policy: Policy = {
         policyName,
@@ -21,11 +23,12 @@ export default function UpdatePolicy() {
       }
       let numbers = /^[0-9]+$/;
     
-    const id = "1234"
+    //const id = "1234"
 
     const getPolicy = async () => {
       try{
         const newData: any = await getPolicyById(id)
+        console.log(newData)
         setPolicyName(newData.policyName)
         //setItemName(newData.itemName)
         setAmount(newData.policyAmount)
@@ -35,9 +38,9 @@ export default function UpdatePolicy() {
       }
     }
 
-    useEffect(()=>{
-      getPolicy()
-    },[id])
+    useEffect(() => {
+      getPolicy();
+    }, []);
 
       const updtPolicy = () => {
         if(policyName==="" && amount==="" && description===""){
@@ -86,6 +89,7 @@ export default function UpdatePolicy() {
           <TextInput
           mode='outlined'
           label="Description"
+          multiline={true}
           style={styles.input}
           value={description}
           onChangeText={description => setDescription(description)}
