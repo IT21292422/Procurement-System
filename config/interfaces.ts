@@ -24,4 +24,10 @@ export interface IRequestedItems{
   description:string;
   isApproved:boolean;
   itemName:string;
+
+export interface Policy{
+  id?: string,
+  policyName: string,
+  policyAmount: number,
+  description: string
 }
