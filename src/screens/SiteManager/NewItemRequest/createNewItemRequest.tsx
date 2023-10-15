@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function ItemsList() {
+export default function CreateNewItemRequest() {
   return (
     <View>
-      <Text>ItemsList</Text>
+      <Text>NewItemRequests</Text>
     </View>
   )
-} 
+}
