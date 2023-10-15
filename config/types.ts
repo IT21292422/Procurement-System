@@ -49,4 +49,4 @@ export type policy = {
 export type supplier = {
 	supplierId:   string;
 	supplierName: string;
-}
+

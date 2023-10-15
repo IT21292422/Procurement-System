@@ -5,12 +5,20 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+import { createStackNavigator } from '@react-navigation/stack';
+import DeliveryDetails from '../src/screens/SiteManager/DeliveryDetails';
+import Draft from '../src/screens/SiteManager/Draft';
+import ItemDetails from '../src/screens/SiteManager/ItemDetails';
+import ItemsList from '../src/screens/SiteManager/ItemsList';
+
 import Draft from '../src/screens/SiteManager/Draft/Draft';
-import ItemsList from '../src/screens/SiteManager/Item/ItemsList';
+import ItemsList from '../src/screens/SiteManager/Item/ItemsList';           
+
 import OrderRef from '../src/screens/Supplier/OrderRef';
 import SupplierProfile from '../src/screens/Supplier/SupplierProfile';
 import CreatePolicy from '../src/screens/TheManager/CreatePolicy';
-import OrderDetails from '../src/screens/TheManager/OrderDetails';
+import ViewPolicies from '../src/screens/TheManager/ViewPolicies';
 import ProcunentOrderDetails from '../src/screens/ProcurementStaff/OrderDetails';
 import PendingOrders from '../src/screens/TheManager/PendingOrders';
 import ViewOrders from '../src/screens/TheManager/ViewOrders';
@@ -21,11 +29,16 @@ import { UserState } from '../config/interfaces';
 import Loading from '../src/screens/Loading';
 import LogIn from '../src/screens/LogIn';
 import UnknownUserScreen from '../src/screens/UnknownUserScreen';
+
+import EvaluatedOrders from '../src/screens/TheManager/EvaluatedOrders';
+
 import OrderList from '../src/screens/SiteManager/Order/OrderList';
 import NewItemRequests from '../src/screens/SiteManager/NewItemRequest/newItemRequests';
 
+
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 export default function MainNavigation() {
   
@@ -105,12 +118,12 @@ function SupplierRoute(){
 
 function TheManagerRoute(){
     return(
-      <Tab.Navigator initialRouteName='ViewOrders'>
-        <Tab.Screen name='ViewOrders' component={ViewOrders}/>
-        <Tab.Screen name='OrderDetails' component={OrderDetails}/>
-        <Tab.Screen name='CreatePolicy' component={CreatePolicy}/>
-        <Tab.Screen name='PendingOrders' component={PendingOrders}/>
-      </Tab.Navigator>
+      <Drawer.Navigator initialRouteName='ViewOrders'>
+        <Drawer.Screen name='View Orders' component={ViewOrders}/>
+        <Drawer.Screen name='Pending Orders' component={PendingOrders}/>
+        <Drawer.Screen name='Approved' component={EvaluatedOrders}/>
+        <Drawer.Screen name='View Policy' component={ViewPolicies}/>
+      </Drawer.Navigator>
     )
 }
 
