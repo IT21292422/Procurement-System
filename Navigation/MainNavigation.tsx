@@ -23,12 +23,12 @@ import ProcunentOrderDetails from '../src/screens/ProcurementStaff/OrderDetails'
 import PendingOrders from '../src/screens/TheManager/PendingOrders';
 import ViewOrders from '../src/screens/TheManager/ViewOrders';
 import ItemAdd from '../src/screens/ProcurementStaff/ItemAdd';
-import OrderPurchase from '../src/screens/ProcurementStaff/OrderPurchase';
 import OrderView from '../src/screens/ProcurementStaff/OrderView';
 import { UserState } from '../config/interfaces';
 import Loading from '../src/screens/Loading';
 import LogIn from '../src/screens/LogIn';
 import UnknownUserScreen from '../src/screens/UnknownUserScreen';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import EvaluatedOrders from '../src/screens/TheManager/EvaluatedOrders';
 
@@ -129,11 +129,10 @@ function TheManagerRoute(){
 
 function ProcurementStaff(){
     return(
-      <Tab.Navigator initialRouteName='OrderView'>
-        <Tab.Screen name='OrderView' component={OrderView}/>
-        <Tab.Screen name='ItemAdd' component={ItemAdd}/>
-        <Tab.Screen name='OrderDetails' component={ProcunentOrderDetails}/>
-        <Tab.Screen name='OrderPurchase' component={OrderPurchase}/>
-      </Tab.Navigator>
+      <Stack.Navigator initialRouteName='OrderView'>
+        <Stack.Screen name='OrderView' options={{ title: 'Orders' }} component={OrderView}/>
+        <Stack.Screen name='ItemAdd' options={{ title: 'Items' }} component={ItemAdd}/>
+        <Stack.Screen name='OrderDetails' options={{ title: 'Item' }} component={ProcunentOrderDetails}/>
+      </Stack.Navigator>
     )
 }  
