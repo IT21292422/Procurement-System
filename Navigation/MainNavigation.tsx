@@ -5,10 +5,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import DeliveryDetails from '../src/screens/SiteManager/DeliveryDetails';
-import Draft from '../src/screens/SiteManager/Draft';
-import ItemDetails from '../src/screens/SiteManager/ItemDetails';
-import ItemsList from '../src/screens/SiteManager/ItemsList';
+import Draft from '../src/screens/SiteManager/Draft/Draft';
+import ItemsList from '../src/screens/SiteManager/Item/ItemsList';
 import OrderRef from '../src/screens/Supplier/OrderRef';
 import SupplierProfile from '../src/screens/Supplier/SupplierProfile';
 import CreatePolicy from '../src/screens/TheManager/CreatePolicy';
@@ -23,6 +21,8 @@ import { UserState } from '../config/interfaces';
 import Loading from '../src/screens/Loading';
 import LogIn from '../src/screens/LogIn';
 import UnknownUserScreen from '../src/screens/UnknownUserScreen';
+import OrderList from '../src/screens/SiteManager/Order/OrderList';
+import NewItemRequests from '../src/screens/SiteManager/NewItemRequest/newItemRequests';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -85,11 +85,11 @@ let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.
 
 function SiteManagerRoute(){
     return(
-      <Tab.Navigator initialRouteName='ItemList'>
-        <Tab.Screen name='ItemList' component={ItemsList}/>
-        <Tab.Screen name='ItemDetails' component={ItemDetails}/>
-        <Tab.Screen name='DeliveryDetails' component={DeliveryDetails}/>
+      <Tab.Navigator initialRouteName='All Items'>
+        <Tab.Screen name='All Items' component={ItemsList}/>
+        <Tab.Screen name='Orders' component={OrderList}/>
         <Tab.Screen name='Draft' component={Draft}/>
+        <Tab.Screen name='Item Requests' component={NewItemRequests}/>
       </Tab.Navigator>
     )
 }  
