@@ -1,11 +1,12 @@
-import { FlatList, View } from 'react-native'
+import { FlatList, Image, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Surface, Text, SegmentedButtons, Avatar, Card, Button } from 'react-native-paper';
+import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB } from 'react-native-paper';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { doc } from 'firebase/firestore';
 import { fireStore } from '../../../config/firebase';
-import { addItem, getAllItems } from '../../../utils/dbFunctions';
+import { requestNewItemSupplier, getAllItems } from '../../../utils/dbFunctions';
 import { itemInterface } from '../../../config/interfaces';
+import { ItemUpdateForm } from './ItemUpdateForm';
 
 export default function SupplierProfile()
 {
@@ -13,6 +14,7 @@ export default function SupplierProfile()
   const [showItems, setShowItems] = useState(false)
   const [showOrders, setShowOrders] = useState(true)
   const [supplierItems, setSupplierItems] = useState<itemInterface[]>([]);
+  const [showUpdateForm, setShowUpdateForm] = useState(false)
 
 
   // const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
@@ -28,7 +30,7 @@ export default function SupplierProfile()
         const itemsArray: itemInterface[] = [];
         itemsSnapshot.forEach((doc: any) =>
         {
-          itemsArray.push({id: doc.id, ...doc.data()});
+          itemsArray.push({ id: doc.id, ...doc.data() });
         });
 
         setSupplierItems(itemsArray);
@@ -48,6 +50,20 @@ export default function SupplierProfile()
 
   }
 
+  const handleFabPress = () =>
+  {
+    setShowUpdateForm(true);
+    // if (showItems) {
+    //   setShowItems(false);
+    // }else{
+    //   setShowItems(true);
+    // }
+    console.log('FAB Pressed');
+  }
+
+  const handleUpdateCancel = () =>{
+    setShowUpdateForm(false);
+  }
 
   const docRef = doc(fireStore, "items", "SF");
 
@@ -81,9 +97,10 @@ export default function SupplierProfile()
           ]}
         />
       </SafeAreaView>
-        
+      <Divider />
       {showItems && !supplierItems &&
-      <Button loading={true}>Loading</Button>}  
+        <Button loading={true}>Loading Items</Button>}
+        {showItems && showUpdateForm && <ItemUpdateForm cancelUpdate={handleUpdateCancel} />}
       {showItems && supplierItems &&
         <FlatList
           data={supplierItems}
@@ -93,11 +110,11 @@ export default function SupplierProfile()
               {/* <Card.Title title={item.itemName} subtitle="Card Subtitle" /> */}
               <Card.Content>
                 <Text variant="titleLarge">{item.itemName}</Text>
-                <Text variant="bodyMedium">Lorem ipsum dolor sit amet, consectetur 
-                adipiscing elit, sed do eiusmod tempor incididunt ut 
-                labore et dolore magna aliqua. Ut enim ad minim veniam</Text>
+                <Text variant="bodyMedium">Lorem ipsum dolor sit amet, consectetur
+                  adipiscing elit, sed do eiusmod tempor incididunt ut
+                  labore et dolore magna aliqua. Ut enim ad minim veniam</Text>
               </Card.Content>
-              <Card.Cover style={styles.imageHolder} source={{ uri: require("../../../public/bricks.jpg") }} />
+              <Card.Cover style={styles.imageHolder} source={require('../../../public/bricks.jpg')} />
               <Card.Actions>
                 <Button>Delete</Button>
                 <Button>Update</Button>
@@ -105,7 +122,11 @@ export default function SupplierProfile()
             </Card>
           )}
         />}
-
+      {showItems && !showUpdateForm && <FAB
+        icon="plus"
+        style={styles.fab}
+        onPress={handleFabPress}
+      />}
       <Surface elevation={1}>
         <Text>Surface</Text>
       </Surface>
@@ -118,9 +139,15 @@ const styles = StyleSheet.create({
     // flex: 1,
     // alignItems: 'center',
     marginVertical: 5,
-    marginHorizontal:1,
+    marginHorizontal: 1,
   },
   imageHolder: {
-    marginHorizontal:20,
-  }
+    marginHorizontal: 20,
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
 });
