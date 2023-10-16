@@ -33,7 +33,7 @@ export default function LogIn() {
 
   const submitLogin= async ()=>{
     dispatch(setLoading(true))
-    // example user login
+    // example user login objects
     // const userData = {
     //  userEmail: "procurement_staff@email.com",
     //  password: "12345678",

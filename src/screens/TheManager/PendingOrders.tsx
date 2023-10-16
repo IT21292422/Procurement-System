@@ -46,8 +46,11 @@ export default function PendingOrders() {
     receiveData()
   }, [orders])
 
+  //This will filter the order to make sure only the approval_pending orders are rendered
+  const pendingOrders = orders.filter((order) => order.data.status === 'approval_pending');
+
   //Iterator design pattern is used here to traverse through the array
-  const renderOrder = orders.map((order, index) => {
+  const renderOrder = pendingOrders.map((order, index) => {
 
     let btncolor: string = "blue"
      //This sets the style of the Order status based on the status
@@ -60,8 +63,7 @@ export default function PendingOrders() {
     } else if (order.data.status === 'delivered') {
       btncolor = "#17A2B8"
     }
-    //This condition make sure only the approval_pending orders are rendered
-    if (order.data.status === 'approval_pending') {
+    
       const renderItem: any = (order.data.itemList || []).map((item: any) => {
         return (
           <>
@@ -124,7 +126,6 @@ export default function PendingOrders() {
             <Button buttonColor="#DC3545" textColor='white' onPress={() => showDeleteDialog(order.id)}>Decline Order</Button>
           </Card.Actions>
         </Card>)
-    }
   })
 
   //This function is to change the status of an order to approved
@@ -148,11 +149,17 @@ export default function PendingOrders() {
     }
   }
 
+  const noPending = (
+    <View style={{alignItems:'center',marginTop:outerHeight/2-150}}>
+    <Text variant="headlineLarge" style={{color:"#ff0000"}}>No pending orders found</Text>
+    </View>
+  );
+
  return (
     <>
       <ScrollView style={styles.scrollview}>
         <View style={styles.container}>
-          {renderOrder}
+        {pendingOrders.length === 0 ? noPending : renderOrder}
         </View>
       </ScrollView>
       <Portal>
