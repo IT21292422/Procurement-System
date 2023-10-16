@@ -2,11 +2,12 @@ import { View, Platform, StyleSheet, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
 import { OrderType } from '../../../config/types';
-import { getOrders, updateOrders } from './OrderController';
+import { deleteOrder, getOrders, updateOrders } from './OrderController';
 
 export default function ViewOrders() {
   const [orders, setOrders] = useState<any[]>([]);
   const [visible, setVisible] = useState(false);
+  const [visibleDelete, setVisibleDelete] = useState(false);
   const [selectedOrderId, setSlectedOrderId] = useState<string | null>(null);
 
   const showDialog = (id: any) => {
@@ -18,6 +19,14 @@ export default function ViewOrders() {
     setVisible(false);
   };
 
+  const showDeleteDialog = (id: any) => {
+    setSlectedOrderId(id);
+    setVisibleDelete(true);
+  };
+  const hideDeleteDialog = () => {
+    setSlectedOrderId(null);
+    setVisibleDelete(false);
+  };
 
   async function receiveData() {
     const newData: any = await getOrders()
@@ -102,6 +111,7 @@ export default function ViewOrders() {
         </Card.Content>
         <Card.Actions>
           <Button disabled={order.data.status === 'approved'||order.data.status==='delivery_pending'||order.data.status==='delivered'} onPress={() => showDialog(order.id)}>Authorize</Button>
+          <Button buttonColor="#DC3545" disabled={order.data.status === 'approved'||order.data.status==='delivery_pending'||order.data.status==='delivered'} onPress={() => showDeleteDialog(order.id)}>Decline Order</Button>
         </Card.Actions>
       </Card>
     )
@@ -112,6 +122,17 @@ export default function ViewOrders() {
       updateOrders(selectedOrderId)
     }
     hideDialog()
+  }
+
+  const deleteData = async () => {
+    if (selectedOrderId) {
+      try {
+        await deleteOrder(selectedOrderId);
+        hideDialog();
+      } catch (error) {
+        console.log("Error deleting order: ", error)
+      }
+    }
   }
 
   return (
@@ -129,6 +150,18 @@ export default function ViewOrders() {
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={approve}>Confirm</Button>
+            <Button onPress={hideDialog}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+      <Portal>
+        <Dialog visible={visibleDelete} onDismiss={hideDeleteDialog} style={styles.dialog}>
+          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyLarge">Are you sure you want to Delete this policy?</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={deleteData}>Confirm</Button>
             <Button onPress={hideDialog}>Cancel</Button>
           </Dialog.Actions>
         </Dialog>

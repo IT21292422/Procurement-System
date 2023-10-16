@@ -44,4 +44,14 @@ async function updateOrders(docId:string){
     }
 }
 
-export {getOrders, updateOrders, getOrderById}
+async function deleteOrder(id:any){
+    try{
+        console.log(id)
+        await deleteDoc(doc(fireStore,"orders", id));
+        console.log("Order deleted successfully with ID: ", id)
+    }catch(error){
+        console.log("Error deleting Order: ",error)
+    }
+}
+
+export {getOrders, updateOrders, getOrderById, deleteOrder}
