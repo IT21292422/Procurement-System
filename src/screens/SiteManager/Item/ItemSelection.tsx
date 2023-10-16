@@ -11,7 +11,8 @@ export default function ItemSelection() {
 		itemName: "",
 		description: "",
 		unitPrice: 0,
-		policy: ""
+		policy: "",
+		unit: ""
 	});
 	
 	useEffect(() => {
