@@ -21,6 +21,7 @@ export type ItemType = {
 	description: string;
 	unitPrice:   number;
 	policy:      string;
+	unit:        string;
 }
 
 export type OrderType = {

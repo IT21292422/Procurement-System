@@ -6,7 +6,7 @@ import { fireStore } from "../../../../config/firebase";
 type itemListElementType = { itemName: string, unitPrice: number, quantity: number }
 
 
-// check whether any drafts exist
+// check whether any drafts exist (returns true if a draft exist)
 export async function existingDraft() {
 	const querySnapshot = await getDocs(collection(fireStore, 'drafts'));
 	return !querySnapshot.empty;
@@ -55,29 +55,38 @@ export async function getDraftDetails(draftId: string): Promise<OrderType> {
 }
 
 
-// add a new item to itemList
-export async function addItemToItemList(draftId: string, newItem: itemListElementType) {
+// add a new item to draft's itemList
+export async function addItemToDraftItemList(draftId: string, newItem: itemListElementType) {
 	try {
-		const draftRef = doc(fireStore, 'drafts', draftId);
-		const docSnapshot = await getDoc(draftRef);
+    const draftRef = doc(fireStore, 'drafts', draftId);
+    const docSnapshot = await getDoc(draftRef);
 
-		if (docSnapshot.exists()) {
-			const existingData = docSnapshot.data();
-			const existingItemList = existingData.itemList || []; 
-			// Initialize as an empty array if itemList doesn't exist
-			existingItemList.push(newItem);
-			await updateDoc(draftRef, { itemList: existingItemList });
-		} else {
-			console.log('Document does not exist');
-		}
-	} catch(error) {
-		console.log('error adding new item to list', error);
-	}
+    if (docSnapshot.exists()) {
+      const existingData = docSnapshot.data();
+      const existingItemList = existingData.itemList || [];
+      const existingItemIndex = existingItemList.findIndex((item: itemListElementType) => {
+				return item.itemName === newItem.itemName
+			});
+
+			// preventing duplicate entries
+      if (existingItemIndex !== -1) {
+        existingItemList[existingItemIndex].quantity += newItem.quantity;
+      } else {
+        existingItemList.push(newItem);
+      }
+
+      await updateDoc(draftRef, { itemList: existingItemList });
+    } else {
+      console.log('Document does not exist');
+    }
+  } catch (error) {
+    console.log('error adding new item to list', error);
+  }
 }
 
 
-// delete item from itemList
-export async function deleteItemFromItemList(draftId: string, itemName: string) {
+// delete item from draft itemList
+export async function deleteItemFromDraftItemList(draftId: string, itemName: string) {
 	try {
 		const draftRef = doc(fireStore, 'drafts', draftId);
 		const docSnapshot = await getDoc(draftRef);
