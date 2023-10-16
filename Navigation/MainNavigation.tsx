@@ -22,7 +22,6 @@ import UnknownUserScreen from '../src/screens/UnknownUserScreen';
 import EvaluatedOrders from '../src/screens/TheManager/EvaluatedOrders';
 import OrderList from '../src/screens/SiteManager/Order/OrderList';
 import NewItemRequests from '../src/screens/SiteManager/NewItemRequest/newItemRequests';
-import { createStackNavigator } from '@react-navigation/stack';
 import ItemDetails from '../src/screens/SiteManager/Item/ItemDetails';
 
 
