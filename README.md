@@ -62,3 +62,5 @@ let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.
       <Button title='change to supplier' onPress={() => dispatch(setUserType('supplier'))}/>
 ```
 
+In Redux the State Tree uses the Singleton pattern and the connect method uses the Observer pattern.
+[Learn more](https://engineering.zalando.com/posts/2016/08/design-patterns-redux.html?gh_src=4n3gxh1?gh_src=4n3gxh1)

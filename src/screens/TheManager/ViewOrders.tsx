@@ -1,108 +1,153 @@
 import { View, Platform, StyleSheet, ScrollView } from 'react-native'
-import React from 'react'
-import { Button, Card, Text } from 'react-native-paper'
-
-const orders = [
-  {
-    title: "Cement",
-    orderId: "ORD-1124",
-    orderImage: require("../../../public/cement.jpeg"),
-    quantity: "1 Ton",
-    status: "Pending",
-    supplier: "Expo Supplier",
-    date: "5/12/2023"
-  },
-  {
-    title: "Bricks",
-    orderId: "ORD-1124",
-    orderImage: require("../../../public/bricks.jpg"),
-    quantity: "1 Ton",
-    status: "Completed",
-    supplier: "Expo Supplier",
-    date: "5/12/2023"
-  },
-  {
-    title: "Iron Rod",
-    orderId: "ORD-1124",
-    orderImage: require("../../../public/ironrods.jpg"),
-    quantity: "1 Ton",
-    status: "Pending",
-    supplier: "Expo Supplier",
-    date: "5/12/2023"
-  },
-  {
-    title: "Gravel Metal",
-    orderId: "ORD-1124",
-    orderImage: require("../../../public/metal.jpeg"),
-    quantity: "1 Ton",
-    status: "Completed",
-    supplier: "Expo Supplier",
-    date: "5/12/2023"
-  },
-
-]
+import React, { useEffect, useState } from 'react'
+import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
+import { OrderType } from '../../../config/types';
+import { getOrders, updateOrders } from './OrderController';
 
 export default function ViewOrders() {
+  const [orders, setOrders] = useState<any[]>([]);
+  const [visible, setVisible] = useState(false);
+  const [selectedOrderId, setSlectedOrderId] = useState<string | null>(null);
 
-  const renderOrder = orders.map((order,index) => {
-    const orderStatus: any = () => {
-      if(order.status==='Pending'){
-        return {
-          textAlign:'right', color:'blue', fontWeight: "600", textShadowColor:'black'
-        }
-      }else if(order.status==='Completed'){
-        return {
-          textAlign:'right', color:'green', fontWeight: "600"
-        }
-      }
-    } 
+  const showDialog = (id: any) => {
+    setSlectedOrderId(id);
+    setVisible(true);
+  };
+  const hideDialog = () => {
+    setSlectedOrderId(null);
+    setVisible(false);
+  };
+
+
+  async function receiveData() {
+    const newData: any = await getOrders()
+    setOrders(newData)
+    console.log(newData)
+  }
+
+  useEffect(() => {
+    receiveData()
+  }, [orders])
+
+  const renderOrder = orders.map((order, index) => {
+    let btncolor: string = "blue"
+
+    if (order.data.status === 'approval_pending') {
+      btncolor = "#DC3545"
+    } else if (order.data.status === 'approved') {
+      btncolor = "#28A745"
+    } else if (order.data.status === 'delivery_pending') {
+      btncolor = "#F1C02C"
+    } else if (order.data.status === 'delivered') {
+      btncolor = "#17A2B8"
+    }
+
+      const renderItem:any = (order.data.itemList || []).map((item: any) => {
+          return (
+            <>
+              <Text variant="bodyMedium" style={{ fontWeight: 'bold' }}>
+                Item Name:
+                <Text variant="bodyMedium">{item.itemName}</Text>
+              </Text>
+              <Text variant="bodyMedium" style={{ fontWeight: 'bold' }}>
+                Quantity:
+                <Text variant="bodyMedium">{item.quantity}</Text>
+              </Text>
+              <Text variant="bodyMedium" style={{ fontWeight: 'bold' }}>
+                Unit Price:
+                <Text variant="bodyMedium">{item.unitPrice}</Text>
+              </Text>
+              <Text>{'\n'}</Text>
+            </>
+          )
+      })
+ 
+
     return (
       <Card key={index} mode='elevated' style={styles.card}>
         <Card.Content>
-          <Text variant="titleLarge" style={{fontWeight:'bold'}}>{order.title}</Text>
-          <Text variant="bodyMedium">{order.orderId}</Text>
+          <Text variant="titleLarge" style={{ fontWeight: 'bold' }}>Orders</Text>
+          <Text variant="bodyMedium">ORD-{order.data.orderId}</Text>
         </Card.Content>
-        <Card.Cover style={styles.cardCover} resizeMode='contain' source={order.orderImage} />
         <Card.Content>
-          <Text variant="titleLarge" style={orderStatus()}>{order.status}</Text>
-          <Text style={{fontWeight:'bold'}}>
-            Quantity:&nbsp;
-          <Text variant="bodyMedium">{order.quantity}</Text>
+          <View style={styles.btnContainer}>
+            <Button mode='contained' buttonColor={btncolor} textColor='white'>{order.data.status}</Button>
+          </View>
+          <Text style={{ fontWeight: 'bold' }}>
+            Order Total:&nbsp;
+            <Text variant="bodyMedium">{order.data.orderTotal}</Text>
           </Text>
-          <Text style={{fontWeight:'bold'}}>
+          <Text style={{ fontWeight: 'bold' }}>
+            Delivery Site:&nbsp;
+            <Text variant="bodyMedium">{order.data.deliverySite}</Text>
+          </Text>
+          <Text style={{ fontWeight: 'bold' }}>
             Supplier:&nbsp;
-          <Text variant="bodyMedium">{order.supplier}</Text>
+            <Text variant="bodyMedium">{order.data.supplierName}</Text>
           </Text>
-          <Text style={{fontWeight:'bold'}}>
-            Date To Receive:&nbsp;
-          <Text variant="bodyMedium">{order.date}</Text>
-          </Text>         
+          <Text style={{ fontWeight: 'bold' }}>
+            Created Date:&nbsp;
+            <Text variant="bodyMedium">{order.data.createdAt ? order.data.createdAt.toDate().toLocaleString(): 'N/A'}</Text>
+          </Text>
+          <Text style={{ fontWeight: 'bold' }}>
+            Purchase Date:&nbsp;
+            <Text variant="bodyMedium">{order.data.purchaseDate ? order.data.purchaseDate.toDate().toLocaleString(): 'N/A'}</Text>
+          </Text>
+          <Text style={{ fontWeight: 'bold' }}>
+            Estimated Delivery Date:&nbsp;
+            <Text variant="bodyMedium">{order.data.estimatedDeliveryDate ? order.data.estimatedDeliveryDate.toDate().toLocaleString(): 'N/A'}</Text>
+          </Text>
+          <Text>{'\n'}</Text>
+          {renderItem}
         </Card.Content>
         <Card.Actions>
-          <Button>Cancel</Button>
-          <Button>Ok</Button>
+          <Button disabled={order.data.status === 'approved'||order.data.status==='delivery_pending'||order.data.status==='delivered'} onPress={() => showDialog(order.id)}>Authorize</Button>
         </Card.Actions>
       </Card>
     )
   })
 
-  return (
-    <ScrollView style={styles.scrollview}>
-      <View style={styles.container}>
-        {renderOrder}
-      </View>
-    </ScrollView>
+  const approve = () => {
+    if (selectedOrderId) {
+      updateOrders(selectedOrderId)
+    }
+    hideDialog()
+  }
 
+  return (
+    <>
+      <ScrollView style={styles.scrollview}>
+        <View style={styles.container}>
+          {renderOrder}
+        </View>
+      </ScrollView>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
+          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyLarge">Are you sure you want to authorize this order</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={approve}>Confirm</Button>
+            <Button onPress={hideDialog}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
+  btnContainer: {
+    flexDirection: 'row', // Horizontal layout
+    justifyContent: 'flex-end', // Right-align content
+  },
   card: {
     width: Platform.OS === 'android' ? '90%' : '50%',
     marginBottom: 20,
     marginTop: 20
   },
-  cardCover:{
+  cardCover: {
     width: '100%',
     aspectRatio: 16 / 9,
     alignSelf: 'center'
@@ -112,7 +157,18 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    //top: 20
+  },
+  containerStyle: {
+    width: '100%',
+    height: '80%',
+    backgroundColor: 'white',
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
+  dialog: {
+    width: '30%',
+    marginLeft: 'auto',
+    marginRight: 'auto'
   },
   scrollview: {
     minHeight: '100%'
