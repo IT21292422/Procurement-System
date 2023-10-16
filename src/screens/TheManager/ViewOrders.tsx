@@ -4,6 +4,7 @@ import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
 import { OrderType } from '../../../config/types';
 import { deleteOrder, getOrders, updateOrders } from './OrderController';
 
+//This function renders all the orders irrespective of the status
 export default function ViewOrders() {
   const [orders, setOrders] = useState<any[]>([]);
   const [visible, setVisible] = useState(false);
@@ -28,19 +29,22 @@ export default function ViewOrders() {
     setVisibleDelete(false);
   };
 
+  //This function retrieves all the orders and set them to the newData state
   async function receiveData() {
     const newData: any = await getOrders()
     setOrders(newData)
     console.log(newData)
   }
 
+  //Observer design pattern is used here, this calls the recieve data function and at the same time oberves the 
+  //orders state for any changes and if there are any changes, this will re-render the component 
   useEffect(() => {
     receiveData()
   }, [orders])
 
   const renderOrder = orders.map((order, index) => {
     let btncolor: string = "blue"
-
+    //This sets the style of the Order status based on the status
     if (order.data.status === 'approval_pending') {
       btncolor = "#DC3545"
     } else if (order.data.status === 'approved') {
@@ -116,7 +120,9 @@ export default function ViewOrders() {
       </Card>
     )
   })
-
+  
+  //This function is to change the status of an order to approved
+  //It calls the updateOrders function in order controller
   const approve = () => {
     if (selectedOrderId) {
       updateOrders(selectedOrderId)
@@ -124,6 +130,7 @@ export default function ViewOrders() {
     hideDialog()
   }
 
+  //This function deletes the order which is declined by the manager
   const deleteData = async () => {
     if (selectedOrderId) {
       try {

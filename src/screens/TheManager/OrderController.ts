@@ -3,6 +3,8 @@ import {fireStore} from '../../../config/firebase'
 
 import { OrderType } from '../../../config/types';
 
+
+//This retrieves all the orders from the database
 async function getOrders(){
     const orders:any = [];
     try{
@@ -18,6 +20,7 @@ async function getOrders(){
     }
 }
 
+//This retieves only the order passed as the parameter
 async function getOrderById(docId:string){
     try{
         const docRef = doc(fireStore,"orders",docId);
@@ -33,6 +36,7 @@ async function getOrderById(docId:string){
     }
 }
 
+//This function updates the status of the order to approved
 async function updateOrders(docId:string){
     try{
         console.log(docId)
@@ -44,6 +48,7 @@ async function updateOrders(docId:string){
     }
 }
 
+//This function deletes the order declined by the manager
 async function deleteOrder(id:any){
     try{
         console.log(id)

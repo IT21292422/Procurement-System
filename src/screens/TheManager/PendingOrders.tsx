@@ -4,7 +4,7 @@ import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
 import { OrderType } from '../../../config/types';
 import { deleteOrder, getOrders, updateOrders } from './OrderController';
 
-
+//This component displays the components which are in approval_pending state so the manager can approve them
 export default function PendingOrders() {
   const [orders, setOrders] = useState<any[]>([]);
   const [visible, setVisible] = useState(false);
@@ -29,12 +29,15 @@ export default function PendingOrders() {
     setVisibleDelete(false);
   };
 
-
+  //This function retrieves data from database and sets that to the newData state
   async function receiveData() {
     const newData: any = await getOrders()
     setOrders(newData)
     console.log(newData)
   }
+
+  //Observer design pattern is used here, this calls the recieve data function and at the same time oberves the 
+  //orders state for any changes and if there are any changes, this will re-render the component 
 
   useEffect(() => {
     receiveData()
@@ -43,7 +46,7 @@ export default function PendingOrders() {
   const renderOrder = orders.map((order, index) => {
 
     let btncolor: string = "blue"
-
+     //This sets the style of the Order status based on the status
     if (order.data.status === 'approval_pending') {
       btncolor = "#DC3545"
     } else if (order.data.status === 'approved') {
@@ -53,7 +56,7 @@ export default function PendingOrders() {
     } else if (order.data.status === 'delivered') {
       btncolor = "#17A2B8"
     }
-
+    //This condition make sure only the approval_pending orders are rendered
     if (order.data.status === 'approval_pending') {
       const renderItem: any = (order.data.itemList || []).map((item: any) => {
         return (
@@ -120,6 +123,8 @@ export default function PendingOrders() {
     }
   })
 
+  //This function is to change the status of an order to approved
+  //It calls the updateOrders function in order controller
   const approve = () => {
     if (selectedOrderId) {
       updateOrders(selectedOrderId)
@@ -127,6 +132,7 @@ export default function PendingOrders() {
     hideDialog()
   }
 
+  //This function deletes the order which is declined by the manager
   const deleteData = async () => {
     if (selectedOrderId) {
       try {

@@ -7,28 +7,28 @@ import { addPolicy } from './PolicyController'
 
 export default function CreatePolicy() {
   const [policyName,setPolicyName] = useState("")
-  //const [itemName,setItemName] = useState("")
+
   const [amount,setAmount] = useState("")
   const [description,setDescription] = useState("")
   const [showInputErrror, setShowInputError] = useState(false)
   const [showNumberErrror, setShowNumberError] = useState(false)
 
-  //const [approvers,setApprovers] = useState("")
-
+  //Policy object to pass to addPolicy function
   const policy: Policy = {
     policyName,
-    //itemName,
     policyAmount: +amount,
     description
   }
-  let numbers = /^[0-9]+$/;
+  let numbers = /^[0-9]+$/; 
 
   const createPolicy = () => {
+    //Form validation part to check whether all input fields are not empty and amount is of number type
     if(policyName==="" && amount==="" && description===""){
       setShowInputError(true)
     }else if(!amount.match(numbers)){
       setShowNumberError(true)
     }else{
+      //call addPolicy function of firebase and send the policy object as the parameter
       addPolicy(policy)
       setPolicyName("")
       //setItemName("")

@@ -4,7 +4,7 @@ import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
 import { OrderType } from '../../../config/types';
 import { getOrders, updateOrders } from './OrderController';
 
-
+//This component displays the orders evaluated by the manager
 export default function EvaluatedOrders() {
     const [orders, setOrders] = useState<any[]>([]);
     const [visible, setVisible] = useState(false);
@@ -19,13 +19,17 @@ export default function EvaluatedOrders() {
       setVisible(false);
     };
   
-  
+    //This function calls getOrders function in order controller and sets the data to newData state
     async function receiveData() {
       const newData: any = await getOrders()
       setOrders(newData)
       console.log(newData)
     }
-  
+    
+
+    //Observer design pattern is used here, this calls the recieve data function and at the same time oberves the 
+    //orders state for any changes and if there are any changes, this will re-render the component 
+
     useEffect(() => {
       receiveData()
     }, [orders])
@@ -33,7 +37,7 @@ export default function EvaluatedOrders() {
     const renderOrder = orders.map((order, index) => {
   
       let btncolor: string = "blue"
-  
+      //This sets the style of the Order status based on the status
       if (order.data.status === 'approval_pending') {
         btncolor = "#DC3545"
       } else if (order.data.status === 'approved') {
@@ -43,7 +47,8 @@ export default function EvaluatedOrders() {
       } else if (order.data.status === 'delivered') {
         btncolor = "#17A2B8"
       }
-  
+      
+      //To filter only the orders with status approved
       if (order.data.status === 'approved') {
         const renderItem: any = (order.data.itemList || []).map((item: any) => {
           return (
@@ -109,6 +114,8 @@ export default function EvaluatedOrders() {
       }
     })
   
+    //This function is to change the status of an order to approved
+    //It calls the updateOrders function in order controller
     const approve = () => {
       if (selectedOrderId) {
         updateOrders(selectedOrderId)

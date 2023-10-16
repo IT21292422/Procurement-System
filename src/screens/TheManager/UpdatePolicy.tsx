@@ -5,26 +5,23 @@ import { Button, Card, Text, TextInput, HelperText } from 'react-native-paper'
 import { Policy } from '../../../config/interfaces'
 import { getPolicyById, updatePolicy } from './PolicyController'
 
+//This component is used to update the policy
 export default function UpdatePolicy(id:any) {
     const [policyName,setPolicyName] = useState("")
-    //const [itemName,setItemName] = useState("")
     const [amount,setAmount] = useState("")
     const [description,setDescription] = useState("")
     const [showInputErrror, setShowInputError] = useState(false)
     const [showNumberErrror, setShowNumberError] = useState(false)
 
-    console.log(id)
-
+    //Th policy object to pass to the updatePolicy function
     const policy: Policy = {
         policyName,
-        //itemName,
         policyAmount: +amount,
         description
       }
       let numbers = /^[0-9]+$/;
     
-    //const id = "1234"
-
+    //This function is used to retrieve the policy based on the id and it sets the state of the respective ones
     const getPolicy = async () => {
       try{
         const newData: any = await getPolicyById(id)
@@ -38,10 +35,13 @@ export default function UpdatePolicy(id:any) {
       }
     }
 
+    //This calls the getPolicy function only once when the compoennt is rendered
     useEffect(() => {
       getPolicy();
     }, []);
 
+    //This is the function to update the policy, it has some valdiations to check whether input fields are not empty
+    //and also the amount is of number type
       const updtPolicy = () => {
         if(policyName==="" && amount==="" && description===""){
           setShowInputError(true)
