@@ -16,6 +16,7 @@ export const userSlice = createSlice({
     },
     logOut: (state) => {
       state.userName = null;
+      state.userType = null;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
