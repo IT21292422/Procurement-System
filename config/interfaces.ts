@@ -40,3 +40,10 @@ export interface IItem {
   unitPrice: number;
   policyName: string;
 }
+
+export interface Policy{
+  id?: string,
+  policyName: string,
+  policyAmount: number,
+  description: string
+}
