@@ -58,7 +58,7 @@ export default function ViewOrders() {
       btncolor = "#17A2B8"
     }
 
-      //Iterator design pattern is used here traverse through the array
+      //Iterator design pattern is used here to traverse through the array
       const renderItem:any = (order.data.itemList || []).map((item: any) => {
           return (
             <>

@@ -37,6 +37,7 @@ export default function EvaluatedOrders() {
       receiveData()
     }, [orders])
   
+    //Iterator design pattern is used here to traverse through the array
     const renderOrder = orders.map((order, index) => {
   
       let btncolor: string = "blue"
@@ -53,7 +54,7 @@ export default function EvaluatedOrders() {
       
       //To filter only the orders with status approved
       if (order.data.status === 'approved') {
-        //Iterator design pattern is used here traverse through the array
+        //Iterator design pattern is used here to traverse through the array
         const renderItem: any = (order.data.itemList || []).map((item: any) => {
           return (
             <>

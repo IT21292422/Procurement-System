@@ -46,7 +46,7 @@ export default function PendingOrders() {
     receiveData()
   }, [orders])
 
-  //Iterator design pattern is used here traverse through the array
+  //Iterator design pattern is used here to traverse through the array
   const renderOrder = orders.map((order, index) => {
 
     let btncolor: string = "blue"

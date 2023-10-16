@@ -79,7 +79,7 @@ export default function ViewPolicies() {
     receiveData()
   }, [policies])
 
-  //Iterator design pattern is used here traverse through the array
+  //Iterator design pattern is used here to traverse through the array
   const renderPolicies = policies.map((policy, index) => {
 
     return (
