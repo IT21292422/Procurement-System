@@ -129,7 +129,7 @@ export default function EvaluatedOrders() {
     }
 
     const noApproved = (
-      <View style={{alignItems:'center',marginTop:outerHeight/2-150}}>
+      <View style={{alignItems:'center',marginTop:Platform.OS=='android'? 300: outerHeight/2-150}}>
       <Text variant="headlineLarge" style={{color:"#28A745"}}>No approved orders found</Text>
       </View>
     );
@@ -187,7 +187,7 @@ export default function EvaluatedOrders() {
       marginRight: 'auto'
     },
     dialog: {
-      width: '30%',
+      width: Platform.OS === 'android' ? '90%': '30%',
       marginLeft: 'auto',
       marginRight: 'auto'
     },
