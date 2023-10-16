@@ -1,12 +1,20 @@
 import { createSlice,PayloadAction } from "@reduxjs/toolkit";
 import {UserState} from '../../config/interfaces'
 
+/*
+This is the initial state of the user when trying to login to the system
+*/
 const initialUserState:UserState = {
   userName: null,
   isLoading: true,
   userType: null,
 };
 
+/*
+This is act as observe pattern through out the program
+and it will provide logUser,logOut,setLoading,setUserType
+works as singleton pattern
+*/
 export const userSlice = createSlice({
   name: "user",
   initialState:initialUserState,
