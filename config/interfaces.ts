@@ -25,3 +25,18 @@ export interface IRequestedItems{
   isApproved:boolean;
   itemName:string;
 }
+
+export interface IUser{
+  userEmail:string;
+  userType:string;
+}
+
+export interface IItem {
+  orderId: string;
+  itemId: string;
+  itemName: string;
+  description: string;
+  unit: string;
+  unitPrice: number;
+  policyName: string;
+}

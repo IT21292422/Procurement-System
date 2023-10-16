@@ -7,7 +7,7 @@ import { setUserType,logUser,setLoading } from '../../features/user/userSlice';
 import { HelperText, TextInput } from 'react-native-paper';
 import login from '../hooks/login';
 import Loading from './Loading';
-import { testcreateUser } from '../hooks/test';
+import { testcreateUser, testcreateUserOnAuth } from '../hooks/test';
 
 export default function LogIn() {
   const [logins, setLogins] = useState<Logings>({
@@ -33,14 +33,21 @@ export default function LogIn() {
 
   const submitLogin= async ()=>{
     dispatch(setLoading(true))
-    const {userType,error} = await login(logins.email,logins.password)
+    const userData = {
+     userEmail: "procurement_staff@email.com",
+     password: "12345678",
+     userType: "procurement_staff",
+    };
+    // const {userType,error} = await login(logins.email,logins.password)
     // setLogins({...logins,email:'procurement_staff'})
-    // const {userType,error} = await login(logins.email,'12345678')
+    const {userType,error} = await login(userData.userEmail,userData.password)
     if(error===null){
-      dispatch(logUser(logins.email))
+      // dispatch(logUser(logins.email))
+      dispatch(logUser(userData.userEmail))
       dispatch(setLoading(false))
       dispatch(setUserType(userType))
-      dispatch(setLoading(false))
+      // dispatch(setUserType(userType))
+      // dispatch(setLoading(false))
     }else{
       dispatch(setLoading(false))
       setLogingError(true)
@@ -94,7 +101,7 @@ export default function LogIn() {
         color={'rgb(127, 0, 255)'} 
         onPress={()=>submitLogin()}/>
       
-      <Button title='test create procurement' onPress={() => testcreateUser ()}/>
+      <Button title='test create user' onPress={() => testcreateUserOnAuth()}/>
       
       <Button title='change to manager' onPress={() => dispatch(setUserType('manager'))}/>
       <Button title='change to site_manager' onPress={() => dispatch(setUserType('site_manager'))}/>

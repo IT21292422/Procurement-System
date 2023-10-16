@@ -6,7 +6,7 @@ const getAllItems = async (orderId: string) => {
   const items:Items[] = [];
 
   try {
-    const ordersCollection = collection(fireStore, "orders");
+    const ordersCollection = collection(fireStore, "order");
     const q = query(ordersCollection, where("orderId", "==", orderId));
     const querySnapshot = await getDocs(q);
 
