@@ -4,7 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { fireStore } from '../../../../config/firebase';
 import { ItemType } from '../../../../config/types';
 import { getItemDetails } from '../hooks/itemHooks';
-import { Text, Card, Title, Paragraph, Button, IconButton, TextInput } from 'react-native-paper';
+import { Text, Card, Title, Paragraph, Button, IconButton, TextInput, ActivityIndicator } from 'react-native-paper';
 import { ScrollView } from 'react-native';
 import { addItemToDraftItemList, createNewDraft, existingDraft, getExistingDraftId } from '../hooks/draftHools';
 
@@ -72,9 +72,7 @@ export default function ItemDetails(props: ItemDetailsProps) {
 	return (
 		<Card>
 			<Card.Content>
-				{isAddToDraftDisabled ? (
-					<Text>Adding to Draft...</Text>
-				) : success ? (
+				{success ? (
 					// Success card content
 					<>
 						<Title>Success</Title>
@@ -96,7 +94,11 @@ export default function ItemDetails(props: ItemDetailsProps) {
 	
 						{/* for building order/draft */}
 						<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-							<IconButton icon="minus" size={20} onPress={handleDecreaseUnits} />
+							<IconButton 
+								icon="minus" size={20} 
+								onPress={handleDecreaseUnits} 
+								disabled={isAddToDraftDisabled} 
+							/>
 							<TextInput
 								label="Units"
 								value={units}
@@ -104,18 +106,30 @@ export default function ItemDetails(props: ItemDetailsProps) {
 								keyboardType="numeric"
 								style={{ width: 100 }}
 							/>
-							<IconButton icon="plus" size={20} onPress={handleIncreaseUnits} />
+							<IconButton 
+								icon="plus" size={20} 
+								onPress={handleIncreaseUnits} disabled={isAddToDraftDisabled} 
+							/>
 							<Text>{`   x${itemDetails?.unit}(s)`}</Text>
 						</View>
 	
 						<Text style={{ fontWeight: 'bold' }}>{`\nTotal: RS: ${(itemDetails?.unitPrice || 0) * parseInt(units)}\n`}</Text>
 						
+						{isAddToDraftDisabled ? (
 						<Button
 						mode="contained"
 						onPress={handleAddToDraft}
 						disabled={isAddToDraftDisabled} >
-							Add to Draft
+							<ActivityIndicator animating={true} />
 						</Button>
+						) : (
+							(<Button
+								mode="contained"
+								onPress={handleAddToDraft}
+								disabled={isAddToDraftDisabled} >
+									Add to Draft
+								</Button>)
+						)}
 					</ScrollView>
 				)}
 			</Card.Content>
