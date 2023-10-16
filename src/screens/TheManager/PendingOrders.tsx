@@ -1,13 +1,17 @@
 import { View, Platform, StyleSheet, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
+//React Native Paper is used as a facade design pattern through out the application as an abstraction that provides
+//a simplified interface to the library, this library offer components with built-in features and functionalities 
+
 import { OrderType } from '../../../config/types';
-import { getOrders, updateOrders } from './OrderController';
+import { deleteOrder, getOrders, updateOrders } from './OrderController';
 
-
+//This component displays the components which are in approval_pending state so the manager can approve them
 export default function PendingOrders() {
   const [orders, setOrders] = useState<any[]>([]);
   const [visible, setVisible] = useState(false);
+  const [visibleDelete, setVisibleDelete] = useState(false);
   const [selectedOrderId, setSlectedOrderId] = useState<string | null>(null);
 
   const showDialog = (id: any) => {
@@ -19,21 +23,34 @@ export default function PendingOrders() {
     setVisible(false);
   };
 
+  const showDeleteDialog = (id: any) => {
+    setSlectedOrderId(id);
+    setVisibleDelete(true);
+  };
+  const hideDeleteDialog = () => {
+    setSlectedOrderId(null);
+    setVisibleDelete(false);
+  };
 
+  //This function retrieves data from database and sets that to the newData state
   async function receiveData() {
     const newData: any = await getOrders()
     setOrders(newData)
     console.log(newData)
   }
 
+  //Observer design pattern is used here, this calls the recieve data function and at the same time oberves the 
+  //orders state for any changes and if there are any changes, this will re-render the component 
+
   useEffect(() => {
     receiveData()
   }, [orders])
 
+  //Iterator design pattern is used here traverse through the array
   const renderOrder = orders.map((order, index) => {
 
     let btncolor: string = "blue"
-
+     //This sets the style of the Order status based on the status
     if (order.data.status === 'approval_pending') {
       btncolor = "#DC3545"
     } else if (order.data.status === 'approved') {
@@ -43,7 +60,7 @@ export default function PendingOrders() {
     } else if (order.data.status === 'delivered') {
       btncolor = "#17A2B8"
     }
-
+    //This condition make sure only the approval_pending orders are rendered
     if (order.data.status === 'approval_pending') {
       const renderItem: any = (order.data.itemList || []).map((item: any) => {
         return (
@@ -104,16 +121,31 @@ export default function PendingOrders() {
           </Card.Content>
           <Card.Actions>
             <Button disabled={order.data.status === 'approved' || order.data.status === 'delivery_pending' || order.data.status === 'delivered'} onPress={() => showDialog(order.id)}>Authorize</Button>
+            <Button buttonColor="#DC3545" onPress={() => showDeleteDialog(order.id)}>Decline Order</Button>
           </Card.Actions>
         </Card>)
     }
   })
 
+  //This function is to change the status of an order to approved
+  //It calls the updateOrders function in order controller
   const approve = () => {
     if (selectedOrderId) {
       updateOrders(selectedOrderId)
     }
     hideDialog()
+  }
+
+  //This function deletes the order which is declined by the manager
+  const deleteData = async () => {
+    if (selectedOrderId) {
+      try {
+        await deleteOrder(selectedOrderId);
+        hideDialog();
+      } catch (error) {
+        console.log("Error deleting order: ", error)
+      }
+    }
   }
 
 
@@ -132,6 +164,18 @@ export default function PendingOrders() {
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={approve}>Confirm</Button>
+            <Button onPress={hideDialog}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+      <Portal>
+        <Dialog visible={visibleDelete} onDismiss={hideDeleteDialog} style={styles.dialog}>
+          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyLarge">Are you sure you want to Delete this policy?</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={deleteData}>Confirm</Button>
             <Button onPress={hideDialog}>Cancel</Button>
           </Dialog.Actions>
         </Dialog>

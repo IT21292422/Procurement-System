@@ -6,6 +6,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+
 import OrderRef from '../src/screens/Supplier/OrderRef';
 import SupplierProfile from '../src/screens/Supplier/SupplierProfile';
 import CreatePolicy from '../src/screens/TheManager/CreatePolicy';
@@ -55,7 +56,7 @@ let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.
     // Render Site Manager route/component
     return (
       <NavigationContainer>
-        <SiteManagerRoute />
+        {/* <SiteManagerRoute /> */}
       </NavigationContainer>
     );
   } else if (userType === 'manager') {
@@ -85,6 +86,18 @@ let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.
   }
 }
 
+
+// function SiteManagerRoute(){
+//     return(
+//       <Tab.Navigator initialRouteName='All Items'>
+//         <Tab.Screen name='All Items' component={ItemsList}/>
+//         <Tab.Screen name='Orders' component={OrderList}/>
+//         <Tab.Screen name='Draft' component={Draft}/>
+//         <Tab.Screen name='Item Requests' component={NewItemRequests}/>
+//       </Tab.Navigator>
+//     )
+// }  
+
 function SiteManagerRoute(){
     return(
       <Tab.Navigator initialRouteName='All Items'>
@@ -101,6 +114,7 @@ function SiteManagerRoute(){
 //     <Stack.Screen name="ItemDetails" component={ItemDetails} />
 //   </Stack.Navigator>
 // );
+
 
 function SupplierRoute(){
     return(

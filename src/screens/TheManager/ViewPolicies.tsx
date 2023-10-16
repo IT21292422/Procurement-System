@@ -1,12 +1,16 @@
 import { View, Platform, StyleSheet, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
+//React Native Paper is used as a facade design pattern through out the application as an abstraction that provides
+//a simplified interface to the library, this library offer components with built-in features and functionalities 
 
 import { Policy } from '../../../config/interfaces'
 import { deletePolicy, getPolicies } from './PolicyController';
 import CreatePolicy from './CreatePolicy';
 import UpdatePolicy from './UpdatePolicy';
 
+
+//This function renders all the policies
 export default function ViewPolicies() {
 
   const [policies, setPolicies] = useState<Policy[]>([]);
@@ -41,6 +45,7 @@ export default function ViewPolicies() {
     setVisible(false);
   };
 
+  //This displays the modal to update a policy
   const updatePolicyModal = (
     <Portal>
       <Modal visible={visibleModalUpdate} onDismiss={hideModalUpdate} contentContainerStyle={styles.containerStyle}>
@@ -49,11 +54,13 @@ export default function ViewPolicies() {
     </Portal>
   );
 
+  //This function retrieves all policy from the database and set to the newData state
   async function receiveData() {
     const newData: Policy[] = await getPolicies()
     setPolicies(newData)
   }
 
+  //This function deletes a policy based on the id
   const deleteData = async () => {
     if (selectedPolicyId) {
       try {
@@ -66,10 +73,13 @@ export default function ViewPolicies() {
     }
   }
 
+  //Observer design pattern is used here, this calls the recieve data function and at the same time oberves the 
+  //policies state for any changes and if there are any changes, this will re-render the component 
   useEffect(() => {
     receiveData()
   }, [policies])
 
+  //Iterator design pattern is used here traverse through the array
   const renderPolicies = policies.map((policy, index) => {
 
     return (

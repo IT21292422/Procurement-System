@@ -3,6 +3,7 @@ import {fireStore} from '../../../config/firebase'
 
 import { Policy } from '../../../config/interfaces'
 
+//This function is used to create a new policy and the data is passed as a parameter 
 async function addPolicy(data:Policy){
 
     try{
@@ -20,6 +21,7 @@ async function addPolicy(data:Policy){
 
 }
 
+//This function retrieves all the policies from the database
 async function getPolicies(){
     const policies:any = [];
     try{
@@ -34,6 +36,7 @@ async function getPolicies(){
     }
 }
 
+//This function retieves the policy based on the id passed as parameter
 async function getPolicyById(docId:any){
     try{
         const docRef = doc(fireStore,"policy",docId.id);
@@ -48,6 +51,7 @@ async function getPolicyById(docId:any){
     }
 }
 
+//This function is used to update the policy based on the id
 async function updatePolicy(docId:any, data:Policy){
     try{
         console.log(docId.id)
@@ -64,6 +68,7 @@ async function updatePolicy(docId:any, data:Policy){
     }
 }
 
+//This function deletes the policy based on the id passed
 async function deletePolicy(id:any){
     try{
         console.log(id)
