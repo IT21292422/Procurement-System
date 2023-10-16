@@ -23,6 +23,8 @@ import { UserState } from '../config/interfaces';
 import Loading from '../src/screens/Loading';
 import LogIn from '../src/screens/LogIn';
 import UnknownUserScreen from '../src/screens/UnknownUserScreen';
+// @ts-ignore
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -105,9 +107,17 @@ function SiteManagerRoute()
 function SupplierRoute()
 {
   return (
-    <Tab.Navigator initialRouteName='SupplierProfile' screenOptions={{tabBarShowLabel: true, headerShown: false,}}>
-      <Tab.Screen name='SupplierProfile' component={SupplierProfile} />
-      <Tab.Screen name='Order' component={OrderRef} />
+    <Tab.Navigator initialRouteName='SupplierProfile' screenOptions={{ tabBarShowLabel: true, headerShown: false, }}>
+      <Tab.Screen name='Items' component={SupplierProfile} options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="home" size={size} color={color} />
+        ),
+      }}   />
+      <Tab.Screen name='Orders' component={OrderRef} options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="bell" size={size} color={color} />
+        ),
+      }}   />
     </Tab.Navigator>
   )
 }

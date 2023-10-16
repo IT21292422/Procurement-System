@@ -1,6 +1,6 @@
 import React from 'react'
 import { auth, fireStore, storage } from '../config/firebase'
-import { addDoc, collection, doc, getDocs, setDoc } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore'
  import {newItem} from '../config/interfaces'
 
 const requestItemsColRef = collection(fireStore, 'supplierItemRequest');
@@ -9,6 +9,10 @@ const ordersColRef = collection(fireStore, 'orders')
 
 export const getAllItems = async () => {
   return await getDocs(itemsColRef);
+}
+
+export const getAllItemRequests = async () => {
+  return await getDocs(requestItemsColRef);
 }
 
 export const requestNewItemSupplier = async (item: newItem) => {
@@ -27,5 +31,17 @@ export const requestNewItemSupplier = async (item: newItem) => {
 
 export const getAllOrders = async () => {
   return await getDocs(ordersColRef);
+}
+
+export const deleteItemRequest = async (docId: string) => {
+  try {
+    const docRef =  doc(requestItemsColRef, docId)
+    await deleteDoc(docRef);
+    console.log(`Request deleted successfully`);
+    return true;
+  } catch (error) {
+    console.log(`Error when deleting request ${error}`);
+    return false;
+  }
 }
 

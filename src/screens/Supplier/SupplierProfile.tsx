@@ -1,23 +1,25 @@
 import { FlatList, Image, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB, Appbar } from 'react-native-paper';
+import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB, Appbar, useTheme } from 'react-native-paper';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { doc } from 'firebase/firestore';
 import { fireStore } from '../../../config/firebase';
-import { requestNewItemSupplier, getAllItems } from '../../../utils/dbFunctions';
+import { requestNewItemSupplier, getAllItems, getAllItemRequests, deleteItemRequest } from '../../../utils/dbFunctions';
 import { itemInterface } from '../../../config/interfaces';
 import { ItemUpdateForm } from './ItemUpdateForm';
+
 
 export default function SupplierProfile()
 {
   const [value, setValue] = useState('');
-  const [showItems, setShowItems] = useState(false)
-  const [showRequests, setShowRequests] = useState(true)
+  const [showItems, setShowItems] = useState(true)
+  const [showRequests, setShowRequests] = useState(false)
   const [supplierItems, setSupplierItems] = useState<itemInterface[]>([]);
+  const [itemRequests, setItemRequests] = useState([]);
   const [showUpdateForm, setShowUpdateForm] = useState(false)
 
-
   // const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+  const logoImage = require('../../../public/sampleCompany.jpg');
 
   useEffect(() =>
   {
@@ -44,8 +46,24 @@ export default function SupplierProfile()
     console.log(supplierItems);
   }, [])
 
+  const loadItemRequests = async () =>
+  {
+    try
+    {
+      const requestSnapshot: any = await getAllItemRequests();
+      const requestArray: any = [];
+      requestSnapshot.forEach((doc: any) =>
+      {
+        requestArray.push({ id: doc.id, ...doc.data() })
+      });
+      setItemRequests(requestArray);
+    } catch (error)
+    {
+      console.log('Error occurred loading item request data', error);
+    }
+  }
 
-  const handleItemPress = () =>
+  const handleItemPress = async () =>
   {
 
   }
@@ -65,16 +83,23 @@ export default function SupplierProfile()
   {
     setShowUpdateForm(false);
   }
+  const handleRequestDelete = async (id: string) =>
+  {
+    const result = await deleteItemRequest(id)
+    if (result)
+    {
+      console.log('Successfully deleted the request');
 
-  const docRef = doc(fireStore, "items", "SF");
+    }
+  }
 
 
   return (
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => { }} />
-        <Appbar.Content title="Test Supplier" />
-        <Appbar.Action icon="menu" onPress={() => { }} />
+        <Image source={logoImage} style={{ width: 40, height: 40, marginEnd: 10 }} />
+        <Appbar.Content title="  Test Supplier" />
         <Appbar.Action icon="account" onPress={() => { }} />
       </Appbar.Header>
       <SafeAreaView style={styles.container}>
@@ -89,6 +114,7 @@ export default function SupplierProfile()
               {
                 setShowRequests(true)
                 setShowItems(false)
+                loadItemRequests()
               },
             },
             {
@@ -121,10 +147,33 @@ export default function SupplierProfile()
                   adipiscing elit, sed do eiusmod tempor incididunt ut
                   labore et dolore magna aliqua. Ut enim ad minim veniam</Text>
               </Card.Content>
-              <Card.Cover style={styles.imageHolder} source={require('../../../public/bricks.jpg')} />
+
               <Card.Actions>
                 <Button>Delete</Button>
                 <Button>Update</Button>
+              </Card.Actions>
+            </Card>
+          )}
+        />}
+      {showRequests && itemRequests.length == 0 &&
+        <Button loading={true}>Loading Requests</Button>}
+      {showRequests &&
+        <FlatList
+          data={itemRequests}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }: any) => (
+            <Card onPress={handleItemPress} style={styles.container}>
+              {/* <Card.Title title={item.itemName} subtitle="Card Subtitle" /> */}
+              <Card.Content>
+                <Text variant="titleLarge">{item.itemName}</Text>
+                <Text variant="bodyMedium">{item.description}</Text>
+                <Text variant="bodyMedium">{item.unitPrice ? `Unit price: ${item.unitPrice}` : 'Unit Price not set'}</Text>
+                <Button style={styles.notApprovedButton}>Pending approval</Button>
+
+              </Card.Content>
+              <Card.Cover style={styles.imageHolder} source={require('../../../public/bricks.jpg')} />
+              <Card.Actions>
+                <Button onPress={() => handleRequestDelete(item.id)}>Delete</Button>
               </Card.Actions>
             </Card>
           )}
@@ -134,9 +183,6 @@ export default function SupplierProfile()
         style={styles.fab}
         onPress={handleFabPress}
       />}
-      <Surface elevation={1}>
-        <Text>Surface</Text>
-      </Surface>
     </>
   )
 }
@@ -157,4 +203,10 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  notApprovedButton: {
+    borderBlockColor: "red",
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: "coral"
+  }
 });

@@ -28,7 +28,7 @@ export const ItemUpdateForm = ({ cancelUpdate }: ChildComponentProps) =>
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
 
-    const handleItemAdd = async (data: newItemRequestInterface) => {
+    const handleItemAdd: any = async (data: newItemRequestInterface) => {
         const result: any = await requestNewItemSupplier({isApproved: false,unitPrice: 0, ...data});
         if (result) {
             console.log('Item addition successful');
