@@ -5,9 +5,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import { createStackNavigator } from '@react-navigation/stack';
-        
+
 import OrderRef from '../src/screens/Supplier/OrderRef';
 import SupplierProfile from '../src/screens/Supplier/SupplierProfile';
 import CreatePolicy from '../src/screens/TheManager/CreatePolicy';
@@ -16,18 +15,16 @@ import ProcunentOrderDetails from '../src/screens/ProcurementStaff/OrderDetails'
 import PendingOrders from '../src/screens/TheManager/PendingOrders';
 import ViewOrders from '../src/screens/TheManager/ViewOrders';
 import ItemAdd from '../src/screens/ProcurementStaff/ItemAdd';
-import OrderPurchase from '../src/screens/ProcurementStaff/OrderPurchase';
 import OrderView from '../src/screens/ProcurementStaff/OrderView';
 import { UserState } from '../config/interfaces';
 import Loading from '../src/screens/Loading';
 import LogIn from '../src/screens/LogIn';
 import UnknownUserScreen from '../src/screens/UnknownUserScreen';
-
 import EvaluatedOrders from '../src/screens/TheManager/EvaluatedOrders';
-
 import OrderList from '../src/screens/SiteManager/Order/OrderList';
 import NewItemRequests from '../src/screens/SiteManager/NewItemRequest/newItemRequests';
-
+import ItemsList from '../src/screens/SiteManager/Item/ItemsList';
+import Draft from '../src/screens/SiteManager/Draft/Draft';
 
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
@@ -89,6 +86,7 @@ let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.
   }
 }
 
+
 // function SiteManagerRoute(){
 //     return(
 //       <Tab.Navigator initialRouteName='All Items'>
@@ -99,6 +97,24 @@ let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.
 //       </Tab.Navigator>
 //     )
 // }  
+
+function SiteManagerRoute(){
+    return(
+      <Tab.Navigator initialRouteName='All Items'>
+        <Tab.Screen name='All Items' component={ItemsList}/>
+        <Tab.Screen name='Orders' component={OrderList}/>
+        <Tab.Screen name='Draft' component={Draft}/>
+        <Tab.Screen name='Item Requests' component={NewItemRequests}/>
+      </Tab.Navigator>
+    )
+}  
+// const SiteManager_StackScreens = () => (
+//   <Stack.Navigator initialRouteName="ItemsList">
+//     <Stack.Screen name="ItemsList" component={ItemsList} />
+//     <Stack.Screen name="ItemDetails" component={ItemDetails} />
+//   </Stack.Navigator>
+// );
+
 
 function SupplierRoute(){
     return(
@@ -122,11 +138,10 @@ function TheManagerRoute(){
 
 function ProcurementStaff(){
     return(
-      <Tab.Navigator initialRouteName='OrderView'>
-        <Tab.Screen name='OrderView' component={OrderView}/>
-        <Tab.Screen name='ItemAdd' component={ItemAdd}/>
-        <Tab.Screen name='OrderDetails' component={ProcunentOrderDetails}/>
-        <Tab.Screen name='OrderPurchase' component={OrderPurchase}/>
-      </Tab.Navigator>
+      <Stack.Navigator initialRouteName='OrderView'>
+        <Stack.Screen name='OrderView' options={{ title: 'Orders' }} component={OrderView}/>
+        <Stack.Screen name='ItemAdd' options={{ title: 'Items' }} component={ItemAdd}/>
+        <Stack.Screen name='OrderDetails' options={{ title: 'Item' }} component={ProcunentOrderDetails}/>
+      </Stack.Navigator>
     )
 }  

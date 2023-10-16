@@ -19,7 +19,8 @@ export async function getItemDetails(itemId: string): Promise<ItemType> {
 				itemName: "",
 				description: "",
 				unitPrice: 0,
-				policy: ""
+				policy: "",
+				unit: ""
 			};
 		}
 	} catch (error) {
@@ -29,16 +30,16 @@ export async function getItemDetails(itemId: string): Promise<ItemType> {
 }
 
 
-// get the names of all items
+// get the names of all items with id
 export async function getItemList() {
 	try {
 		const itemsCollection = collection(fireStore, "items");
 		const querySnapshot = await getDocs(itemsCollection);
 
-		const itemList: string[] = [];
+		const itemList: Array<{itemId: string, itemName: string}> = [];
 
 		querySnapshot.forEach((doc) => {
-			itemList.push(doc.data().itemName);
+			itemList.push({itemId: doc.id, itemName: doc.data().itemName});
 		});
 
 		return itemList;
