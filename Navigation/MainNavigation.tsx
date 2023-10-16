@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
@@ -27,100 +27,111 @@ import UnknownUserScreen from '../src/screens/UnknownUserScreen';
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function MainNavigation() {
-  
+export default function MainNavigation()
+{
+
   const dispatch = useDispatch()
 
   // before develop your part uncomment other routes except your
   // let userName:string | null = useSelector((state:UserState)=> state.userName)
   // let userType:string | null = useSelector((state:UserState)=> state.userType)
   // let isLoading:boolean = useSelector((state:UserState)=> state.isLoading)
- 
-let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
-let userType: string | null = useSelector((state: { user: UserState }) => state.user.userType);
-let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
+
+  let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
+  let userType: string | null = useSelector((state: { user: UserState }) => state.user.userType);
+  let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
 
   // this the are you can crate mock user
   userName = 'hello'
   userType = 'supplier'
   isLoading = false
 
-  if(!userType && !userName){
-    return <LogIn/>
+  if (!userType && !userName)
+  {
+    return <LogIn />
   }
 
-  if (userType === 'site_manager') {
+  if (userType === 'site_manager')
+  {
     // Render Site Manager route/component
     return (
       <NavigationContainer>
         <SiteManagerRoute />
       </NavigationContainer>
     );
-  } else if (userType === 'manager') {
+  } else if (userType === 'manager')
+  {
     // Render The Manager route/component
     return (
       <NavigationContainer>
         <TheManagerRoute />
       </NavigationContainer>
     );
-  } else if (userType === 'supplier') {
+  } else if (userType === 'supplier')
+  {
     // Render Supplier route/component
     return (
       <NavigationContainer>
         <SupplierRoute />
       </NavigationContainer>
     );
-  } else if (userType === 'procurement_staff') {
+  } else if (userType === 'procurement_staff')
+  {
     // Render Procurement Staff route/component
     return (
       <NavigationContainer>
         <ProcurementStaff />
       </NavigationContainer>
     );
-  } else {
+  } else
+  {
     // Handle other cases or unknown user types here
     return <UnknownUserScreen />;
   }
 }
 
-function SiteManagerRoute(){
-    return(
-      <Tab.Navigator initialRouteName='ItemList'>
-        <Tab.Screen name='ItemList' component={ItemsList}/>
-        <Tab.Screen name='ItemDetails' component={ItemDetails}/>
-        <Tab.Screen name='DeliveryDetails' component={DeliveryDetails}/>
-        <Tab.Screen name='Draft' component={Draft}/>
-      </Tab.Navigator>
-    )
-}  
-
-function SupplierRoute(){
-    return(
-      <Tab.Navigator initialRouteName='SupplierProfile'>
-        <Tab.Screen name='SupplierProfile' component={SupplierProfile}/>
-        <Tab.Screen name='Order' component={OrderRef}/>
-      </Tab.Navigator>
-    )
+function SiteManagerRoute()
+{
+  return (
+    <Tab.Navigator initialRouteName='ItemList'>
+      <Tab.Screen name='ItemList' component={ItemsList} />
+      <Tab.Screen name='ItemDetails' component={ItemDetails} />
+      <Tab.Screen name='DeliveryDetails' component={DeliveryDetails} />
+      <Tab.Screen name='Draft' component={Draft} />
+    </Tab.Navigator>
+  )
 }
 
-function TheManagerRoute(){
-    return(
-      <Tab.Navigator initialRouteName='ViewOrders'>
-        <Tab.Screen name='ViewOrders' component={ViewOrders}/>
-        <Tab.Screen name='OrderDetails' component={OrderDetails}/>
-        <Tab.Screen name='CreatePolicy' component={CreatePolicy}/>
-        <Tab.Screen name='PendingOrders' component={PendingOrders}/>
-      </Tab.Navigator>
-    )
+function SupplierRoute()
+{
+  return (
+    <Tab.Navigator initialRouteName='SupplierProfile' screenOptions={{tabBarShowLabel: true, headerShown: false,}}>
+      <Tab.Screen name='SupplierProfile' component={SupplierProfile} />
+      <Tab.Screen name='Order' component={OrderRef} />
+    </Tab.Navigator>
+  )
 }
 
-function ProcurementStaff(){
-    return(
-      <Tab.Navigator initialRouteName='OrderView'>
-        <Tab.Screen name='OrderView' component={OrderView}/>
-        <Tab.Screen name='ItemAdd' component={ItemAdd}/>
-        <Tab.Screen name='OrderDetails' component={ProcunentOrderDetails}/>
-        <Tab.Screen name='OrderPurchase' component={OrderPurchase}/>
-      </Tab.Navigator>
-    )
+function TheManagerRoute()
+{
+  return (
+    <Tab.Navigator initialRouteName='ViewOrders'>
+      <Tab.Screen name='ViewOrders' component={ViewOrders} />
+      <Tab.Screen name='OrderDetails' component={OrderDetails} />
+      <Tab.Screen name='CreatePolicy' component={CreatePolicy} />
+      <Tab.Screen name='PendingOrders' component={PendingOrders} />
+    </Tab.Navigator>
+  )
+}
+
+function ProcurementStaff()
+{
+  return (
+    <Tab.Navigator initialRouteName='OrderView'>
+      <Tab.Screen name='OrderView' component={OrderView} />
+      <Tab.Screen name='ItemAdd' component={ItemAdd} />
+      <Tab.Screen name='OrderDetails' component={ProcunentOrderDetails} />
+      <Tab.Screen name='OrderPurchase' component={OrderPurchase} />
+    </Tab.Navigator>
+  )
 }  

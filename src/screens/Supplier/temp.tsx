@@ -4,7 +4,6 @@ import { requestNewItemSupplier } from '../../../utils/dbFunctions'
 import { FlatList, View, StyleSheet } from 'react-native'
 import { ChildComponentProps } from '../../../config/interfaces';
 import { useForm, Controller } from "react-hook-form";
-import { newItemRequestInterface } from "../../../config/interfaces";
 
 export const ItemUpdateForm = ({ cancelUpdate }: ChildComponentProps) =>
 {
@@ -13,7 +12,7 @@ export const ItemUpdateForm = ({ cancelUpdate }: ChildComponentProps) =>
         defaultValues: {
             itemName: '',
             description: '',
-            unitPrice: '0',
+            unitPrice: 0,
         }
     });
 
@@ -28,11 +27,10 @@ export const ItemUpdateForm = ({ cancelUpdate }: ChildComponentProps) =>
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
 
-    const handleItemAdd = async (data: newItemRequestInterface) => {
-        const result: any = await requestNewItemSupplier({isApproved: false,unitPrice: 0, ...data});
-        if (result) {
+    const handleItemAdd = async () => {
+        const result: any = await requestNewItemSupplier;
+        if (result.status) {
             console.log('Item addition successful');
-            cancelUpdate();
         } else {
             console.log('Item addition was not successful please try again');
         }
@@ -53,9 +51,9 @@ export const ItemUpdateForm = ({ cancelUpdate }: ChildComponentProps) =>
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <TextInput
                                     label='Item Name'
-                                    value={value}
+                                    value={itemName}
                                     mode='outlined'
-                                    onChangeText={onChange}
+                                    onChangeText={name => setItemName(name)}
                                 />
                             )}
                             name="itemName" />
@@ -69,9 +67,9 @@ export const ItemUpdateForm = ({ cancelUpdate }: ChildComponentProps) =>
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <TextInput
                                     label='Item Description'
-                                    value={value}
+                                    value={itemDescription}
                                     mode='outlined'
-                                    onChangeText={onChange}
+                                    onChangeText={name => setItemDescription(name)}
                                 />
                             )}
                             name="description" />
@@ -85,11 +83,16 @@ export const ItemUpdateForm = ({ cancelUpdate }: ChildComponentProps) =>
                             render={({ field: { onChange, onBlur, value } }) => (
                                 <TextInput
                                     label='Unit Price'
-                                    value={value}
+                                    value={itemUnitPrice}
                                     mode='outlined'
                                     keyboardType='numeric'
                                     maxLength={7}
-                                    onChangeText={onChange}
+                                    onChangeText={amount => 
+                                    {
+                                        setItemUnitPrice(amount)
+                                        setUnitPriceNumber(parseFloat(amount))
+                                    }
+                                    }
                                 />
                             )}
                             name="unitPrice"

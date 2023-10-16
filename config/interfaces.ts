@@ -38,7 +38,7 @@ export interface orderInterface {
 export interface newItemRequestInterface {
   itemName: string;
   description: string;
-  isApproved: boolean;
+  unitPrice?: number;
 }
 
 export interface ChildComponentProps {

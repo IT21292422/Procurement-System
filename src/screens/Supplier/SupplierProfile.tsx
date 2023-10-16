@@ -1,6 +1,6 @@
 import { FlatList, Image, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB } from 'react-native-paper';
+import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB, Appbar } from 'react-native-paper';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { doc } from 'firebase/firestore';
 import { fireStore } from '../../../config/firebase';
@@ -12,7 +12,7 @@ export default function SupplierProfile()
 {
   const [value, setValue] = useState('');
   const [showItems, setShowItems] = useState(false)
-  const [showOrders, setShowOrders] = useState(true)
+  const [showRequests, setShowRequests] = useState(true)
   const [supplierItems, setSupplierItems] = useState<itemInterface[]>([]);
   const [showUpdateForm, setShowUpdateForm] = useState(false)
 
@@ -61,7 +61,8 @@ export default function SupplierProfile()
     console.log('FAB Pressed');
   }
 
-  const handleUpdateCancel = () =>{
+  const handleUpdateCancel = () =>
+  {
     setShowUpdateForm(false);
   }
 
@@ -70,6 +71,12 @@ export default function SupplierProfile()
 
   return (
     <>
+      <Appbar.Header>
+        <Appbar.BackAction onPress={() => { }} />
+        <Appbar.Content title="Test Supplier" />
+        <Appbar.Action icon="menu" onPress={() => { }} />
+        <Appbar.Action icon="account" onPress={() => { }} />
+      </Appbar.Header>
       <SafeAreaView style={styles.container}>
         <SegmentedButtons
           value={value}
@@ -77,10 +84,10 @@ export default function SupplierProfile()
           buttons={[
             {
               value: 'orderClicked',
-              label: 'Order',
+              label: 'Item requests',
               onPress: () =>
               {
-                setShowOrders(true)
+                setShowRequests(true)
                 setShowItems(false)
               },
             },
@@ -90,7 +97,7 @@ export default function SupplierProfile()
               onPress: () =>
               {
                 setShowItems(true)
-                setShowOrders(false)
+                setShowRequests(false)
                 console.log(supplierItems)
               },
             }
@@ -98,9 +105,9 @@ export default function SupplierProfile()
         />
       </SafeAreaView>
       <Divider />
-      {showItems && !supplierItems &&
+      {showItems && supplierItems.length == 0 &&
         <Button loading={true}>Loading Items</Button>}
-        {showItems && showUpdateForm && <ItemUpdateForm cancelUpdate={handleUpdateCancel} />}
+      {showItems && showUpdateForm && <ItemUpdateForm cancelUpdate={handleUpdateCancel} />}
       {showItems && supplierItems &&
         <FlatList
           data={supplierItems}
