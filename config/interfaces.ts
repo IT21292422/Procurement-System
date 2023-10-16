@@ -42,8 +42,8 @@ export interface IItem {
 }
 
 export interface Policy{
-  id?: string,
-  policyName: string,
-  policyAmount: number,
-  description: string
+  id?: string;
+  policyName: string;
+  policyAmount: number;
+  description: string;
 }
