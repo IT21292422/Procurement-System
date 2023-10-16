@@ -1,6 +1,8 @@
 import { View, Platform, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { Button, Card, Text, TextInput, HelperText } from 'react-native-paper'
+//React Native Paper is used as a facade design pattern through out the application as an abstraction that provides
+//a simplified interface to the library, this library offer components with built-in features and functionalities 
 
 import { Policy } from '../../../config/interfaces'
 import { addPolicy } from './PolicyController'

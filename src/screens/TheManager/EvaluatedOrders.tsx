@@ -1,6 +1,9 @@
 import { View, Platform, StyleSheet, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
+//React Native Paper is used as a facade design pattern through out the application as an abstraction that provides
+//a simplified interface to the library, this library offer components with built-in features and functionalities 
+
 import { OrderType } from '../../../config/types';
 import { getOrders, updateOrders } from './OrderController';
 
@@ -50,6 +53,7 @@ export default function EvaluatedOrders() {
       
       //To filter only the orders with status approved
       if (order.data.status === 'approved') {
+        //Iterator design pattern is used here traverse through the array
         const renderItem: any = (order.data.itemList || []).map((item: any) => {
           return (
             <>

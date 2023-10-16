@@ -1,6 +1,8 @@
 import { View, Platform, StyleSheet, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
+//React Native Paper is used as a facade design pattern through out the application as an abstraction that provides
+//a simplified interface to the library, this library offer components with built-in features and functionalities 
 
 import { Policy } from '../../../config/interfaces'
 import { deletePolicy, getPolicies } from './PolicyController';
@@ -77,6 +79,7 @@ export default function ViewPolicies() {
     receiveData()
   }, [policies])
 
+  //Iterator design pattern is used here traverse through the array
   const renderPolicies = policies.map((policy, index) => {
 
     return (
