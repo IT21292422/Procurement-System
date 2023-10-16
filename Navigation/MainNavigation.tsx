@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
@@ -20,67 +20,79 @@ import { UserState } from '../config/interfaces';
 import Loading from '../src/screens/Loading';
 import LogIn from '../src/screens/LogIn';
 import UnknownUserScreen from '../src/screens/UnknownUserScreen';
+
+// @ts-ignore
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import EvaluatedOrders from '../src/screens/TheManager/EvaluatedOrders';
 import OrderList from '../src/screens/SiteManager/Order/OrderList';
 import NewItemRequests from '../src/screens/SiteManager/NewItemRequest/newItemRequests';
 import ItemsList from '../src/screens/SiteManager/Item/ItemsList';
 import Draft from '../src/screens/SiteManager/Draft/Draft';
 
+
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-export default function MainNavigation() {
-  
+export default function MainNavigation()
+{
+
   const dispatch = useDispatch()
 
   // before develop your part uncomment other routes except your
   // let userName:string | null = useSelector((state:UserState)=> state.userName)
   // let userType:string | null = useSelector((state:UserState)=> state.userType)
   // let isLoading:boolean = useSelector((state:UserState)=> state.isLoading)
- 
-let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
-let userType: string | null = useSelector((state: { user: UserState }) => state.user.userType);
-let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
+
+  let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
+  let userType: string | null = useSelector((state: { user: UserState }) => state.user.userType);
+  let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
 
   // this the are you can crate mock user
-  // userName = 'hello'
-  // userType = 'procurement_staff'
-  // isLoading = false
+  userName = 'hello'
+  userType = 'supplier'
+  isLoading = false
 
-  if(!userType && !userName){
-    return <LogIn/>
+  if (!userType && !userName)
+  {
+    return <LogIn />
   }
 
-  if (userType === 'site_manager') {
+  if (userType === 'site_manager')
+  {
     // Render Site Manager route/component
     return (
       <NavigationContainer>
         {/* <SiteManagerRoute /> */}
       </NavigationContainer>
     );
-  } else if (userType === 'manager') {
+  } else if (userType === 'manager')
+  {
     // Render The Manager route/component
     return (
       <NavigationContainer>
         <TheManagerRoute />
       </NavigationContainer>
     );
-  } else if (userType === 'supplier') {
+  } else if (userType === 'supplier')
+  {
     // Render Supplier route/component
     return (
       <NavigationContainer>
         <SupplierRoute />
       </NavigationContainer>
     );
-  } else if (userType === 'procurement_staff') {
+  } else if (userType === 'procurement_staff')
+  {
     // Render Procurement Staff route/component
     return (
       <NavigationContainer>
         <ProcurementStaff />
       </NavigationContainer>
     );
-  } else {
+  } else
+  {
     // Handle other cases or unknown user types here
     return <UnknownUserScreen />;
   }
@@ -116,14 +128,24 @@ function SiteManagerRoute(){
 // );
 
 
-function SupplierRoute(){
-    return(
-      <Tab.Navigator initialRouteName='SupplierProfile'>
-        <Tab.Screen name='SupplierProfile' component={SupplierProfile}/>
-        <Tab.Screen name='OrderRef' component={OrderRef}/>
-      </Tab.Navigator>
-    )
+function SupplierRoute()
+{
+  return (
+    <Tab.Navigator initialRouteName='SupplierProfile' screenOptions={{ tabBarShowLabel: true, headerShown: false, }}>
+      <Tab.Screen name='Items' component={SupplierProfile} options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="home" size={size} color={color} />
+        ),
+      }}   />
+      <Tab.Screen name='Orders' component={OrderRef} options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="bell" size={size} color={color} />
+        ),
+      }}   />
+    </Tab.Navigator>
+  )
 }
+
 
 function TheManagerRoute(){
     return(
@@ -144,4 +166,5 @@ function ProcurementStaff(){
         <Stack.Screen name='OrderDetails' options={{ title: 'Item' }} component={ProcunentOrderDetails}/>
       </Stack.Navigator>
     )
+
 }  
