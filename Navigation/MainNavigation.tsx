@@ -5,16 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import { createStackNavigator } from '@react-navigation/stack';
-import DeliveryDetails from '../src/screens/SiteManager/DeliveryDetails';
-import Draft from '../src/screens/SiteManager/Draft';
-import ItemDetails from '../src/screens/SiteManager/ItemDetails';
-import ItemsList from '../src/screens/SiteManager/ItemsList';
-
-import Draft from '../src/screens/SiteManager/Draft/Draft';
-import ItemsList from '../src/screens/SiteManager/Item/ItemsList';           
-
 import OrderRef from '../src/screens/Supplier/OrderRef';
 import SupplierProfile from '../src/screens/Supplier/SupplierProfile';
 import CreatePolicy from '../src/screens/TheManager/CreatePolicy';
@@ -28,10 +19,7 @@ import { UserState } from '../config/interfaces';
 import Loading from '../src/screens/Loading';
 import LogIn from '../src/screens/LogIn';
 import UnknownUserScreen from '../src/screens/UnknownUserScreen';
-import { createStackNavigator } from '@react-navigation/stack';
-
 import EvaluatedOrders from '../src/screens/TheManager/EvaluatedOrders';
-
 import OrderList from '../src/screens/SiteManager/Order/OrderList';
 import NewItemRequests from '../src/screens/SiteManager/NewItemRequest/newItemRequests';
 
