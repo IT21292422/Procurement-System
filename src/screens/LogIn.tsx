@@ -33,21 +33,20 @@ export default function LogIn() {
 
   const submitLogin= async ()=>{
     dispatch(setLoading(true))
-    const userData = {
-     userEmail: "procurement_staff@email.com",
-     password: "12345678",
-     userType: "procurement_staff",
-    };
-    // const {userType,error} = await login(logins.email,logins.password)
+    // example user login
+    // const userData = {
+    //  userEmail: "procurement_staff@email.com",
+    //  password: "12345678",
+    //  userType: "procurement_staff",
+    // };
+    // const {userType,error} = await login(userData.userEmail,userData.password)
+    const {userType,error} = await login(logins.email,logins.password)
     // setLogins({...logins,email:'procurement_staff'})
-    const {userType,error} = await login(userData.userEmail,userData.password)
     if(error===null){
-      // dispatch(logUser(logins.email))
-      dispatch(logUser(userData.userEmail))
+      // dispatch(logUser(userData.userEmail))
+      dispatch(logUser(logins.email))
       dispatch(setLoading(false))
       dispatch(setUserType(userType))
-      // dispatch(setUserType(userType))
-      // dispatch(setLoading(false))
     }else{
       dispatch(setLoading(false))
       setLogingError(true)

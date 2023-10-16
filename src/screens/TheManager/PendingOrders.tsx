@@ -46,8 +46,11 @@ export default function PendingOrders() {
     receiveData()
   }, [orders])
 
-  //Iterator design pattern is used here traverse through the array
-  const renderOrder = orders.map((order, index) => {
+  //This will filter the order to make sure only the approval_pending orders are rendered
+  const pendingOrders = orders.filter((order) => order.data.status === 'approval_pending');
+
+  //Iterator design pattern is used here to traverse through the array
+  const renderOrder = pendingOrders.map((order, index) => {
 
     let btncolor: string = "blue"
      //This sets the style of the Order status based on the status
@@ -60,8 +63,7 @@ export default function PendingOrders() {
     } else if (order.data.status === 'delivered') {
       btncolor = "#17A2B8"
     }
-    //This condition make sure only the approval_pending orders are rendered
-    if (order.data.status === 'approval_pending') {
+    
       const renderItem: any = (order.data.itemList || []).map((item: any) => {
         return (
           <>
@@ -121,10 +123,9 @@ export default function PendingOrders() {
           </Card.Content>
           <Card.Actions>
             <Button disabled={order.data.status === 'approved' || order.data.status === 'delivery_pending' || order.data.status === 'delivered'} onPress={() => showDialog(order.id)}>Authorize</Button>
-            <Button buttonColor="#DC3545" onPress={() => showDeleteDialog(order.id)}>Decline Order</Button>
+            <Button buttonColor="#DC3545" textColor='white' onPress={() => showDeleteDialog(order.id)}>Decline Order</Button>
           </Card.Actions>
         </Card>)
-    }
   })
 
   //This function is to change the status of an order to approved
@@ -141,26 +142,31 @@ export default function PendingOrders() {
     if (selectedOrderId) {
       try {
         await deleteOrder(selectedOrderId);
-        hideDialog();
+        hideDeleteDialog();
       } catch (error) {
         console.log("Error deleting order: ", error)
       }
     }
   }
 
+  const noPending = (
+    <View style={{alignItems:'center',marginTop:outerHeight/2-150}}>
+    <Text variant="headlineLarge" style={{color:"#ff0000"}}>No pending orders found</Text>
+    </View>
+  );
 
  return (
     <>
       <ScrollView style={styles.scrollview}>
         <View style={styles.container}>
-          {renderOrder}
+        {pendingOrders.length === 0 ? noPending : renderOrder}
         </View>
       </ScrollView>
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
           <Dialog.Title>Alert</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyLarge">Are you sure you want to authorize this order</Text>
+            <Text variant="bodyLarge">Are you sure you want to authorize this order?</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={approve}>Confirm</Button>
@@ -172,11 +178,11 @@ export default function PendingOrders() {
         <Dialog visible={visibleDelete} onDismiss={hideDeleteDialog} style={styles.dialog}>
           <Dialog.Title>Alert</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyLarge">Are you sure you want to Delete this policy?</Text>
+            <Text variant="bodyLarge">Are you sure you want to Decline this order?</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={deleteData}>Confirm</Button>
-            <Button onPress={hideDialog}>Cancel</Button>
+            <Button onPress={hideDeleteDialog}>Cancel</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

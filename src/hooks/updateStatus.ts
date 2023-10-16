@@ -4,7 +4,6 @@ import {
   query,
   where,
   setDoc,
-  DocumentReference,
   getDocs,
 } from "firebase/firestore";
 

@@ -58,7 +58,7 @@ export default function ViewOrders() {
       btncolor = "#17A2B8"
     }
 
-      //Iterator design pattern is used here traverse through the array
+      //Iterator design pattern is used here to traverse through the array
       const renderItem:any = (order.data.itemList || []).map((item: any) => {
           return (
             <>
@@ -119,7 +119,7 @@ export default function ViewOrders() {
         </Card.Content>
         <Card.Actions>
           <Button disabled={order.data.status === 'approved'||order.data.status==='delivery_pending'||order.data.status==='delivered'} onPress={() => showDialog(order.id)}>Authorize</Button>
-          <Button buttonColor="#DC3545" disabled={order.data.status === 'approved'||order.data.status==='delivery_pending'||order.data.status==='delivered'} onPress={() => showDeleteDialog(order.id)}>Decline Order</Button>
+          <Button buttonColor="#DC3545" textColor='white' disabled={order.data.status === 'approved'||order.data.status==='delivery_pending'||order.data.status==='delivered'} onPress={() => showDeleteDialog(order.id)}>Decline Order</Button>
         </Card.Actions>
       </Card>
     )
@@ -139,7 +139,7 @@ export default function ViewOrders() {
     if (selectedOrderId) {
       try {
         await deleteOrder(selectedOrderId);
-        hideDialog();
+        hideDeleteDialog();
       } catch (error) {
         console.log("Error deleting order: ", error)
       }
@@ -157,7 +157,7 @@ export default function ViewOrders() {
         <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
           <Dialog.Title>Alert</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyLarge">Are you sure you want to authorize this order</Text>
+            <Text variant="bodyLarge">Are you sure you want to authorize this order?</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={approve}>Confirm</Button>
@@ -169,11 +169,11 @@ export default function ViewOrders() {
         <Dialog visible={visibleDelete} onDismiss={hideDeleteDialog} style={styles.dialog}>
           <Dialog.Title>Alert</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyLarge">Are you sure you want to Delete this policy?</Text>
+            <Text variant="bodyLarge">Are you sure you want to Decline this order?</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={deleteData}>Confirm</Button>
-            <Button onPress={hideDialog}>Cancel</Button>
+            <Button onPress={hideDeleteDialog}>Cancel</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
