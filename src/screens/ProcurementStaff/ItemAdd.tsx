@@ -49,15 +49,7 @@ const ItemAdd: React.FC<{ route: ItemAddRouteProp,navigation:NavigationProp<Root
     await createItem(orderId,itemData)
     setSetLoading(false)
     hideModal()
-    } 
-    
-  const addTestItem = async() =>{
-      setSetLoading(true)
-      let id = await testCreateItem(orderId)
-      if(await id){
-        setSetLoading(false)
-    }
-  }
+  } 
 
   const handleRefresh = async () => {
   setSetLoading(true);
@@ -111,11 +103,6 @@ const topBar = () =>{
         <Button onPress={() => {
           showModal()
         }}>New Item</Button>
-        {/* <Button
-          onPress={() => {
-            addTestItem()
-          }}
-          >addTestItem</Button> */}
         </Card.Actions>
       </View>
   )

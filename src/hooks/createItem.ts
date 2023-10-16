@@ -13,7 +13,7 @@ const createItem = async (orderId: string, newItem: Items) => {
   console.log(orderId);
   console.log(newItem.itemName);
   try {
-  const ordersCollection = collection(fireStore, "orders");
+  const ordersCollection = collection(fireStore, "order");
   const q = query(ordersCollection, where("orderId", "==", orderId));
   const querySnapshot = await getDocs(q);
 

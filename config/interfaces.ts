@@ -26,6 +26,21 @@ export interface IRequestedItems{
   itemName:string;
 }
 
+export interface IUser{
+  userEmail:string;
+  userType:string;
+}
+
+export interface IItem {
+  orderId: string;
+  itemId: string;
+  itemName: string;
+  description: string;
+  unit: string;
+  unitPrice: number;
+  policyName: string;
+}
+
 export interface Policy{
   id?: string;
   policyName: string;

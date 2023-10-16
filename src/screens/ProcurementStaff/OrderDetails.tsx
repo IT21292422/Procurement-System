@@ -1,16 +1,24 @@
 import { View,StyleSheet, RefreshControl, ScrollView } from 'react-native'
 import React,{useState,useEffect} from 'react'
-import { logOut } from '../../../features/user/userSlice';
-import { useDispatch } from 'react-redux';
-import { IRequestedItems, UserState } from '../../../config/interfaces';
-import { ActivityIndicator, MD2Colors,Button,Card,Text } from 'react-native-paper';
+import { IRequestedItems,IItem } from '../../../config/interfaces';
+import { ActivityIndicator, MD2Colors,Button,Modal, Portal, TextInput,Card,Text} from 'react-native-paper';
 import getItemRequests from '../../hooks/getItemRequests'
+import addSystemItem from '../../hooks/addSystemItem';
 
 export default function ProcunentOrderDetails({navigation}) {
-  const dispatch = useDispatch()
   const [setLoading, setSetLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [itemRequested, setItemRequested] = useState<IRequestedItems[]>([]);
+  const [visible, setVisible] = useState(false);
+  const [item, setItem] = useState<IItem>({
+  orderId: '',
+  itemId: '',
+  itemName: '',
+  description: '',
+  unit: '',
+  unitPrice: 0,
+  policyName: '',
+  });
 
   useEffect(() => {
     const fetchRequests = async () =>{
@@ -22,6 +30,20 @@ export default function ProcunentOrderDetails({navigation}) {
     fetchRequests()
   }, []);
 
+  const showModal = () => setVisible(true);
+  const hideModal = () => {
+    setVisible(false);
+    setItem({
+      orderId: '',
+      itemId: '',
+      itemName: '',
+      description: '',
+      unit: '',
+      unitPrice: 0,
+      policyName: '',
+    });
+  };
+
   const handleRefresh = async () => {
   setSetLoading(true);
   setIsRefreshing(true);
@@ -31,14 +53,23 @@ export default function ProcunentOrderDetails({navigation}) {
   setSetLoading(false);
   };
 
+  const submitItemData = async () =>{
+  setSetLoading(true);
+  await addSystemItem(item)
+  setSetLoading(false);
+  }
+
+  const addSystemItemModal = () =>{
+    showModal()
+  }
+
   const topBar = () =>{
     return(
       <View>
       <Card.Actions>
         <Button onPress={() => {
-          dispatch(logOut())
-          // logout()
-        }}>Logout</Button>
+          addSystemItemModal()
+        }}>Add Item</Button>
         <Button
           onPress={() =>
             navigation.navigate('OrderView')}>
@@ -48,6 +79,68 @@ export default function ProcunentOrderDetails({navigation}) {
       </View>
     )
   }
+
+  const sysItemAddModal:any = () =>{
+  return(
+   <Portal>
+      <Modal visible={visible} contentContainerStyle={styles.containerStyle}>
+        <TextInput
+          label="Order ID"
+          value={item.orderId}
+          onChangeText={(text) =>
+            setItem({ ...item, orderId: text })
+          }
+        />
+        <TextInput
+          label="Item ID"
+          value={item.itemId}
+          onChangeText={(text) =>
+            setItem({ ...item, itemId: text })
+          }
+        />
+        <TextInput
+          label="Item Name"
+          value={item.itemName}
+          onChangeText={(text) =>
+            setItem({ ...item, itemName: text })
+          }
+        />
+        <TextInput
+          label="Description"
+          value={item.description}
+          onChangeText={(text) =>
+            setItem({ ...item, description: text })
+          }
+        />
+        <TextInput
+          label="Unit"
+          value={item.unit}
+          onChangeText={(text) =>
+            setItem({ ...item, unit: text })
+          }
+        />
+        <TextInput
+          label="Unit Price"
+          value={item.unitPrice.toString()}
+          onChangeText={(text) =>
+            setItem({ ...item, unitPrice: parseInt(text, 10) })
+          }
+        />
+        <TextInput
+          label="Policy Name"
+          value={item.policyName}
+          onChangeText={(text) =>
+            setItem({ ...item, policyName: text })
+          }
+        />
+        <Card.Actions>
+          <Button onPress={submitItemData}>Add Item</Button>
+          <Button onPress={hideModal}>Cancel</Button>
+        </Card.Actions>
+      </Modal>
+    </Portal>
+  )
+}
 
   const requestedItemView = () =>{
     return(
@@ -94,6 +187,7 @@ export default function ProcunentOrderDetails({navigation}) {
           <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
         }>
           {topBar()}
+          {sysItemAddModal()}
           {requestedItemView()}
       </ScrollView>
     )
@@ -116,10 +210,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     //top: 20
   },
-  containerStyle : {
-    backgroundColor: 'white', 
-    padding: 20},
   scrollview: {
     minHeight: '100%'
-    }
+    },
+  containerStyle : {
+    backgroundColor: 'white', 
+    padding: 20,
+    borderRadius: 16,
+    margin:10
+  }
 })

@@ -20,7 +20,7 @@ const testCreateOrder = async () => {
   };
 
   try {
-    const ordersCollection = collection(fireStore, "orders");
+    const ordersCollection = collection(fireStore, "order");
     const newOrderRef = await addDoc(ordersCollection, orderData);
     console.log(newOrderRef);
     return newOrderRef.id; // Return the ID of the newly created order document
@@ -43,7 +43,7 @@ const testCreateItem = async (orderId) => {
   };
 
   try {
-    const ordersCollection = collection(fireStore, "items");
+    const ordersCollection = collection(fireStore, "item");
     const newOrderRef = await addDoc(ordersCollection, itemData);
     console.log(newOrderRef);
     return newOrderRef.id; // Return the ID of the newly created order document
@@ -61,7 +61,7 @@ const testcreateUser = async () => {
   };
 
   try {
-    const ordersCollection = collection(fireStore, "users");
+    const ordersCollection = collection(fireStore, "user");
     const newOrderRef = await addDoc(ordersCollection, userData);
     console.log(newOrderRef);
   } catch (error) {
@@ -70,7 +70,7 @@ const testcreateUser = async () => {
   }
 };
 
-const testcreateUserOnAuth = () => {
+const testcreateUserOnAuth = async () => {
   const userData = {
     userEmail: "procurement_staff@email.com",
     password: "12345678",
@@ -88,6 +88,21 @@ const testcreateUserOnAuth = () => {
     .catch((error) => {
       console.log(error);
     });
+
+  const userDataOnDataBase = {
+    userEmail: userData.userEmail,
+    userType: userData.userType,
+  };
+  try {
+    const ordersCollection = collection(fireStore, "user");
+    const newOrderRef = await addDoc(ordersCollection, userDataOnDataBase);
+    console.log(newOrderRef);
+    return newOrderRef.id; // Return the ID of the newly created order document
+  } catch (error) {
+    // Handle any errors that may occur during the creation process
+    console.error("Error creating order:", error);
+    throw error; // You can choose to throw the error for further handling or handle it here
+  }
 };
 
 export {
