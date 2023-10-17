@@ -50,9 +50,11 @@ export default function MainNavigation()
   let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
 
   // this the are you can crate mock user
-  // userName = 'hello'
-  // userType = 'supplier'
-  // isLoading = false
+
+  userName = 'hello'
+  userType = 'supplier'
+  isLoading = false
+
 
   if (!userType && !userName)
   {
@@ -162,7 +164,7 @@ function ProcurementStaff(){
     return(
       <Stack.Navigator initialRouteName='OrderView'>
         <Stack.Screen name='OrderView' options={{ title: 'Orders' }} component={OrderView}/>
-        <Stack.Screen name='ItemAdd' options={{ title: 'Items' }} component={ItemAdd}/>
+        {/* <Stack.Screen name='ItemAdd' options={{ title: 'Items' }} component={ItemAdd}/> */}
         <Stack.Screen name='OrderDetails' options={{ title: 'Item' }} component={ProcunentOrderDetails}/>
       </Stack.Navigator>
     )

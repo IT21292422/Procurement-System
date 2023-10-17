@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto'
   },
   dialog: {
-    width: '30%',
+    width: Platform.OS === 'android' ? '90%': '30%',
     marginLeft: 'auto',
     marginRight: 'auto'
   },
