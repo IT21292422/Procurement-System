@@ -1,9 +1,9 @@
 import { FlatList, Image, View } from 'react-native'
-import { getAllItemRequests, deleteItemRequest, getAllItems } from '../../../utils/dbFunctions';
+import { getAllItemRequests, deleteItemRequest, getAllItems, getAllOrders, getCompletedOrders } from '../../../utils/dbFunctions';
 
 import React, { useEffect, useState } from 'react'
 import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB, Appbar, useTheme } from 'react-native-paper';
-import { itemInterface } from '../../../config/interfaces';
+import { itemInterface, orderInterface } from '../../../config/interfaces';
 import { ItemUpdateForm } from './ItemUpdateForm';
 import { StyleSheet, SafeAreaView } from 'react-native';
 
@@ -11,75 +11,57 @@ export default function OrderRef()
 {
   const [showOrders, setShowOrders] = useState(true)
   const [itemRequests, setItemRequests] = useState([]);
-  const [showPastOrders, setshowPastOrders] = useState(false);
-  const [showCurrentOrders, setShowCurrentOrders] = useState(false)
   const [showUpdateForm, setShowUpdateForm] = useState(false)
   const [supplierItems, setSupplierItems] = useState<itemInterface[]>([]);
   const [value, setValue] = useState('');
-
+  
+  // using
+  const [showPastOrders, setshowPastOrders] = useState(false);
+  const [showCurrentOrders, setShowCurrentOrders] = useState<boolean>(true)
+  const [currentOrders, setCurrentOrders] = useState<orderInterface[]>([])
+  const [pastOrders, setPastOrders] = useState<orderInterface[]>([])
 
   useEffect(() =>
   {
-
     const loadData = async () =>
     {
       try
       {
-        const itemsSnapshot: any = await getAllItems();
-        const itemsArray: itemInterface[] = [];
-        itemsSnapshot.forEach((doc: any) =>
+        const ordersSnapshot: any = await getAllOrders();
+        const ordersArray: orderInterface[] = [];
+        ordersSnapshot.forEach((doc: any) =>
         {
-          itemsArray.push({ id: doc.id, ...doc.data() });
+          ordersArray.push({ id: doc.id, ...doc.data() });
         });
 
-        setSupplierItems(itemsArray);
+        setCurrentOrders(ordersArray);
       } catch (error)
       {
-        console.log('Error occurred loading data', error);
+        console.log('Error occurred loading orders', error);
       }
 
     }
-    loadData()
-    console.log(supplierItems);
+    // loadData()
+    console.log(currentOrders);
   }, [])
 
-  const loadItemRequests = async () =>
+  const loadPastOrders = async () =>
   {
     try
     {
-      const requestSnapshot: any = await getAllItemRequests();
+      const requestSnapshot: any = await getCompletedOrders();
       const requestArray: any = [];
       requestSnapshot.forEach((doc: any) =>
       {
         requestArray.push({ id: doc.id, ...doc.data() })
       });
-      setItemRequests(requestArray);
+      setPastOrders(requestArray);
     } catch (error)
     {
-      console.log('Error occurred loading item request data', error);
+      console.log('Error occurred loading request data', error);
     }
   }
 
-  const handleItemPress = async () =>
-  {
-
-  }
-
-  const handleFabPress = () =>
-  {
-    setShowUpdateForm(true);
-    // if (showItems) {
-    //   setShowItems(false);
-    // }else{
-    //   setShowItems(true);
-    // }
-    console.log('FAB Pressed');
-  }
-
-  const handleUpdateCancel = () =>
-  {
-    setShowUpdateForm(false);
-  }
   const handleRequestDelete = async (id: string) =>
   {
     const result = await deleteItemRequest(id)
@@ -109,8 +91,7 @@ export default function OrderRef()
               onPress: () =>
               {
                 setshowPastOrders(true)
-                setShowItems(false)
-                loadItemRequests()
+                setShowCurrentOrders(false)
               },
             },
             {
@@ -118,28 +99,27 @@ export default function OrderRef()
               label: 'Active Orders',
               onPress: () =>
               {
-                setShowItems(true)
+                setShowCurrentOrders(true)
                 setshowPastOrders(false)
-                console.log(supplierItems)
+                console.log(currentOrders)
               },
             }
           ]}
         />
       </SafeAreaView>
       <Divider />
-      {showCurrentOrders && supplierItems.length == 0 &&
+      {showCurrentOrders && currentOrders.length == 0 &&
         <Button loading={true}>Loading Items</Button>}
-      {showCurrentOrders && showUpdateForm && <ItemUpdateForm cancelUpdate={handleUpdateCancel} />}
-      {showCurrentOrders && supplierItems &&
+      {showCurrentOrders && currentOrders &&
         <FlatList
-          data={supplierItems}
+          data={currentOrders}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <Card onPress={handleItemPress} style={styles.container}>
+            <Card style={styles.container}>
               {/* <Card.Title title={item.itemName} subtitle="Card Subtitle" /> */}
               <Card.Content>
-                <Text variant="titleLarge">{item.itemName}</Text>
-                <Text variant="bodyMedium">{item.description}</Text>
+                <Text variant="titleLarge">{item.orderId}</Text>
+                <Text variant="bodyMedium">`To delivery site: ${item.deliverySite}`</Text>
               </Card.Content>
 
               <Card.Actions>
@@ -149,14 +129,14 @@ export default function OrderRef()
             </Card>
           )}
         />}
-      {showOrders && showPastOrders &&
+      {showPastOrders && pastOrders.length == 0 &&
         <Button loading={true}>Loading Requests</Button>}
       {showOrders &&
         <FlatList
-          data={itemRequests}
+          data={pastOrders}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }: any) => (
-            <Card onPress={handleItemPress} style={styles.container}>
+            <Card style={styles.container}>
               {/* <Card.Title title={item.itemName} subtitle="Card Subtitle" /> */}
               <Card.Content>
                 <Text variant="titleLarge">{item.itemName}</Text>

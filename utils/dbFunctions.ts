@@ -1,11 +1,12 @@
 import React from 'react'
 import { auth, fireStore, storage } from '../config/firebase'
-import { addDoc, collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore'
- import {newItem} from '../config/interfaces'
+import { QuerySnapshot, DocumentData, addDoc, collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
+ import {newItem, orderInterface} from '../config/interfaces'
 
 const requestItemsColRef = collection(fireStore, 'supplierItemRequest');
 const itemsColRef = collection(fireStore, 'items');
 const ordersColRef = collection(fireStore, 'orders')
+
 
 export const getAllItems = async () => {
   return await getDocs(itemsColRef);
@@ -31,6 +32,11 @@ export const requestNewItemSupplier = async (item: newItem) => {
 
 export const getAllOrders = async () => {
   return await getDocs(ordersColRef);
+}
+
+export const getCompletedOrders = async() => {
+  const q = query(ordersColRef, where("status", "==", "approved"));
+  return await getDocs(q);
 }
 
 export const deleteItemRequest = async (docId: string) => {
