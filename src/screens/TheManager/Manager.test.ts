@@ -1,4 +1,5 @@
 import { addPolicy, getPolicies, getPolicyById, updatePolicy, deletePolicy } from './PolicyController'
+import {describe, expect, jest, test} from '@jest/globals'
 
 const policy = {
   policyName: 'Test Policy',
@@ -7,16 +8,17 @@ const policy = {
 };
 
 //expect(actual value).toBe(expected value)
-describe('Firebase Firestore Functions', () => {
+describe('Test cases to test the functions in Policy Controller', () => {
   //Test case to test adding policy to database, updating it, retrieving it by ID and then deleting it
   test('addPolicy adds a new policy document', async () => {
+    jest.setTimeout(25000);
 
     // Call the addPolicy function
     await addPolicy(policy);
 
     //Check if the policy was added to Firestore by checking the getPolicies function
     const policies = await getPolicies();
-    const addedPolicy = policies.find((policy) => policy.policyName === 'Test Policy');
+    const addedPolicy = policies.find((policy:any) => policy.policyName === 'Test Policy');
     const policyId = addedPolicy.id;
 
     // Assertion
@@ -33,7 +35,7 @@ describe('Firebase Firestore Functions', () => {
     await updatePolicy({ id: policyId }, updatedPolicyData);
 
     //Then to retieve the updated data
-    const updatedPolicy = await getPolicyById({ id: policyId });
+    const updatedPolicy:any = await getPolicyById({ id: policyId });
 
     // Assertion to check whether we get the expected value
     expect(updatedPolicy.policyName).toBe('Updated Test Policy');
@@ -76,7 +78,7 @@ describe('Firebase Firestore Functions', () => {
 
     // Checking specific policy data
     for (const mockPolicy of mockPolicies) {
-      const retrievedPolicy = policies.find((policy) => policy.policyName === mockPolicy.policyName);
+      const retrievedPolicy = policies.find((policy:any) => policy.policyName === mockPolicy.policyName);
       expect(retrievedPolicy).toBeDefined();
       expect(retrievedPolicy.policyAmount).toBe(mockPolicy.policyAmount);
     }
@@ -89,7 +91,7 @@ describe('Firebase Firestore Functions', () => {
     const testPolicyId = 'czMXCLkqUDjXjYd3JkXL';
 
     // Call the getPolicyById function
-    const policy = await getPolicyById({ id: testPolicyId });
+    const policy:any = await getPolicyById({ id: testPolicyId });
 
     // Assertion
     expect(policy).toBeDefined();
@@ -105,7 +107,7 @@ describe('Firebase Firestore Functions', () => {
   
     try {
       await getPolicyById({ id: invalidPolicyId });
-    } catch (error) {
+    } catch (error:any) {
       // Assertion
       expect(error).toBeDefined(); //We expect an error here
       expect(error.message).toContain('No such policy document');
