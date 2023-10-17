@@ -50,9 +50,11 @@ export default function MainNavigation()
   let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
 
   // this the are you can crate mock user
+
   userName = 'hello'
-  userType = 'manager'
+  userType = 'supplier'
   isLoading = false
+
 
   if (!userType && !userName)
   {

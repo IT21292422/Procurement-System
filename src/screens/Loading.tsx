@@ -2,6 +2,9 @@ import { View,StyleSheet,Dimensions } from 'react-native'
 import React from 'react'
 import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
+/*
+This page will load when some component called to be come isLoading true in redux
+*/
 export default function Loading() {
   return (
     <View style={styles.container}>
