@@ -1,5 +1,5 @@
 import { FlatList, Image, View } from 'react-native'
-import { getAllItemRequests, deleteItemRequest, getAllItems, getAllOrders, getCompletedOrders, formatDate, dateToString } from '../../../utils/dbFunctions';
+import { getAllItemRequests, deleteItemRequest, getAllItems, getAllOrders, getCompletedOrders, rejectOrder, dateToString } from '../../../utils/dbFunctions';
 
 import React, { useEffect, useState } from 'react'
 import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB, Appbar, TextInput } from 'react-native-paper';
@@ -67,6 +67,21 @@ export default function OrderRef()
   }, [currentOrders])
 
 
+  const rejectOrderStatus = async (id: string) =>
+  {
+    console.log(`rejecting order with id ${id}`);
+
+    const result = await rejectOrder(id);
+    if (result)
+    {
+      console.log('Successfully rejected the order');
+    } else
+    {
+      console.log('Rejection not succesful');
+    }
+  }
+
+
   const loadPastOrders = async () =>
   {
     try
@@ -102,9 +117,10 @@ export default function OrderRef()
     setShowDeliveryInput(true);
   }
 
-  const uploadDate = (data: any) =>{
+  const uploadDate = (data: any) =>
+  {
     console.log(`Called upload date with this data ${data}`);
-    
+
   }
 
 
@@ -173,11 +189,11 @@ export default function OrderRef()
                 />
               </Card.Content>
               <Card.Actions style={styles.buttonGroup}>
-                {showDeliveryInput && <DatePickerHook control={control} name="estimatedDeliveryDatelivery" value={deliveryDate}/>}
+                {showDeliveryInput && <DatePickerHook control={control} name="estimatedDeliveryDatelivery" value={deliveryDate} />}
                 <Button icon="check" style={styles.acceptButton} onPress={handleDeliveryDateInput}>Accept</Button>
                 {showDeliveryInput && <Button icon="close" style={styles.acceptButton} onPress={() => setShowDeliveryInput(false)}>Cancel</Button>}
-                {!showDeliveryInput && <Button icon="close" style={styles.acceptButton}>Reject</Button>}
-                <Button style={styles.acceptButton} onPress={handleSubmit(uploadDate)}>Confirm</Button>
+                {!showDeliveryInput && <Button icon="close" style={styles.acceptButton} onPress={() => { rejectOrderStatus(item.id) }}>Reject</Button>}
+                {/* <Button style={styles.acceptButton} onPress={handleSubmit(uploadDate)}>Confirm</Button> */}
 
               </Card.Actions>
             </Card>

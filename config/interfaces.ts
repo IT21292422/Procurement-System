@@ -5,12 +5,13 @@ export interface UserState {
 }
 
 export interface itemInterface {
-  itemId: "string";
-  itemName: "string";
-  description: "string";
-  unit: "string";
-  unitPrice: "number";
-  policyName: "string";
+  itemId: string;
+  itemName: string;
+  description: string;
+  unit: string;
+  unitPrice: number;
+  policyName: string;
+  id?: string;
 }
 
 export interface newItem {
@@ -35,6 +36,7 @@ export interface orderInterface {
   purchaseDate: Date; // procurement
   supplierName: string;
   estimatedDeliveryDate: Date; //delivery date for order
+  id?:string;
 }
 
 export interface orderItemsinterface{
