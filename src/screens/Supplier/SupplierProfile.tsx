@@ -19,6 +19,9 @@ export default function SupplierProfile()
   const [supplierItems, setSupplierItems] = useState<itemInterface[]>([]);
   const [itemRequests, setItemRequests] = useState([]);
   const [showUpdateForm, setShowUpdateForm] = useState(false)
+  const [showActualUpdateForm, setShowActualUpdateForm] = useState(false)
+  const [itemId, setItemId] = useState('');
+  const [refresh, setRefresh] = useState(false)
 
   // const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
   const logoImage = require('../../../public/sampleCompany.jpg');
@@ -49,7 +52,7 @@ export default function SupplierProfile()
     }
     loadData()
     console.log(supplierItems);
-  }, [])
+  }, [refresh])
 
   const loadItemRequests = async () =>
   {
@@ -68,10 +71,13 @@ export default function SupplierProfile()
     }
   }
 
-  const handleItemPress = async () =>
+  const handleUpdateItemPress = async (id: string) =>
   {
-
+    setItemId(id);
+    setShowActualUpdateForm(true);
   }
+
+
 
   const handleFabPress = () =>
   {
@@ -87,6 +93,7 @@ export default function SupplierProfile()
   const handleUpdateCancel = () =>
   {
     setShowUpdateForm(false);
+    setShowActualUpdateForm(false);
   }
   const handleRequestDelete = async (id: string) =>
   {
@@ -116,7 +123,9 @@ export default function SupplierProfile()
         <Appbar.BackAction onPress={() => { }} />
         <Image source={logoImage} style={{ width: 40, height: 40, marginEnd: 10 }} />
         <Appbar.Content title="  Test Supplier" />
-        <Appbar.Action icon="account" onPress={() => {dispatch(logOut())}} />
+
+        <Appbar.Action icon="logout" onPress={() => {dispatch(logOut())}} />
+
       </Appbar.Header>
       <SafeAreaView style={styles.container}>
         <SegmentedButtons
@@ -149,13 +158,14 @@ export default function SupplierProfile()
       <Divider />
       {showItems && supplierItems.length == 0 &&
         <Button loading={true}>Loading Items</Button>}
-      {showItems && showUpdateForm && <ItemUpdateForm cancelUpdate={handleUpdateCancel} />}
+      {showItems && showUpdateForm && <ItemUpdateForm cancelUpdate={handleUpdateCancel} refreshScreen={setRefresh} />}
+      {showItems && showActualUpdateForm && <ItemUpdateForm cancelUpdate={handleUpdateCancel} id={itemId} refreshScreen={setRefresh}/>}
       {showItems && supplierItems &&
         <FlatList
           data={supplierItems}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }: any) => (
-            <Card onPress={handleItemPress} style={styles.container}>
+            <Card style={styles.container}>
               {/* <Card.Title title={item.itemName} subtitle="Card Subtitle" /> */}
               <Card.Content>
                 <Text variant="titleLarge">{item.itemName}</Text>
@@ -164,7 +174,7 @@ export default function SupplierProfile()
 
               <Card.Actions>
                 <Button onPress={() => {handleDeleteItem(item.id)}}>Delete</Button>
-                <Button>Update</Button>
+                <Button onPress={() => handleUpdateItemPress(item.id)}>Update</Button>
               </Card.Actions>
             </Card>
           )}
@@ -176,7 +186,7 @@ export default function SupplierProfile()
           data={itemRequests}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }: any) => (
-            <Card onPress={handleItemPress} style={styles.container}>
+            <Card style={styles.container}>
               {/* <Card.Title title={item.itemName} subtitle="Card Subtitle" /> */}
               <Card.Content>
                 <Text variant="titleLarge">{item.itemName}</Text>

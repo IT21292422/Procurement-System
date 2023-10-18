@@ -1,5 +1,5 @@
 import React from "react";
-import { auth, fireStore, storage } from "../config/firebase";
+import { fireStore, storage } from "../config/firebase";
 import {
   QuerySnapshot,
   DocumentData,
@@ -13,8 +13,9 @@ import {
   where,
   Timestamp,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
-import { newItem, orderInterface } from "../config/interfaces";
+import { newItem, orderInterface,existingItem } from "../config/interfaces";
 
 const requestItemsColRef = collection(fireStore, "supplierItemRequest");
 const itemsColRef = collection(fireStore, "items");
@@ -52,6 +53,25 @@ export const getAllOrders = async () => {
 export const getCompletedOrders = async () => {
   const q = query(ordersColRef, where("status", "==", "delivered"));
   return await getDocs(q);
+};
+
+export const getItemById = async (id: string | undefined):Promise<existingItem | boolean> => {
+  try {
+    const docRef = doc(itemsColRef, id);
+    const docSnap:any = await getDoc(docRef);
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      return docSnap.data();
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+      return false;
+    }
+  } catch (error) {
+    return false
+    console.log("Error retrieving data on item");
+
+  }
 };
 
 export const deleteItem = async (docId: string) => {
@@ -108,7 +128,9 @@ export const dateToString = (time: any) => {
   })}`;
 };
 
-export const updateDeliveryDate = async () => {};
+export const updateDeliveryDate = async () => {
+  
+};
 
 export const rejectOrder = async (id: string) => {
   try {
@@ -120,3 +142,15 @@ export const rejectOrder = async (id: string) => {
     return false;
   }
 };
+
+
+export const updateItem = async (id: string, data: existingItem) =>{
+  try {
+    const docRef = doc(itemsColRef, id);
+    const result = await updateDoc(docRef, {...data});
+    return true;
+  } catch (error) {
+    console.log(`Error when updating order ${error}`);
+    return false;
+  }
+}

@@ -20,6 +20,14 @@ export interface newItem {
   itemName: string;
   unitPrice: number;
 }
+
+export interface existingItem{
+  description: string;
+  itemName: string;
+  unitPrice: number;
+  policyName: string;
+  unit: string;
+}
 export interface supplierInterface {
   supplierId: string;
   supplierName: string;
@@ -52,7 +60,7 @@ export interface newItemRequestInterface {
 
 export interface ChildComponentProps {
   cancelUpdate: () => void;
-
+}
 export interface Logings{
   email:string,
   password:string
