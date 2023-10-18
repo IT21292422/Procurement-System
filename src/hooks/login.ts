@@ -17,7 +17,7 @@ export default async function login(email: string, password: string): Promise<Lo
   };
   const userCredential: UserCredential = await signInWithEmailAndPassword(auth, userData.userEmail, userData.password);
   if (userCredential) {
-    const usersRef = query(collection(fireStore, "user"),where("userEmail","==",userData.userEmail));
+    const usersRef = query(collection(fireStore, "users"),where("userEmail","==",userData.userEmail));
     const getUserType = await getDocs(usersRef)
 
     if (getUserType.docs.length > 0) {

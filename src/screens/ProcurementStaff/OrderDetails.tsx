@@ -155,7 +155,7 @@ export default function ProcunentOrderDetails({navigation}) {
                 <Text style={{ fontWeight: 'bold' }}>
                   Item status:&nbsp;
                   {item.isApproved?(
-                    <Text variant="bodyMedium">Approved</Text>
+                    <Text variant="bodyMedium" style={{backgroundColor:'green'}}>Approved</Text>
                   ):(
                     <Text variant="bodyMedium">Pending</Text>
                   )}

@@ -50,9 +50,11 @@ export default function MainNavigation()
   let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.isLoading);
 
   // this the are you can crate mock user
-  userName = 'hello'
-  userType = 'supplier'
+
+  // userName = 'hello'
+  // userType = 'supplier'
   isLoading = false
+
 
   if (!userType && !userName)
   {
@@ -64,7 +66,7 @@ export default function MainNavigation()
     // Render Site Manager route/component
     return (
       <NavigationContainer>
-        {/* <SiteManagerRoute /> */}
+        <SiteManagerRoute />
       </NavigationContainer>
     );
   } else if (userType === 'manager')
@@ -91,8 +93,8 @@ export default function MainNavigation()
         <ProcurementStaff />
       </NavigationContainer>
     );
-  } else
-  {
+  } 
+  else {
     // Handle other cases or unknown user types here
     return <UnknownUserScreen />;
   }

@@ -26,7 +26,6 @@ export default function EvaluatedOrders() {
     async function receiveData() {
       const newData: any = await getOrders()
       setOrders(newData)
-      console.log(newData)
     }
     
 
@@ -36,9 +35,12 @@ export default function EvaluatedOrders() {
     useEffect(() => {
       receiveData()
     }, [orders])
+
+    //This will filter the order to make sure only the approved orders are rendered
+    const evaluatedOrders = orders.filter((order) => order.data.status === 'approved');
   
     //Iterator design pattern is used here to traverse through the array
-    const renderOrder = orders.map((order, index) => {
+    const renderOrder = evaluatedOrders.map((order, index) => {
   
       let btncolor: string = "blue"
       //This sets the style of the Order status based on the status
@@ -52,8 +54,6 @@ export default function EvaluatedOrders() {
         btncolor = "#17A2B8"
       }
       
-      //To filter only the orders with status approved
-      if (order.data.status === 'approved') {
         //Iterator design pattern is used here to traverse through the array
         const renderItem: any = (order.data.itemList || []).map((item: any) => {
           return (
@@ -116,7 +116,6 @@ export default function EvaluatedOrders() {
               <Button disabled={order.data.status === 'approved' || order.data.status === 'delivery_pending' || order.data.status === 'delivered'} onPress={() => showDialog(order.id)}>Authorize</Button>
             </Card.Actions>
           </Card>)
-      }
     })
   
     //This function is to change the status of an order to approved
@@ -127,13 +126,19 @@ export default function EvaluatedOrders() {
       }
       hideDialog()
     }
+
+    const noApproved = (
+      <View style={{alignItems:'center',marginTop:Platform.OS=='android'? 300: outerHeight/2-150}}>
+      <Text variant="headlineLarge" style={{color:"#28A745"}}>No approved orders found</Text>
+      </View>
+    );
   
   
    return (
       <>
         <ScrollView style={styles.scrollview}>
           <View style={styles.container}>
-            {renderOrder}
+          {evaluatedOrders.length === 0 ? noApproved : renderOrder}
           </View>
         </ScrollView>
         <Portal>
@@ -181,7 +186,7 @@ export default function EvaluatedOrders() {
       marginRight: 'auto'
     },
     dialog: {
-      width: '30%',
+      width: Platform.OS === 'android' ? '90%': '30%',
       marginLeft: 'auto',
       marginRight: 'auto'
     },

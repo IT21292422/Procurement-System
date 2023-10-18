@@ -26,7 +26,7 @@ export default function OrderView({navigation}:any) {
     createdAt: Date;
     purchaseDate: Date;
     supplierName: string;
-    estimatedDeliveryDate: Date;
+    estimatedDeliveryDate?: Date;
   }[]>([]);
   const [setLoading, setSetLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -55,37 +55,28 @@ const handleRefresh = async () => {
   setSetLoading(false);
 };
 
-const submitData = async() =>{
-      let id = createOrder(order)
-      setOrder({text:''})
-      if(await id){
-      }
-    }
-
 const updateOrderStatus = async (orderId:string) =>{
       setSetLoading(true);
-      await updateStatus(orderId, "approved");
+      await updateStatus(orderId, "delivery_pending");
       setSetLoading(false);
     }
 
 const topBar = () =>{
   return(
       <View>
+      <Card>
+      <Button>{userName}</Button>
       <Card.Actions>
-      <Text>{userName}</Text>
         <Button onPress={() => {
           dispatch(logOut())
-          // logout()
         }}>Logout</Button>
-        {/* <Button onPress={() => {
-          testCreateOrder()
-        }}>add test Order</Button> */}
         <Button
           onPress={() =>
             navigation.navigate('OrderDetails')}>
           View Requested Items
         </Button>
       </Card.Actions>
+      </Card>
       </View>
   )
 }
@@ -122,9 +113,9 @@ const orderView = () =>{
             <Button onPress={() => navigation.navigate('ItemAdd', { orderId: order.orderId })}>
               View Items
             </Button>
-            {order.status==='pending'?(
-              <Button onPress={() => {updateOrderStatus(order.orderId)}} style={{ backgroundColor: 'green' }}>
-              Approve
+            {order.status==='approved' && order.estimatedDeliveryDate!== null ?(
+              <Button onPress={() => {updateOrderStatus(order.orderId)}}>
+              Set Pending
             </Button>):(
             <Button>
               Confirmed 
@@ -154,7 +145,7 @@ const orderView = () =>{
         }>
           {topBar()}
           {orderView()}
-    </ScrollView>
+        </ScrollView>
     )
   }
 }
