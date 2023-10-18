@@ -64,6 +64,7 @@ export default function PendingOrders() {
       btncolor = "#17A2B8"
     }
     
+    
       const renderItem: any = (order.data.itemList || []).map((item: any) => {
         return (
           <>
@@ -150,7 +151,7 @@ export default function PendingOrders() {
   }
 
   const noPending = (
-    <View style={{alignItems:'center',marginTop:outerHeight/2-150}}>
+    <View style={{alignItems:'center',marginTop:Platform.OS=='android'? 300: outerHeight/2-150}}>
     <Text variant="headlineLarge" style={{color:"#ff0000"}}>No pending orders found</Text>
     </View>
   );
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto'
   },
   dialog: {
-    width: '30%',
+    width: Platform.OS === 'android' ? '90%': '30%',
     marginLeft: 'auto',
     marginRight: 'auto'
   },
