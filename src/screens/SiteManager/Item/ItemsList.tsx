@@ -1,8 +1,7 @@
 import { View, ScrollView } from 'react-native';
-import { Modal, Text, Card, Title, Paragraph, Button } from 'react-native-paper';
+import { Modal, Text, Card, Title, Button } from 'react-native-paper';
 import React, { useEffect, useState } from 'react';
 import { getItemList } from '../hooks/itemHooks';
-import { useNavigation } from '@react-navigation/native';
 import ItemDetails from './ItemDetails';
 import { logOut } from '../../../../features/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';

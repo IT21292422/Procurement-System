@@ -1,7 +1,5 @@
 import { View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { doc, getDoc } from "firebase/firestore";
-import { fireStore } from '../../../../config/firebase';
 import { ItemType } from '../../../../config/types';
 import { getItemDetails } from '../hooks/itemHooks';
 import { Text, Card, Title, Paragraph, Button, IconButton, TextInput, ActivityIndicator } from 'react-native-paper';

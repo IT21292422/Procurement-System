@@ -1,4 +1,4 @@
-import { collection, doc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { fireStore } from "../../../../config/firebase";
 import { supplier } from "../../../../config/types";
 
