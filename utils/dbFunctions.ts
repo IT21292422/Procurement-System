@@ -35,7 +35,7 @@ export const getAllOrders = async () => {
 }
 
 export const getCompletedOrders = async() => {
-  const q = query(ordersColRef, where("status", "==", "approved"));
+  const q = query(ordersColRef, where("status", "==", "delivered"));
   return await getDocs(q);
 }
 

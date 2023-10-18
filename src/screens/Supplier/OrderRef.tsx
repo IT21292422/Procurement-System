@@ -41,16 +41,17 @@ export default function OrderRef()
       }
 
     }
-    // loadData()
-    console.log(currentOrders);
+    loadData();
+    console.log('calling loadData() function');
   }, [])
 
   const loadPastOrders = async () =>
   {
     try
     {
+      console.log('Calling loadPastOrders() function');
       const requestSnapshot: any = await getCompletedOrders();
-      const requestArray: any = [];
+      const requestArray: orderInterface[] = [];
       requestSnapshot.forEach((doc: any) =>
       {
         requestArray.push({ id: doc.id, ...doc.data() })
@@ -59,7 +60,7 @@ export default function OrderRef()
     } catch (error)
     {
       console.log('Error occurred loading request data', error);
-    }
+    }    
   }
 
   const handleRequestDelete = async (id: string) =>
@@ -92,6 +93,7 @@ export default function OrderRef()
               {
                 setshowPastOrders(true)
                 setShowCurrentOrders(false)
+                loadPastOrders();
               },
             },
             {
@@ -119,7 +121,9 @@ export default function OrderRef()
               {/* <Card.Title title={item.itemName} subtitle="Card Subtitle" /> */}
               <Card.Content>
                 <Text variant="titleLarge">{item.orderId}</Text>
-                <Text variant="bodyMedium">`To delivery site: ${item.deliverySite}`</Text>
+                <Text variant="bodyMedium">To delivery site + {item.deliverySite}</Text>
+                <Text variant="bodyMedium">{item.estimatedDeliveryDate.toString()}</Text>
+
               </Card.Content>
 
               <Card.Actions>
@@ -129,19 +133,22 @@ export default function OrderRef()
             </Card>
           )}
         />}
+
+        
       {showPastOrders && pastOrders.length == 0 &&
         <Button loading={true}>Loading Requests</Button>}
       {showOrders &&
         <FlatList
           data={pastOrders}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }: any) => (
+          renderItem={({ item }) => (
             <Card style={styles.container}>
               {/* <Card.Title title={item.itemName} subtitle="Card Subtitle" /> */}
               <Card.Content>
-                <Text variant="titleLarge">{item.itemName}</Text>
-                <Text variant="bodyMedium">{item.description}</Text>
-                <Text variant="bodyMedium">{item.unitPrice ? `Unit price: ${item.unitPrice}` : 'Unit Price not set'}</Text>
+                <Text variant="titleLarge">{item.orderId}</Text>
+                <Text variant="bodyMedium">{item.deliverySite}</Text>
+                <Text variant="bodyMedium">{item.orderTotal}</Text>
+                <Text variant="bodyMedium">{item.status == 'delivered' ? `Order completed` : 'Oops something went wrong'}</Text>
                 <Button style={styles.notApprovedButton}>Accept</Button>
                 <Button style={styles.notApprovedButton}>Reject</Button>
 
@@ -152,11 +159,6 @@ export default function OrderRef()
             </Card>
           )}
         />}
-      {showCurrentOrders && !showUpdateForm && <FAB
-        icon="plus"
-        style={styles.fab}
-        onPress={handleFabPress}
-      />}
     </>
   )
 }
