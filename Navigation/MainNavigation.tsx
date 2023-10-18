@@ -66,7 +66,7 @@ export default function MainNavigation()
     // Render Site Manager route/component
     return (
       <NavigationContainer>
-        {/* <SiteManagerRoute /> */}
+        <SiteManagerRoute />
       </NavigationContainer>
     );
   } else if (userType === 'manager')
