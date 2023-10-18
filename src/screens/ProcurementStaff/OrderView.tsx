@@ -26,7 +26,7 @@ export default function OrderView({navigation}:any) {
     createdAt: Date;
     purchaseDate: Date;
     supplierName: string;
-    estimatedDeliveryDate: Date;
+    estimatedDeliveryDate?: Date;
   }[]>([]);
   const [setLoading, setSetLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -64,7 +64,7 @@ const submitData = async() =>{
 
 const updateOrderStatus = async (orderId:string) =>{
       setSetLoading(true);
-      await updateStatus(orderId, "approved");
+      await updateStatus(orderId, "delivery_pending");
       setSetLoading(false);
     }
 
@@ -75,11 +75,7 @@ const topBar = () =>{
       <Text>{userName}</Text>
         <Button onPress={() => {
           dispatch(logOut())
-          // logout()
         }}>Logout</Button>
-        {/* <Button onPress={() => {
-          testCreateOrder()
-        }}>add test Order</Button> */}
         <Button
           onPress={() =>
             navigation.navigate('OrderDetails')}>
@@ -122,9 +118,9 @@ const orderView = () =>{
             <Button onPress={() => navigation.navigate('ItemAdd', { orderId: order.orderId })}>
               View Items
             </Button>
-            {order.status==='pending'?(
-              <Button onPress={() => {updateOrderStatus(order.orderId)}} style={{ backgroundColor: 'green' }}>
-              Approve
+            {order.status==='approved' && order.estimatedDeliveryDate!== null ?(
+              <Button onPress={() => {updateOrderStatus(order.orderId)}}>
+              Set Pending
             </Button>):(
             <Button>
               Confirmed 
@@ -154,7 +150,7 @@ const orderView = () =>{
         }>
           {topBar()}
           {orderView()}
-    </ScrollView>
+        </ScrollView>
     )
   }
 }

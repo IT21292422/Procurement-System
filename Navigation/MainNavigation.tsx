@@ -78,10 +78,11 @@ let isLoading: boolean = useSelector((state: { user: UserState }) => state.user.
         <ProcurementStaff />
       </NavigationContainer>
     );
-  } else {
-    // Handle other cases or unknown user types here
-    return <UnknownUserScreen />;
-  }
+  } 
+  // else {
+  //   // Handle other cases or unknown user types here
+  //   return <UnknownUserScreen />;
+  // }
 }
 
 function SiteManagerRoute(){
