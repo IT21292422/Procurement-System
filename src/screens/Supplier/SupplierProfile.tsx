@@ -116,7 +116,7 @@ export default function SupplierProfile()
         <Appbar.BackAction onPress={() => { }} />
         <Image source={logoImage} style={{ width: 40, height: 40, marginEnd: 10 }} />
         <Appbar.Content title="  Test Supplier" />
-        <Appbar.Action icon="account" onPress={() => {dispatch(logOut)}} />
+        <Appbar.Action icon="account" onPress={() => {dispatch(logOut())}} />
       </Appbar.Header>
       <SafeAreaView style={styles.container}>
         <SegmentedButtons
