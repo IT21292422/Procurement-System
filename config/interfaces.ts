@@ -36,6 +36,12 @@ export interface orderInterface {
   supplierName: string;
   estimatedDeliveryDate: Date; //delivery date for order
 }
+
+export interface orderItemsinterface{
+itemName: string; 
+  unitPrice: number; 
+  quantity: number
+}
 export interface newItemRequestInterface {
   itemName: string;
   description: string;

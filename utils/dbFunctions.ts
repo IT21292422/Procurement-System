@@ -1,6 +1,6 @@
 import React from 'react'
 import { auth, fireStore, storage } from '../config/firebase'
-import { QuerySnapshot, DocumentData, addDoc, collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { QuerySnapshot, DocumentData, addDoc, collection, deleteDoc, doc, getDocs, query, setDoc, where, Timestamp, updateDoc  } from 'firebase/firestore'
  import {newItem, orderInterface} from '../config/interfaces'
 
 const requestItemsColRef = collection(fireStore, 'supplierItemRequest');
@@ -49,5 +49,25 @@ export const deleteItemRequest = async (docId: string) => {
     console.log(`Error when deleting request ${error}`);
     return false;
   }
+}
+
+export const formatDate = (timestamp: any) =>{
+  const date:	Date = timestamp.toDate();
+  const newDate = Timestamp.fromDate(new Date());
+  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+  const result = newDate.toDate().toDateString()
+  return result
+  // return newDate.toLocaleString();
+}
+
+export const dateToString = (time: any) => {
+  console.log(time);
+  console.log(typeof time);
+  const date = time.toDate()
+  return `${date.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`
+}
+
+export const updateDeliveryDate = async () =>{
+
 }
 

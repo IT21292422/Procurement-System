@@ -1,11 +1,15 @@
 import { FlatList, Image, View } from 'react-native'
-import { getAllItemRequests, deleteItemRequest, getAllItems, getAllOrders, getCompletedOrders } from '../../../utils/dbFunctions';
+import { getAllItemRequests, deleteItemRequest, getAllItems, getAllOrders, getCompletedOrders, formatDate, dateToString } from '../../../utils/dbFunctions';
 
 import React, { useEffect, useState } from 'react'
-import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB, Appbar, useTheme } from 'react-native-paper';
-import { itemInterface, orderInterface } from '../../../config/interfaces';
+import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB, Appbar, TextInput } from 'react-native-paper';
+import { itemInterface, orderInterface, orderItemsinterface } from '../../../config/interfaces';
 import { ItemUpdateForm } from './ItemUpdateForm';
 import { StyleSheet, SafeAreaView } from 'react-native';
+import { useForm, Controller } from "react-hook-form";
+import DatePicker from 'react-native-date-picker'
+import { DatePickerHook } from './datePicker';
+
 
 export default function OrderRef()
 {
@@ -14,12 +18,23 @@ export default function OrderRef()
   const [showUpdateForm, setShowUpdateForm] = useState(false)
   const [supplierItems, setSupplierItems] = useState<itemInterface[]>([]);
   const [value, setValue] = useState('');
-  
+
   // using
   const [showPastOrders, setshowPastOrders] = useState(false);
   const [showCurrentOrders, setShowCurrentOrders] = useState<boolean>(true)
-  const [currentOrders, setCurrentOrders] = useState<orderInterface[]>([])
   const [pastOrders, setPastOrders] = useState<orderInterface[]>([])
+  const [currentOrders, setCurrentOrders] = useState<orderInterface[]>([])
+  const [orderItems, setOrderItems] = useState<orderItemsinterface[]>([])
+  const [showDeliveryInput, setShowDeliveryInput] = useState(false)
+  const [openDatePicker, setOpenDatePicker] = useState(false)
+  const [deliveryDate, setDeliveryDate] = useState()
+
+  // form hook initialization
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      deliveryDate: undefined,
+    }
+  });
 
   useEffect(() =>
   {
@@ -45,6 +60,13 @@ export default function OrderRef()
     console.log('calling loadData() function');
   }, [])
 
+  useEffect(() =>
+  {
+    const allItemLists = currentOrders.map(order => order.itemList).flat();
+    setOrderItems(allItemLists);
+  }, [currentOrders])
+
+
   const loadPastOrders = async () =>
   {
     try
@@ -57,10 +79,12 @@ export default function OrderRef()
         requestArray.push({ id: doc.id, ...doc.data() })
       });
       setPastOrders(requestArray);
+      console.log(orderItems);
+
     } catch (error)
     {
       console.log('Error occurred loading request data', error);
-    }    
+    }
   }
 
   const handleRequestDelete = async (id: string) =>
@@ -71,6 +95,16 @@ export default function OrderRef()
       console.log('Successfully deleted the request');
 
     }
+  }
+
+  const handleDeliveryDateInput = () =>
+  {
+    setShowDeliveryInput(true);
+  }
+
+  const uploadDate = (data: any) =>{
+    console.log(`Called upload date with this data ${data}`);
+    
   }
 
 
@@ -95,6 +129,7 @@ export default function OrderRef()
                 setShowCurrentOrders(false)
                 loadPastOrders();
               },
+
             },
             {
               value: 'itemClicked',
@@ -121,20 +156,35 @@ export default function OrderRef()
               {/* <Card.Title title={item.itemName} subtitle="Card Subtitle" /> */}
               <Card.Content>
                 <Text variant="titleLarge">{item.orderId}</Text>
-                <Text variant="bodyMedium">To delivery site + {item.deliverySite}</Text>
-                <Text variant="bodyMedium">{item.estimatedDeliveryDate.toString()}</Text>
-
+                <Text variant="bodyMedium">To delivery site: {item.deliverySite}</Text>
+                <Text variant="bodyMedium">Requested delivery date {dateToString(item.estimatedDeliveryDate)}</Text>
+                <FlatList
+                  data={orderItems}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item }) => (
+                    <Card style={styles.container}>
+                      <Card.Content>
+                        <Text variant="bodyMedium">Item name: {item.itemName}</Text>
+                        <Text variant="bodyMedium">Quantity: {item.quantity}</Text>
+                        <Text variant="bodyMedium">Unit Price: {item.unitPrice}</Text>
+                      </Card.Content>
+                    </Card>
+                  )}
+                />
               </Card.Content>
+              <Card.Actions style={styles.buttonGroup}>
+                {showDeliveryInput && <DatePickerHook control={control} name="estimatedDeliveryDatelivery" value={deliveryDate}/>}
+                <Button icon="check" style={styles.acceptButton} onPress={handleDeliveryDateInput}>Accept</Button>
+                {showDeliveryInput && <Button icon="close" style={styles.acceptButton} onPress={() => setShowDeliveryInput(false)}>Cancel</Button>}
+                {!showDeliveryInput && <Button icon="close" style={styles.acceptButton}>Reject</Button>}
+                <Button style={styles.acceptButton} onPress={handleSubmit(uploadDate)}>Confirm</Button>
 
-              <Card.Actions>
-                <Button>Delete</Button>
-                <Button>Update</Button>
               </Card.Actions>
             </Card>
           )}
         />}
 
-        
+
       {showPastOrders && pastOrders.length == 0 &&
         <Button loading={true}>Loading Requests</Button>}
       {showOrders &&
@@ -149,8 +199,8 @@ export default function OrderRef()
                 <Text variant="bodyMedium">{item.deliverySite}</Text>
                 <Text variant="bodyMedium">{item.orderTotal}</Text>
                 <Text variant="bodyMedium">{item.status == 'delivered' ? `Order completed` : 'Oops something went wrong'}</Text>
-                <Button style={styles.notApprovedButton}>Accept</Button>
-                <Button style={styles.notApprovedButton}>Reject</Button>
+                <Text variant="bodyMedium">Delivered at {dateToString(item.estimatedDeliveryDate)}</Text>
+                <Button icon="check">Delivered</Button>
 
               </Card.Content>
               <Card.Cover style={styles.imageHolder} source={require('../../../public/bricks.jpg')} />
@@ -184,5 +234,16 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderWidth: 1,
     borderColor: "coral"
+  },
+  acceptButton: {
+    marginVertical: 2
+  },
+  rejectButton: {
+
+  },
+  buttonGroup: {
+    flex: 1,
+    flexDirection: 'column',
+    marginVertical: 4
   }
 });
