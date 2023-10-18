@@ -51,8 +51,8 @@ export default function MainNavigation()
 
   // this the are you can crate mock user
 
-  userName = 'hello'
-  userType = 'supplier'
+  // userName = 'hello'
+  // userType = 'supplier'
   isLoading = false
 
 

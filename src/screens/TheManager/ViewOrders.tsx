@@ -6,6 +6,8 @@ import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
 
 import { OrderType } from '../../../config/types';
 import { deleteOrder, getOrders, updateOrders } from './OrderController';
+import { setUserType,logOut,logUser,setLoading } from '../../../features/user/userSlice';
+import { useSelector,useDispatch  } from 'react-redux';
 
 //This function renders all the orders irrespective of the status
 export default function ViewOrders() {
@@ -13,6 +15,8 @@ export default function ViewOrders() {
   const [visible, setVisible] = useState(false);
   const [visibleDelete, setVisibleDelete] = useState(false);
   const [selectedOrderId, setSlectedOrderId] = useState<string | null>(null);
+
+  const dispatch = useDispatch()
 
   const showDialog = (id: any) => {
     setSlectedOrderId(id);
@@ -149,6 +153,9 @@ export default function ViewOrders() {
   return (
     <>
       <ScrollView style={styles.scrollview}>
+      <View style={styles.btnContainer1}>
+        <Button mode="contained-tonal" style={styles.btn} onPress={()=>{dispatch(logOut())}}>Logout</Button>
+        </View>
         <View style={styles.container}>
           {renderOrder}
         </View>
@@ -182,6 +189,15 @@ export default function ViewOrders() {
 }
 
 const styles = StyleSheet.create({
+  btn: {
+    width: 200,
+  },
+  btnContainer1:{
+    flexDirection: 'row', // Horizontal layout
+    justifyContent: 'flex-end', // Right-align content
+    marginTop:20,
+    paddingRight: 20, 
+  },
   btnContainer: {
     flexDirection: 'row', // Horizontal layout
     justifyContent: 'flex-end', // Right-align content
