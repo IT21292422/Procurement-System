@@ -93,8 +93,8 @@ export default function MainNavigation()
         <ProcurementStaff />
       </NavigationContainer>
     );
-  } else
-  {
+  } 
+  else {
     // Handle other cases or unknown user types here
     return <UnknownUserScreen />;
   }
