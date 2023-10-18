@@ -3,12 +3,14 @@ import { getAllItemRequests, deleteItemRequest, getAllItems, getAllOrders, getCo
 
 import React, { useEffect, useState } from 'react'
 import { Surface, Text, SegmentedButtons, Avatar, Card, Button, Divider, FAB, Appbar, TextInput } from 'react-native-paper';
-import { itemInterface, orderInterface, orderItemsinterface } from '../../../config/interfaces';
+import { itemInterface, orderInterface, orderItemsinterface, UserState } from '../../../config/interfaces';
 import { ItemUpdateForm } from './ItemUpdateForm';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from 'react-native-date-picker'
 import { DatePickerHook } from './datePicker';
+import { setUserType,logOut,logUser,setLoading } from '../../../features/user/userSlice';
+import { useSelector,useDispatch } from 'react-redux';
 
 
 export default function OrderRef()
@@ -35,6 +37,9 @@ export default function OrderRef()
       deliveryDate: undefined,
     }
   });
+
+  const dispatch = useDispatch()
+
 
   useEffect(() =>
   {
@@ -129,7 +134,7 @@ export default function OrderRef()
       <Appbar.Header>
         <Appbar.BackAction onPress={() => { }} />
         <Appbar.Content title="Test Supplier" />
-        <Appbar.Action icon="account" onPress={() => { }} />
+        <Appbar.Action icon="logout" onPress={() => {dispatch(logOut())}} />
       </Appbar.Header>
       <SafeAreaView style={styles.container}>
         <SegmentedButtons
