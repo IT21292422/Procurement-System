@@ -40,7 +40,6 @@ export default function ViewOrders() {
   async function receiveData() {
     const newData: any = await getOrders()
     setOrders(newData)
-    console.log(newData)
   }
 
   //Observer design pattern is used here, this calls the recieve data function and at the same time oberves the 
