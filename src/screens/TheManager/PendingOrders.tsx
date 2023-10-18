@@ -1,106 +1,193 @@
 import { View, Platform, StyleSheet, ScrollView } from 'react-native'
-import React from 'react'
-import { Button, Card, Text } from 'react-native-paper'
+import React, { useEffect, useState } from 'react'
+import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
+//React Native Paper is used as a facade design pattern through out the application as an abstraction that provides
+//a simplified interface to the library, this library offer components with built-in features and functionalities 
 
-const orders = [
-  {
-    title: "Cement",
-    orderId: "ORD-1124",
-    orderImage: require("../../../public/cement.jpeg"),
-    quantity: "1 Ton",
-    status: "Pending",
-    supplier: "Expo Supplier",
-    date: "5/12/2023"
-  },
-  {
-    title: "Bricks",
-    orderId: "ORD-1124",
-    orderImage: require("../../../public/bricks.jpg"),
-    quantity: "1 Ton",
-    status: "Completed",
-    supplier: "Expo Supplier",
-    date: "5/12/2023"
-  },
-  {
-    title: "Iron Rod",
-    orderId: "ORD-1124",
-    orderImage: require("../../../public/ironrods.jpg"),
-    quantity: "1 Ton",
-    status: "Pending",
-    supplier: "Expo Supplier",
-    date: "5/12/2023"
-  },
-  {
-    title: "Gravel Metal",
-    orderId: "ORD-1124",
-    orderImage: require("../../../public/metal.jpeg"),
-    quantity: "1 Ton",
-    status: "Completed",
-    supplier: "Expo Supplier",
-    date: "5/12/2023"
-  },
+import { OrderType } from '../../../config/types';
+import { deleteOrder, getOrders, updateOrders } from './OrderController';
 
-]
-
+//This component displays the components which are in approval_pending state so the manager can approve them
 export default function PendingOrders() {
+  const [orders, setOrders] = useState<any[]>([]);
+  const [visible, setVisible] = useState(false);
+  const [visibleDelete, setVisibleDelete] = useState(false);
+  const [selectedOrderId, setSlectedOrderId] = useState<string | null>(null);
 
+  const showDialog = (id: any) => {
+    setSlectedOrderId(id);
+    setVisible(true);
+  };
+  const hideDialog = () => {
+    setSlectedOrderId(null);
+    setVisible(false);
+  };
+
+  const showDeleteDialog = (id: any) => {
+    setSlectedOrderId(id);
+    setVisibleDelete(true);
+  };
+  const hideDeleteDialog = () => {
+    setSlectedOrderId(null);
+    setVisibleDelete(false);
+  };
+
+  //This function retrieves data from database and sets that to the newData state
+  async function receiveData() {
+    const newData: any = await getOrders()
+    setOrders(newData)
+    console.log(newData)
+  }
+
+  //Observer design pattern is used here, this calls the recieve data function and at the same time oberves the 
+  //orders state for any changes and if there are any changes, this will re-render the component 
+
+  useEffect(() => {
+    receiveData()
+  }, [orders])
+
+  //Iterator design pattern is used here to traverse through the array
   const renderOrder = orders.map((order, index) => {
 
-    const orderStatus: any = () => {
-      if (order.status === 'Pending') {
-        return {
-          textAlign: 'right', color: 'blue', fontWeight: "600", textShadowColor: 'black'
-        }
-      } else if (order.status === 'Completed') {
-        return {
-          textAlign: 'right', color: 'green', fontWeight: "600"
-        }
-      }
+    let btncolor: string = "blue"
+     //This sets the style of the Order status based on the status
+    if (order.data.status === 'approval_pending') {
+      btncolor = "#DC3545"
+    } else if (order.data.status === 'approved') {
+      btncolor = "#28A745"
+    } else if (order.data.status === 'delivery_pending') {
+      btncolor = "#F1C02C"
+    } else if (order.data.status === 'delivered') {
+      btncolor = "#17A2B8"
     }
+    //This condition make sure only the approval_pending orders are rendered
+    if (order.data.status === 'approval_pending') {
+      const renderItem: any = (order.data.itemList || []).map((item: any) => {
+        return (
+          <>
+            <Text variant="bodyMedium" style={{ fontWeight: 'bold' }}>
+              Item Name:
+              <Text variant="bodyMedium">{item.itemName}</Text>
+            </Text>
+            <Text variant="bodyMedium" style={{ fontWeight: 'bold' }}>
+              Quantity:
+              <Text variant="bodyMedium">{item.quantity}</Text>
+            </Text>
+            <Text variant="bodyMedium" style={{ fontWeight: 'bold' }}>
+              Unit Price:
+              <Text variant="bodyMedium">{item.unitPrice}</Text>
+            </Text>
+            <Text>{'\n'}</Text>
+          </>
+        )
+      })
 
-    if (order.status === 'Pending') {
       return (
         <Card key={index} mode='elevated' style={styles.card}>
           <Card.Content>
-            <Text variant="titleLarge" style={{ fontWeight: 'bold' }}>{order.title}</Text>
-            <Text variant="bodyMedium">{order.orderId}</Text>
+            <Text variant="titleLarge" style={{ fontWeight: 'bold' }}>Orders</Text>
+            <Text variant="bodyMedium">ORD-{order.data.orderId}</Text>
           </Card.Content>
-          <Card.Cover style={styles.cardCover} resizeMode='contain' source={order.orderImage} />
           <Card.Content>
-            <Text variant="titleLarge" style={orderStatus()}>{order.status}</Text>
+            <View style={styles.btnContainer}>
+              <Button mode='contained' buttonColor={btncolor} textColor='white'>{order.data.status}</Button>
+            </View>
             <Text style={{ fontWeight: 'bold' }}>
-              Quantity:&nbsp;
-              <Text variant="bodyMedium">{order.quantity}</Text>
+              Order Total:&nbsp;
+              <Text variant="bodyMedium">{order.data.orderTotal}</Text>
+            </Text>
+            <Text style={{ fontWeight: 'bold' }}>
+              Delivery Site:&nbsp;
+              <Text variant="bodyMedium">{order.data.deliverySite}</Text>
             </Text>
             <Text style={{ fontWeight: 'bold' }}>
               Supplier:&nbsp;
-              <Text variant="bodyMedium">{order.supplier}</Text>
+              <Text variant="bodyMedium">{order.data.supplierName}</Text>
             </Text>
             <Text style={{ fontWeight: 'bold' }}>
-              Date To Receive:&nbsp;
-              <Text variant="bodyMedium">{order.date}</Text>
+              Created Date:&nbsp;
+              <Text variant="bodyMedium">{order.data.createdAt ? order.data.createdAt.toDate().toLocaleString() : 'N/A'}</Text>
             </Text>
+            <Text style={{ fontWeight: 'bold' }}>
+              Purchase Date:&nbsp;
+              <Text variant="bodyMedium">{order.data.purchaseDate ? order.data.purchaseDate.toDate().toLocaleString() : 'N/A'}</Text>
+            </Text>
+            <Text style={{ fontWeight: 'bold' }}>
+              Estimated Delivery Date:&nbsp;
+              <Text variant="bodyMedium">{order.data.estimatedDeliveryDate ? order.data.estimatedDeliveryDate.toDate().toLocaleString() : 'N/A'}</Text>
+            </Text>
+            <Text>{'\n'}</Text>
+            {renderItem}
           </Card.Content>
           <Card.Actions>
-            <Button>Cancel</Button>
-            <Button>Ok</Button>
+            <Button disabled={order.data.status === 'approved' || order.data.status === 'delivery_pending' || order.data.status === 'delivered'} onPress={() => showDialog(order.id)}>Authorize</Button>
+            <Button buttonColor="#DC3545" textColor='white' onPress={() => showDeleteDialog(order.id)}>Decline Order</Button>
           </Card.Actions>
-        </Card>
-      )
+        </Card>)
     }
   })
 
-  return (
-    <ScrollView style={styles.scrollview}>
-      <View style={styles.container}>
-        {renderOrder}
-      </View>
-    </ScrollView>
+  //This function is to change the status of an order to approved
+  //It calls the updateOrders function in order controller
+  const approve = () => {
+    if (selectedOrderId) {
+      updateOrders(selectedOrderId)
+    }
+    hideDialog()
+  }
 
+  //This function deletes the order which is declined by the manager
+  const deleteData = async () => {
+    if (selectedOrderId) {
+      try {
+        await deleteOrder(selectedOrderId);
+        hideDeleteDialog();
+      } catch (error) {
+        console.log("Error deleting order: ", error)
+      }
+    }
+  }
+
+ return (
+    <>
+      <ScrollView style={styles.scrollview}>
+        <View style={styles.container}>
+          {renderOrder}
+        </View>
+      </ScrollView>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
+          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyLarge">Are you sure you want to authorize this order?</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={approve}>Confirm</Button>
+            <Button onPress={hideDialog}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+      <Portal>
+        <Dialog visible={visibleDelete} onDismiss={hideDeleteDialog} style={styles.dialog}>
+          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyLarge">Are you sure you want to Decline this order?</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={deleteData}>Confirm</Button>
+            <Button onPress={hideDeleteDialog}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
+  btnContainer: {
+    flexDirection: 'row', // Horizontal layout
+    justifyContent: 'flex-end', // Right-align content
+  },
   card: {
     width: Platform.OS === 'android' ? '90%' : '50%',
     marginBottom: 20,
@@ -116,7 +203,18 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    //top: 20
+  },
+  containerStyle: {
+    width: '100%',
+    height: '80%',
+    backgroundColor: 'white',
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
+  dialog: {
+    width: '30%',
+    marginLeft: 'auto',
+    marginRight: 'auto'
   },
   scrollview: {
     minHeight: '100%'
