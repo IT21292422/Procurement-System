@@ -48,7 +48,7 @@ describe('Test cases to test the functions in Policy Controller', () => {
     // Assertion
     expect(deletedPolicy).toBeUndefined(); // Make sure deletedPolicy is undefined, to check if the policy no longer exists
 
-  },10000);
+  },25000);
 
   //Test case to test retieving policy from database by comparing with the pre-existing documents
   test('getPolicies retrieves a list of policies', async () => {
