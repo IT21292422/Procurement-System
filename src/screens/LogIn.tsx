@@ -1,13 +1,12 @@
-import { View, Text,Button,StyleSheet } from 'react-native'
+import { View, Text,StyleSheet,Image } from 'react-native'
 import React,{useEffect,useState} from 'react'
 import NetInfo from '@react-native-community/netinfo';
 import { Logings, UserState } from '../../config/interfaces';
 import { useSelector,useDispatch } from 'react-redux';
 import { setUserType,logUser,setLoading } from '../../features/user/userSlice';
-import { HelperText, TextInput } from 'react-native-paper';
+import { HelperText, TextInput,Button, Card } from 'react-native-paper';
 import login from '../hooks/login';
 import Loading from './Loading';
-import { testcreateUser, testcreateUserOnAuth } from '../hooks/test';
 
 export default function LogIn() {
   const [logins, setLogins] = useState<Logings>({
@@ -24,36 +23,40 @@ export default function LogIn() {
 
   useEffect(() => {
     dispatch(setLoading(false))
+    
+    NetInfo.fetch().then(state => {
+      console.log('Connection type', state.type);
+      console.log('Is connected?', state.isConnected);
+    });
   }, []);
-
-  NetInfo.fetch().then(state => {
-  console.log('Connection type', state.type);
-  console.log('Is connected?', state.isConnected);
-  });
-
+    
   const submitLogin= async ()=>{
-    dispatch(setLoading(true))
-    const userData = {
-     userEmail: "procurement_staff@email.com",
-     password: "12345678",
-     userType: "procurement_staff",
-    };
-    // const {userType,error} = await login(logins.email,logins.password)
-    // setLogins({...logins,email:'procurement_staff'})
-    const {userType,error} = await login(userData.userEmail,userData.password)
-    if(error===null){
-      // dispatch(logUser(logins.email))
-      dispatch(logUser(userData.userEmail))
-      dispatch(setLoading(false))
-      dispatch(setUserType(userType))
-      // dispatch(setUserType(userType))
-      // dispatch(setLoading(false))
-    }else{
-      dispatch(setLoading(false))
+//* four main users who can access the system
+    if(logins.email===''){
       setLogingError(true)
+      return;
     }
-  }
+    switch (logins.email) {
+      case 'procurement_staff':
+      case 'site_manager':
+      case 'supplier':
+      case 'manager':
+        break; // No error
+      default:
+        setLogingError(true);
+        return;
+    }
 
+// manager
+// site_manager
+// supplier
+// procurement_staff
+    dispatch(setLoading(true))
+    dispatch(setUserType(logins.email))
+    dispatch(logUser(logins.email))
+    dispatch(setLoading(false))
+  }
+  
   const handleEmailChange = (text:string) => {
     setLogins({ ...logins, email: text });
   };
@@ -61,32 +64,32 @@ export default function LogIn() {
   const handlePasswordChange = (text:string) => {
     setLogins({ ...logins, password: text });
   };
-
+  
   if(isLoading){
-      return (
-        <Loading/>
-      )
-  }else{
     return (
-      // <View style={[t.flexGrow,t.justifyAround,t.selfStart]}>
+      <Loading/>
+      )
+    }else{
+      return (
       <View style={styles.container}>
-      <Text>LogIn</Text>
-      <Text>User name {userName}</Text>
-      <Text>User name typed {logins.email}</Text>
-      <Text>User type {userType}</Text>
+      <Text style={styles.texts}>Procurement System</Text>
+      <Image
+        style={styles.image}
+        source={require('../../assets/favicon.png')}
+      />
       <View>
         <HelperText type="error" visible={logingError}>
           Invalid email or password !!!
         </HelperText>
-        <View style={{ margin: 10 }}>
+        <View style={styles.textInputs}>
           <TextInput 
-          label="Email" 
+          label="User Name" 
           value={logins.email} 
           onChangeText={handleEmailChange}
           style={styles.textArea}
           />
         </View>
-        <View style={{ margin: 10 }}>
+        <View style={styles.textInputs}>
           <TextInput 
           label="Password"  
           value={logins.password} 
@@ -96,26 +99,21 @@ export default function LogIn() {
           />
         </View>
       </View>
-      <Button 
-        title='Login here' 
-        color={'rgb(127, 0, 255)'} 
-        onPress={()=>submitLogin()}/>
-      
-      <Button title='test create user' onPress={() => testcreateUserOnAuth()}/>
-      
-      <Button title='change to manager' onPress={() => dispatch(setUserType('manager'))}/>
-      <Button title='change to site_manager' onPress={() => dispatch(setUserType('site_manager'))}/>
-      <Button title='change to procurement_staff' onPress={() => {
-        dispatch(setUserType('procurement_staff'))
-        dispatch(logUser('hello'))
-      }}/>
-      <Button title='change to supplier' onPress={() => dispatch(setUserType('supplier'))}/>
+        <Card.Actions>
+          <Button
+        onPress={()=>{submitLogin()}}
+        labelStyle={styles.button}
+          ><Text style={{color:'purple'}}>Login</Text></Button>
+        </Card.Actions>
     </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  texts:{
+    fontSize:20,
+  },
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -125,9 +123,31 @@ const styles = StyleSheet.create({
   textArea:{ 
     borderRadius: 10, 
     borderWidth: 1, 
-    borderColor: 'gray' 
+    borderColor: 'white',
+    color:'white'
   },
   button:{
     borderRadius:30,
+    width:100,
+    color:'rgb(51, 133, 255)',
+  },
+  image:{
+    resizeMode: 'cover',
+    height: 200,
+    width: 200,
+  },
+  textInputs:{
+    margin: 10,
+    color:'white',
+    width:300
   }
 }) 
+
+// const {userType,error} = await login(logins.email,logins.password)
+// dispatch(setUserType('manager'))
+// manager
+// site_manager
+// supplier
+// procurement_staff
+// setLogins({...logins,email:'procurement_staff'})
+// dispatch(logUser(userData.userEmail))

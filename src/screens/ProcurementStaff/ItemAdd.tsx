@@ -96,7 +96,7 @@ const topBar = () =>{
   return(
       <View>
         <Card.Actions>
-        <Text>Items for order : {orderId}</Text>
+        <Text>{orderId}</Text>
         <Button
             onPress={() => navigation.navigate('OrderView')}
             >To Order View</Button>

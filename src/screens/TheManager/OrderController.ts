@@ -3,6 +3,8 @@ import {fireStore} from '../../../config/firebase'
 
 import { OrderType } from '../../../config/types';
 
+
+//This retrieves all the orders from the database
 async function getOrders(){
     const orders:any = [];
     try{
@@ -18,12 +20,12 @@ async function getOrders(){
     }
 }
 
+//This retieves only the order passed as the parameter
 async function getOrderById(docId:string){
     try{
         const docRef = doc(fireStore,"orders",docId);
         const querySnapshot = await getDoc(docRef);
         if(querySnapshot.exists()){
-            console.log(querySnapshot.data())
             return querySnapshot.data()
         }else{
             console.log("No such order document")
@@ -33,6 +35,7 @@ async function getOrderById(docId:string){
     }
 }
 
+//This function updates the status of the order to approved
 async function updateOrders(docId:string){
     try{
         console.log(docId)
@@ -44,4 +47,15 @@ async function updateOrders(docId:string){
     }
 }
 
-export {getOrders, updateOrders, getOrderById}
+//This function deletes the order declined by the manager
+async function deleteOrder(id:any){
+    try{
+        console.log(id)
+        await deleteDoc(doc(fireStore,"orders", id));
+        console.log("Order deleted successfully with ID: ", id)
+    }catch(error){
+        console.log("Error deleting Order: ",error)
+    }
+}
+
+export {getOrders, updateOrders, getOrderById, deleteOrder}
