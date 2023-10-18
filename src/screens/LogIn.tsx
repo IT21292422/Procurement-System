@@ -23,13 +23,13 @@ export default function LogIn() {
 
   useEffect(() => {
     dispatch(setLoading(false))
+    
+    NetInfo.fetch().then(state => {
+      console.log('Connection type', state.type);
+      console.log('Is connected?', state.isConnected);
+    });
   }, []);
-
-  NetInfo.fetch().then(state => {
-  console.log('Connection type', state.type);
-  console.log('Is connected?', state.isConnected);
-  });
-
+    
   const submitLogin= async ()=>{
 //* four main users who can access the system
     if(logins.email===''){
@@ -71,7 +71,7 @@ export default function LogIn() {
       )
     }else{
       return (
-        <View style={styles.container}>
+      <View style={styles.container}>
       <Text style={styles.texts}>Procurement System</Text>
       <Image
         style={styles.image}
@@ -103,7 +103,7 @@ export default function LogIn() {
           <Button
         onPress={()=>{submitLogin()}}
         labelStyle={styles.button}
-          >Login</Button>
+          ><Text style={{color:'purple'}}>Login</Text></Button>
         </Card.Actions>
     </View>
     )
@@ -138,7 +138,8 @@ const styles = StyleSheet.create({
   },
   textInputs:{
     margin: 10,
-    color:'white'
+    color:'white',
+    width:300
   }
 }) 
 

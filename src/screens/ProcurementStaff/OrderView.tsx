@@ -55,13 +55,6 @@ const handleRefresh = async () => {
   setSetLoading(false);
 };
 
-const submitData = async() =>{
-      let id = createOrder(order)
-      setOrder({text:''})
-      if(await id){
-      }
-    }
-
 const updateOrderStatus = async (orderId:string) =>{
       setSetLoading(true);
       await updateStatus(orderId, "delivery_pending");
@@ -71,8 +64,9 @@ const updateOrderStatus = async (orderId:string) =>{
 const topBar = () =>{
   return(
       <View>
+      <Card>
+      <Button>{userName}</Button>
       <Card.Actions>
-      <Text>{userName}</Text>
         <Button onPress={() => {
           dispatch(logOut())
         }}>Logout</Button>
@@ -82,6 +76,7 @@ const topBar = () =>{
           View Requested Items
         </Button>
       </Card.Actions>
+      </Card>
       </View>
   )
 }
