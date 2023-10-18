@@ -8,7 +8,6 @@ export async function createNewOrder(newOder: OrderType) {
 	try {
 		await addDoc(collection(fireStore, 'orders'), {
 			...newOder,
-			orderId: undefined,
 			isDraft: false,
 			createdAt: serverTimestamp()
 		});

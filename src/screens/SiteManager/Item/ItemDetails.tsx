@@ -116,12 +116,12 @@ export default function ItemDetails(props: ItemDetailsProps) {
 						<Text style={{ fontWeight: 'bold' }}>{`\nTotal: RS: ${(itemDetails?.unitPrice || 0) * parseInt(units)}\n`}</Text>
 						
 						{isAddToDraftDisabled ? (
-						<Button
-						mode="contained"
-						onPress={handleAddToDraft}
-						disabled={isAddToDraftDisabled} >
-							<ActivityIndicator animating={true} />
-						</Button>
+							<Button
+							mode="contained"
+							onPress={handleAddToDraft}
+							disabled={isAddToDraftDisabled} >
+								<ActivityIndicator animating={true} />
+							</Button>
 						) : (
 							(<Button
 								mode="contained"
