@@ -1,14 +1,19 @@
 import { View, ScrollView } from 'react-native';
-import { Modal, Text, Card, Title, Paragraph, Button } from 'react-native-paper';
+import { Modal, Text, Card, Title, Button } from 'react-native-paper';
 import React, { useEffect, useState } from 'react';
 import { getItemList } from '../hooks/itemHooks';
-import { useNavigation } from '@react-navigation/native';
 import ItemDetails from './ItemDetails';
+import { logOut } from '../../../../features/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { UserState } from '../../../../config/interfaces';
 
 export default function ItemsList() {
 	const [itemList, setItemList] = useState<{itemId: string, itemName: string}[]>([]);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [selectedItemId, setSelectedItemId] = useState('');
+
+	const dispatch = useDispatch()
+  let userName: string | null = useSelector((state: { user: UserState }) => state.user.userName);
 
 	useEffect(() => {
 		const fetchItemList = async () => {
@@ -26,6 +31,12 @@ export default function ItemsList() {
 
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+			<Text>{`\n`}</Text>
+			<Button onPress={() => dispatch(logOut())}>
+				Logout
+			</Button>
+			<Text>{`\n`}</Text>
+
 			{itemList.map((item) => (
 				<Card key={item.itemId} onPress={() => toggleModal(item.itemId)}>
 					<Card.Content>
