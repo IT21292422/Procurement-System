@@ -1,10 +1,13 @@
 import { View, Platform, StyleSheet, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Text, Dialog, Portal, Modal } from 'react-native-paper'
+//React Native Paper is used as a facade design pattern through out the application as an abstraction that provides
+//a simplified interface to the library, this library offer components with built-in features and functionalities 
+
 import { OrderType } from '../../../config/types';
 import { getOrders, updateOrders } from './OrderController';
 
-
+//This component displays the orders evaluated by the manager
 export default function EvaluatedOrders() {
     const [orders, setOrders] = useState<any[]>([]);
     const [visible, setVisible] = useState(false);
@@ -19,21 +22,29 @@ export default function EvaluatedOrders() {
       setVisible(false);
     };
   
-  
+    //This function calls getOrders function in order controller and sets the data to newData state
     async function receiveData() {
       const newData: any = await getOrders()
       setOrders(newData)
       console.log(newData)
     }
-  
+    
+
+    //Observer design pattern is used here, this calls the recieve data function and at the same time oberves the 
+    //orders state for any changes and if there are any changes, this will re-render the component 
+
     useEffect(() => {
       receiveData()
     }, [orders])
+
+    //This will filter the order to make sure only the approved orders are rendered
+    const evaluatedOrders = orders.filter((order) => order.data.status === 'approved');
   
-    const renderOrder = orders.map((order, index) => {
+    //Iterator design pattern is used here to traverse through the array
+    const renderOrder = evaluatedOrders.map((order, index) => {
   
       let btncolor: string = "blue"
-  
+      //This sets the style of the Order status based on the status
       if (order.data.status === 'approval_pending') {
         btncolor = "#DC3545"
       } else if (order.data.status === 'approved') {
@@ -43,8 +54,8 @@ export default function EvaluatedOrders() {
       } else if (order.data.status === 'delivered') {
         btncolor = "#17A2B8"
       }
-  
-      if (order.data.status === 'approved') {
+      
+        //Iterator design pattern is used here to traverse through the array
         const renderItem: any = (order.data.itemList || []).map((item: any) => {
           return (
             <>
@@ -106,22 +117,29 @@ export default function EvaluatedOrders() {
               <Button disabled={order.data.status === 'approved' || order.data.status === 'delivery_pending' || order.data.status === 'delivered'} onPress={() => showDialog(order.id)}>Authorize</Button>
             </Card.Actions>
           </Card>)
-      }
     })
   
+    //This function is to change the status of an order to approved
+    //It calls the updateOrders function in order controller
     const approve = () => {
       if (selectedOrderId) {
         updateOrders(selectedOrderId)
       }
       hideDialog()
     }
+
+    const noApproved = (
+      <View style={{alignItems:'center',marginTop:Platform.OS=='android'? 300: outerHeight/2-150}}>
+      <Text variant="headlineLarge" style={{color:"#28A745"}}>No approved orders found</Text>
+      </View>
+    );
   
   
    return (
       <>
         <ScrollView style={styles.scrollview}>
           <View style={styles.container}>
-            {renderOrder}
+          {evaluatedOrders.length === 0 ? noApproved : renderOrder}
           </View>
         </ScrollView>
         <Portal>
@@ -169,7 +187,7 @@ export default function EvaluatedOrders() {
       marginRight: 'auto'
     },
     dialog: {
-      width: '30%',
+      width: Platform.OS === 'android' ? '90%': '30%',
       marginLeft: 'auto',
       marginRight: 'auto'
     },
