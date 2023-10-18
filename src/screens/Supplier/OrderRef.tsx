@@ -119,7 +119,7 @@ export default function OrderRef()
 
   const handleDeliveryDateInput = () =>
   {
-    setShowDeliveryInput(true);
+    setShowDeliveryInput(false);
   }
 
   const uploadDate = (data: any) =>
@@ -204,7 +204,6 @@ export default function OrderRef()
             </Card>
           )}
         />}
-
 
       {showPastOrders && pastOrders.length == 0 &&
         <Button loading={true}>Loading Requests</Button>}
