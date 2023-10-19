@@ -226,7 +226,9 @@ const supplierItemRequestView = () =>{
         }>
           {topBar()}
           {sysItemAddModal()}
+          <Button>Manager New Item Requests</Button>
           {requestedItemView()}
+          <Button>Supplier New Item Requests</Button>
           {supplierItemRequestView()}
       </ScrollView>
     )
