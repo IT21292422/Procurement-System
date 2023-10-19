@@ -61,3 +61,5 @@ export type supplier = {
 	supplierId:   string;
 	supplierName: string;
 }
+
+export type itemListElementType = { itemName: string, unitPrice: number, quantity: number }

@@ -26,7 +26,6 @@ export default function EvaluatedOrders() {
     async function receiveData() {
       const newData: any = await getOrders()
       setOrders(newData)
-      console.log(newData)
     }
     
 

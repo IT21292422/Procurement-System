@@ -1,7 +1,5 @@
 import { View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { doc, getDoc } from "firebase/firestore";
-import { fireStore } from '../../../../config/firebase';
 import { ItemType } from '../../../../config/types';
 import { getItemDetails } from '../hooks/itemHooks';
 import { Text, Card, Title, Paragraph, Button, IconButton, TextInput, ActivityIndicator } from 'react-native-paper';
@@ -116,12 +114,12 @@ export default function ItemDetails(props: ItemDetailsProps) {
 						<Text style={{ fontWeight: 'bold' }}>{`\nTotal: RS: ${(itemDetails?.unitPrice || 0) * parseInt(units)}\n`}</Text>
 						
 						{isAddToDraftDisabled ? (
-						<Button
-						mode="contained"
-						onPress={handleAddToDraft}
-						disabled={isAddToDraftDisabled} >
-							<ActivityIndicator animating={true} />
-						</Button>
+							<Button
+							mode="contained"
+							onPress={handleAddToDraft}
+							disabled={isAddToDraftDisabled} >
+								<ActivityIndicator animating={true} />
+							</Button>
 						) : (
 							(<Button
 								mode="contained"

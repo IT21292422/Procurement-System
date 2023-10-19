@@ -51,8 +51,8 @@ export default function MainNavigation()
 
   // this the are you can crate mock user
 
-  userName = 'hello'
-  userType = 'supplier'
+  // userName = 'hello'
+  // userType = 'supplier'
   isLoading = false
 
 
@@ -66,7 +66,7 @@ export default function MainNavigation()
     // Render Site Manager route/component
     return (
       <NavigationContainer>
-        {/* <SiteManagerRoute /> */}
+        <SiteManagerRoute />
       </NavigationContainer>
     );
   } else if (userType === 'manager')
@@ -164,7 +164,7 @@ function ProcurementStaff(){
     return(
       <Stack.Navigator initialRouteName='OrderView'>
         <Stack.Screen name='OrderView' options={{ title: 'Orders' }} component={OrderView}/>
-        {/* <Stack.Screen name='ItemAdd' options={{ title: 'Items' }} component={ItemAdd}/> */}
+        <Stack.Screen name='ItemAdd' options={{ title: 'Items' }} component={ItemAdd}/>
         <Stack.Screen name='OrderDetails' options={{ title: 'Item' }} component={ProcunentOrderDetails}/>
       </Stack.Navigator>
     )

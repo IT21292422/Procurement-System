@@ -1,9 +1,7 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
-import { OrderType } from "../../../../config/types";
+import { OrderType, itemListElementType } from "../../../../config/types";
 import { fireStore } from "../../../../config/firebase";
 
-
-type itemListElementType = { itemName: string, unitPrice: number, quantity: number }
 
 
 // check whether any drafts exist (returns true if a draft exist)

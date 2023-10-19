@@ -26,7 +26,6 @@ async function getOrderById(docId:string){
         const docRef = doc(fireStore,"orders",docId);
         const querySnapshot = await getDoc(docRef);
         if(querySnapshot.exists()){
-            console.log(querySnapshot.data())
             return querySnapshot.data()
         }else{
             console.log("No such order document")
