@@ -117,9 +117,12 @@ const orderView = () =>{
               <Button onPress={() => {updateOrderStatus(order.orderId)}}>
               Set Pending
             </Button>):(
-            <Button>
-              Confirmed 
-            </Button>) 
+              <Card.Actions>
+                <Button>
+                  Confirmed 
+                </Button>
+              </Card.Actions>
+            ) 
             }
           </Card.Actions>
         </Card>
