@@ -32,7 +32,7 @@ export default function LogIn() {
     
   const submitLogin= async ()=>{
 //* four main users who can access the system
-    if(logins.email===''){
+    if(logins.email===''&&logins.password === ''){
       setLogingError(true)
       return;
     }

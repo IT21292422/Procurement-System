@@ -44,6 +44,7 @@ export interface newItemRequestInterface {
 
 export interface ChildComponentProps {
   cancelUpdate: () => void;
+  }
 
 export interface Logings{
   email:string,
@@ -88,4 +89,11 @@ export interface Policy{
   policyAmount: number;
   description: string;
 
+}
+
+export interface IsupplierItemRequest {
+  description:string;
+  isApproved:boolean;
+  itemName:string;
+  unitPrice:number;
 }

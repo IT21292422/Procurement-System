@@ -1,14 +1,16 @@
 import { View,StyleSheet, RefreshControl, ScrollView } from 'react-native'
 import React,{useState,useEffect} from 'react'
-import { IRequestedItems,IItem } from '../../../config/interfaces';
+import { IRequestedItems,IItem, IsupplierItemRequest } from '../../../config/interfaces';
 import { ActivityIndicator, MD2Colors,Button,Modal, Portal, TextInput,Card,Text} from 'react-native-paper';
 import getItemRequests from '../../hooks/getItemRequests'
 import addSystemItem from '../../hooks/addSystemItem';
+import getAllsupplierItemRequest from '../../hooks/getAllsupplierItemRequest';
 
 export default function ProcunentOrderDetails({navigation}) {
   const [setLoading, setSetLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [itemRequested, setItemRequested] = useState<IRequestedItems[]>([]);
+  const [supplierItemRequests, setSupplierItemRequests] = useState<IsupplierItemRequest[]>([]);
   const [visible, setVisible] = useState(false);
   const [item, setItem] = useState<IItem>({
   orderId: '',
@@ -25,6 +27,8 @@ export default function ProcunentOrderDetails({navigation}) {
       setSetLoading(true)
       const requestedItems:IRequestedItems[] = await getItemRequests()
       setItemRequested(requestedItems)
+      const supplierItemRequested:IsupplierItemRequest[] = await getAllsupplierItemRequest()
+      setSupplierItemRequests(supplierItemRequested)
       setSetLoading(false)
     }
     fetchRequests()
@@ -142,6 +146,40 @@ export default function ProcunentOrderDetails({navigation}) {
   )
 }
 
+const supplierItemRequestView = () =>{
+  return(<View style={styles.container}>
+      {supplierItemRequests.length? (
+        supplierItemRequests.map((item, index) => (
+        <Card key={index} mode='elevated' style={styles.card}>
+            <Card.Content>
+              <Text variant="bodyMedium">{item.itemName}</Text>
+            </Card.Content>
+            <Card.Content>
+                <Text style={{ fontWeight: 'bold' }}>
+                  Item status:&nbsp;
+                  {item.isApproved?(
+                    <Text variant="bodyMedium" style={{backgroundColor:'green'}}>Approved</Text>
+                  ):(
+                    <Text variant="bodyMedium">Pending</Text>
+                  )}
+                </Text>
+                <Text>
+                  Unit price:&nbsp;
+                  <Text variant="bodyMedium">{item.unitPrice}</Text>
+                </Text>
+                <Text>
+                  Description:&nbsp;
+                  <Text variant="bodyMedium">{item.description}</Text>
+                </Text>
+            </Card.Content>
+        </Card>
+      ))
+    ) : (
+      <Text>Loading</Text>
+    )}
+      </View>)
+}
+
   const requestedItemView = () =>{
     return(
       <View style={styles.container}>
@@ -189,6 +227,7 @@ export default function ProcunentOrderDetails({navigation}) {
           {topBar()}
           {sysItemAddModal()}
           {requestedItemView()}
+          {supplierItemRequestView()}
       </ScrollView>
     )
   }
